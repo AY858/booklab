@@ -1,4 +1,4 @@
-name: Fix BOOK LAB front face
+name: Fix BOOK LAB page visibility
 on:
   push:
     branches: [main]
@@ -10,14 +10,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Patch WebGL front-face orientation
+      - name: Patch static and turning page face logic
         run: |
           python - <<'PY'
           from pathlib import Path
           p=Path('index.html')
           s=p.read_text()
-          s=s.replace('BOOK LAB v5.2 WEBGL','BOOK LAB v5.3 WEBGL')
-          s=s.replace('function setupGL(){gl.enable(gl.DEPTH_TEST);','function setupGL(){gl.frontFace(gl.CW);gl.enable(gl.DEPTH_TEST);')
+          s=s.replace('BOOK LAB v5.3 WEBGL','BOOK LAB v5.4 WEBGL')
+          s=s.replace('function setupGL(){gl.frontFace(gl.CW);gl.enable(gl.DEPTH_TEST);','function setupGL(){gl.enable(gl.DEPTH_TEST);')
+          s=s.replace('uniform float uFlip;\nout vec4 outColor;','uniform float uFlip;\nuniform float uMode;\nout vec4 outColor;')
+          old="""  bool front=gl_FrontFacing;
+  if(!front && uFlip < 0.48) discard;
+  vec2 uv=front?vUV:vec2(1.0-vUV.x,vUV.y);
+  vec4 c=front?samplePage(uFront,uv,uFrontOpacity,uFrontMat):samplePage(uBack,uv,uBackOpacity,uBackMat);"""
+          new="""  bool staticPage = uMode < 0.5;
+  bool front = staticPage ? true : !gl_FrontFacing;
+  if(!staticPage && !front && uFlip < 0.48) discard;
+  vec2 uv=front?vUV:vec2(1.0-vUV.x,vUV.y);
+  vec4 c=front?samplePage(uFront,uv,uFrontOpacity,uFrontMat):samplePage(uBack,uv,uBackOpacity,uBackMat);"""
+          s=s.replace(old,new)
           p.write_text(s)
           PY
       - name: Commit fix
@@ -25,5 +36,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git commit -m "Fix mirrored page orientation" || exit 0
+          git commit -m "Fix static pages disappearing during flip" || exit 0
           git push
