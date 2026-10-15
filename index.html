@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>BOOK LAB — WebGL Flipbook v5.1</title>
+<style>
+:root{--bg:#101114;--panel:#17191d;--panel2:#21242a;--line:#30343c;--text:#f2f4f7;--muted:#8f97a4;--accent:#9da6ff}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}button,input,select{font:inherit;color:inherit}button{cursor:pointer}.app{height:100%;display:grid;grid-template-rows:52px 1fr}.topbar{display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid var(--line);background:#131519}.brand{font-weight:800;letter-spacing:.08em;margin-right:8px}.btn{height:32px;padding:0 11px;border:1px solid var(--line);background:var(--panel2);border-radius:8px;display:inline-flex;align-items:center;justify-content:center;gap:6px}.btn.primary{background:#eef0ff;color:#11131a;border-color:#eef0ff}.spacer{flex:1}.status{font-size:12px;color:var(--muted)}input[type=file]{display:none}.main{display:grid;grid-template-columns:286px 1fr;min-height:0}.sidebar{min-height:0;border-right:1px solid var(--line);background:var(--panel);display:grid;grid-template-rows:auto 1fr auto}.sidehead{padding:10px;border-bottom:1px solid var(--line)}.drop{padding:12px;border:1px dashed #4a505b;border-radius:9px;color:var(--muted);font-size:12px;text-align:center}.drop.drag{border-color:var(--accent);background:#22253b}.list{overflow:auto;padding:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start}.thumb{border:1px solid #333844;background:#242730;border-radius:7px;padding:5px;user-select:none}.thumb.selected{outline:2px solid var(--accent);outline-offset:1px}.thumb.dragging{opacity:.4}.thumb img{display:block;width:100%;aspect-ratio:.707/1;object-fit:contain;background:#0b0c0e;border-radius:4px}.meta{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:10px;margin-top:4px}.chip{padding:2px 5px;border-radius:99px;background:#333843}.chip.pet{background:#203b3e;color:#b8f0eb}.chip.tracing{background:#403a28;color:#ffe7a4}.settings{padding:11px;border-top:1px solid var(--line);display:grid;gap:9px}.settings h3{margin:0;font-size:12px}.row{display:grid;grid-template-columns:86px 1fr;align-items:center;gap:8px;color:var(--muted);font-size:12px}.row input,.row select{width:100%;background:#22262d;border:1px solid var(--line);border-radius:6px;padding:6px}.actions{display:flex;gap:6px}.actions .btn{flex:1;font-size:11px}.stagewrap{position:relative;overflow:hidden;background:radial-gradient(circle at 50% 42%,#3d414a 0,#1b1d22 48%,#0e0f12 100%)}.canvasbox{position:absolute;inset:0 0 52px;display:grid;place-items:center}.canvasbox canvas{display:block;width:min(90vw,1160px);height:min(80vh,790px)}.controls{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);display:flex;align-items:center;gap:7px;padding:7px;border:1px solid #343944;background:#121418df;border-radius:12px}.indicator{min-width:128px;text-align:center;color:#c6cbd4;font-size:12px}.zoom{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:11px}.zoom input{width:86px}.empty{position:absolute;inset:0 0 52px;display:grid;place-items:center;color:var(--muted);pointer-events:none}.empty b{display:block;text-align:center;color:#e1e4ea;font-size:18px;margin-bottom:7px}.toast{position:absolute;right:14px;top:14px;background:#eef0ff;color:#11131a;padding:8px 11px;border-radius:8px;font-size:12px;opacity:0;transform:translateY(-5px);transition:.18s;z-index:50}.toast.show{opacity:1;transform:none}@media(max-width:920px){.main{grid-template-columns:230px 1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar"><div class="brand">BOOK LAB v5.1 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
+<main class="main"><aside class="sidebar"><div class="sidehead"><div class="drop" id="drop">拖图片到这里 · 自动按文件名排序<br>缩略图拖动即可改页序</div></div><div class="list" id="list"></div><div class="settings"><h3>当前页面材质</h3><div class="row"><span>材质</span><select id="material"><option value="paper">普通纸</option><option value="pet">PET 透明封皮</option><option value="tracing">硫酸纸 / 半透明纸</option></select></div><div class="row"><span>不透明度</span><input id="opacity" type="range" min="5" max="100" value="100"></div><div class="row"><span>页名</span><input id="name"></div><div class="actions"><button class="btn" id="duplicate">复制页</button><button class="btn" id="delete">删除页</button></div></div></aside>
+<section class="stagewrap"><div class="toast" id="toast"></div><div class="canvasbox"><canvas id="viewer"></canvas></div><div class="empty" id="empty"><div><b>导入页面开始预览 📖</b><span>WebGL 曲面网格 · 纸张弯曲 · 双面纹理 · 预缓存</span></div></div><div class="controls"><button class="btn" id="first">⟪</button><button class="btn" id="prev">←</button><div class="indicator" id="indicator">0 / 0</div><button class="btn" id="next">→</button><button class="btn" id="last">⟫</button><div class="zoom">缩放 <input id="zoom" type="range" min="65" max="125" value="96"></div></div></section></main></div>
+<script>
+const $=s=>document.querySelector(s),pages=[];let selected=null,spread=0,busy=false,dragId=null,soundOn=true,zoom=.96;
+const list=$('#list'),canvas=$('#viewer');
+const PREVIEW_W=920,PREVIEW_H=1300,THUMB_W=180,THUMB_H=255;
+const bitmapCache=new Map(),textureCache=new Map();
+function uid(){return crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2)}function sortN(a,b){return a.name.localeCompare(b.name,undefined,{numeric:true,sensitivity:'base'})}function clamp(v,a,b){return Math.max(a,Math.min(b,v))}function maxSpread(){return pages.length?Math.ceil((pages.length-1)/2):0}function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._);t._=setTimeout(()=>t.classList.remove('show'),1200)}function pageAt(i){return i>=0&&i<pages.length?pages[i]:null}function pair(s=spread){if(!pages.length)return{l:null,r:null};if(s===0)return{l:null,r:pageAt(0)};return{l:pageAt(s*2-1),r:pageAt(s*2)}}
+async function resizeToBlob(file,maxW,maxH,q=.9){const bmp=await createImageBitmap(file,{imageOrientation:'from-image'});const s=Math.min(1,maxW/bmp.width,maxH/bmp.height),w=Math.max(1,Math.round(bmp.width*s)),h=Math.max(1,Math.round(bmp.height*s));const c=typeof OffscreenCanvas!=='undefined'?new OffscreenCanvas(w,h):Object.assign(document.createElement('canvas'),{width:w,height:h});const x=c.getContext('2d',{alpha:true});x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(bmp,0,0,w,h);bmp.close();if(c.convertToBlob)return c.convertToBlob({type:'image/webp',quality:q});return new Promise(r=>c.toBlob(r,'image/webp',q))}
+async function addFiles(fs){const arr=[...fs].filter(f=>f.type.startsWith('image/')).sort(sortN);if(!arr.length)return;$('#status').textContent='建立纹理…';for(let i=0;i<arr.length;i++){const f=arr[i],preview=await resizeToBlob(f,PREVIEW_W,PREVIEW_H,.9),thumb=await resizeToBlob(f,THUMB_W,THUMB_H,.78);pages.push({id:uid(),name:f.name,material:'paper',opacity:1,preview,thumb,thumbURL:URL.createObjectURL(thumb)});$('#status').textContent=`纹理 ${i+1}/${arr.length}`;await new Promise(requestAnimationFrame)}if(!selected)selected=pages[0]?.id||null;renderList();renderSettings();await ensureSpread(spread);drawScene();$('#status').textContent='WebGL 曲面翻页';toast(`已导入 ${arr.length} 页`)}
+async function getBitmap(p){if(!p)return null;if(bitmapCache.has(p.id))return bitmapCache.get(p.id);const b=await createImageBitmap(p.preview);bitmapCache.set(p.id,b);return b}
+async function ensureSpread(s){const ps=[];for(let k=Math.max(0,s-1);k<=Math.min(maxSpread(),s+1);k++){const a=pair(k);if(a.l)ps.push(a.l);if(a.r)ps.push(a.r)}await Promise.all(ps.map(async p=>{await getBitmap(p);ensureTexture(p)}))}
+const gl=canvas.getContext('webgl2',{alpha:true,antialias:true,premultipliedAlpha:true,preserveDrawingBuffer:false});
+if(!gl){alert('当前浏览器没有启用 WebGL2，请使用最新版 Chrome/Edge。')}
+const VS=`#version 300 es
+precision highp float;
+layout(location=0) in vec2 aPos;
+layout(location=1) in vec2 aUV;
+uniform mat4 uMVP;
+uniform float uFlip;
+uniform float uDir;
+uniform float uSide;
+uniform float uCurl;
+uniform float uMode;
+out vec2 vUV;out float vShade;out float vEdge;
+void main(){
+  float ux=aPos.x; float yy=(aPos.y-.5)*2.0;
+  const float PAGE_W = 1.408;
+  vec3 p;
+  if(uMode<0.5){
+    float x=(uSide<0.0)?(-PAGE_W+ux*PAGE_W):(ux*PAGE_W);
+    p=vec3(x,yy,0.0);
+    vShade=1.0;
+  }else{
+    float d=ux*PAGE_W;
+    float base=3.14159265*uFlip;
+    float wave=sin(3.14159265*uFlip);
+    float local=base + uCurl*wave*(ux-.18);
+    float sx=cos(local)*d;
+    float sz=sin(local)*d;
+    sz += .13*wave*sin(3.14159265*ux);
+    if(uDir>0.0) p=vec3(sx,yy,sz);
+    else p=vec3(-sx,yy,sz);
+    vShade=.78 + .22*abs(cos(local));
+  }
+  vUV=aUV;vEdge=smoothstep(.0,.08,ux)*(1.0-smoothstep(.9,1.0,ux));
+  gl_Position=uMVP*vec4(p,1.0);
+}`;
+const FS=`#version 300 es
+precision highp float;
+in vec2 vUV;in float vShade;in float vEdge;
+uniform sampler2D uFront;uniform sampler2D uBack;
+uniform float uFrontOpacity;uniform float uBackOpacity;
+uniform float uFrontMat;uniform float uBackMat;
+out vec4 outColor;
+vec4 samplePage(sampler2D tex, vec2 uv,float op,float mat){
+  vec4 c=texture(tex,uv);
+  float a=c.a*op;
+  if(mat>0.5&&mat<1.5)a*=.72;
+  if(mat>1.5)a*=.84;
+  if(mat>0.5){float sheen=pow(max(0.0,1.0-abs(uv.x-.35)*2.0),10.0);c.rgb+=sheen*(mat<1.5?.18:.08);}
+  return vec4(c.rgb,a);
+}
+void main(){
+  bool front=gl_FrontFacing;
+  vec2 uv=front?vUV:vec2(1.0-vUV.x,vUV.y);
+  vec4 c=front?samplePage(uFront,uv,uFrontOpacity,uFrontMat):samplePage(uBack,uv,uBackOpacity,uBackMat);
+  c.rgb*=vShade;
+  c.rgb*=mix(.90,1.0,vEdge);
+  if(c.a<.01)discard;
+  outColor=c;
+}`;
+function shader(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(s));return s}
+const prog=gl.createProgram();gl.attachShader(prog,shader(gl.VERTEX_SHADER,VS));gl.attachShader(prog,shader(gl.FRAGMENT_SHADER,FS));gl.linkProgram(prog);if(!gl.getProgramParameter(prog,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(prog));gl.useProgram(prog);
+const SEG=48,verts=[],idx=[];for(let i=0;i<=SEG;i++){let x=i/SEG;verts.push(x,0,x,1,x,1,x,0)}
+verts.length=0;for(let i=0;i<=SEG;i++){const x=i/SEG;verts.push(x,0,x,1,x,1,x,0)}
+verts.length=0;for(let i=0;i<=SEG;i++){const x=i/SEG;verts.push(x,0,x,1);verts.push(x,1,x,0)}
+for(let i=0;i<SEG;i++){const a=i*2,b=a+1,c=a+2,d=a+3;idx.push(a,b,c,b,d,c)}
+const vao=gl.createVertexArray();gl.bindVertexArray(vao);const vb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,vb);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(verts),gl.STATIC_DRAW);const ib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(idx),gl.STATIC_DRAW);gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,2,gl.FLOAT,false,16,0);gl.enableVertexAttribArray(1);gl.vertexAttribPointer(1,2,gl.FLOAT,false,16,8);
+const U={};['uMVP','uFlip','uDir','uSide','uCurl','uMode','uFrontOpacity','uBackOpacity','uFrontMat','uBackMat','uFront','uBack'].forEach(n=>U[n]=gl.getUniformLocation(prog,n));
+function mat4Perspective(fovy,aspect,near,far){const f=1/Math.tan(fovy/2),nf=1/(near-far);return new Float32Array([f/aspect,0,0,0,0,f,0,0,0,0,(far+near)*nf,-1,0,0,2*far*near*nf,0])}
+function mat4Mul(a,b){const o=new Float32Array(16);for(let r=0;r<4;r++)for(let c=0;c<4;c++)o[c*4+r]=a[0*4+r]*b[c*4+0]+a[1*4+r]*b[c*4+1]+a[2*4+r]*b[c*4+2]+a[3*4+r]*b[c*4+3];return o}
+function mat4View(){const z=-4.25/zoom,tilt=-.11,ct=Math.cos(tilt),st=Math.sin(tilt);return new Float32Array([1,0,0,0,0,ct,st,0,0,-st,ct,0,0,-.06,z,1])}
+function mvp(){return mat4Mul(mat4Perspective(.72,canvas.width/canvas.height,.1,30),mat4View())}
+function ensureTexture(p){if(!p)return null;if(textureCache.has(p.id))return textureCache.get(p.id);const bmp=bitmapCache.get(p.id);if(!bmp)return null;const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,bmp);gl.generateMipmap(gl.TEXTURE_2D);textureCache.set(p.id,t);return t}
+const whiteTex=(()=>{const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array([250,250,250,255]));return t})();
+function matCode(p){return !p?0:p.material==='pet'?1:p.material==='tracing'?2:0}
+function bindTex(unit,p){gl.activeTexture(gl.TEXTURE0+unit);gl.bindTexture(gl.TEXTURE_2D,p?(ensureTexture(p)||whiteTex):whiteTex)}
+function drawMesh(front,back,opt={}){gl.useProgram(prog);gl.bindVertexArray(vao);gl.uniformMatrix4fv(U.uMVP,false,mvp());gl.uniform1f(U.uFlip,opt.flip??0);gl.uniform1f(U.uDir,opt.dir??1);gl.uniform1f(U.uSide,opt.side??1);gl.uniform1f(U.uCurl,opt.curl??.75);gl.uniform1f(U.uMode,opt.mode??0);gl.uniform1f(U.uFrontOpacity,front?.opacity??1);gl.uniform1f(U.uBackOpacity,back?.opacity??1);gl.uniform1f(U.uFrontMat,matCode(front));gl.uniform1f(U.uBackMat,matCode(back));bindTex(0,front);bindTex(1,back);gl.uniform1i(U.uFront,0);gl.uniform1i(U.uBack,1);gl.drawElements(gl.TRIANGLES,idx.length,gl.UNSIGNED_SHORT,0)}
+function setupGL(){gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.disable(gl.CULL_FACE)}
+function drawScene(s=spread,flipState=null){fitCanvas(false);gl.viewport(0,0,canvas.width,canvas.height);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);if(!pages.length){updateIndicator();return}setupGL();const P=pair(s);if(!flipState){if(P.l)drawMesh(P.l,P.l,{mode:0,side:-1});if(P.r)drawMesh(P.r,P.r,{mode:0,side:1});}else{const {dir,t,from,to}=flipState,A=pair(from),B=pair(to);if(dir>0){
+    if(A.l)drawMesh(A.l,A.l,{mode:0,side:-1});
+    if(B.r)drawMesh(B.r,B.r,{mode:0,side:1});
+    if(A.r||B.l)drawMesh(A.r,B.l,{mode:1,dir:1,flip:t,curl:.95});
+  }else{
+    if(B.l)drawMesh(B.l,B.l,{mode:0,side:-1});
+    if(A.r)drawMesh(A.r,A.r,{mode:0,side:1});
+    if(A.l||B.r)drawMesh(A.l,B.r,{mode:1,dir:-1,flip:t,curl:.95});
+  }}updateIndicator()}
+function fitCanvas(redraw=true){const r=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,1.65),w=Math.max(2,Math.round(r.width*dpr)),h=Math.max(2,Math.round(r.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h}if(redraw)drawScene()}
+function ease(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}
+async function animate(dir){if(busy||!pages.length)return;const to=spread+dir;if(to<0||to>maxSpread())return;busy=true;await ensureSpread(to);await ensureSpread(spread);$('#status').textContent='WebGL 翻页中';flipSound();const from=spread,start=performance.now(),dur=900;function frame(now){const raw=clamp((now-start)/dur,0,1),t=ease(raw);drawScene(from,{dir,t,from,to});if(raw<1)requestAnimationFrame(frame);else{spread=to;busy=false;drawScene();$('#status').textContent='WebGL 曲面翻页'}}requestAnimationFrame(frame)}
+function updateIndicator(){$('#empty').style.display=pages.length?'none':'grid';$('#indicator').textContent=pages.length?(spread===0?`封面 · ${pages.length}页`:`${spread*2}-${Math.min(spread*2+1,pages.length)} · ${pages.length}页`):'0 / 0'}
+function renderList(){list.innerHTML='';const frag=document.createDocumentFragment();pages.forEach((p,i)=>{if(!p.thumbURL)p.thumbURL=URL.createObjectURL(p.thumb);const d=document.createElement('div');d.className='thumb'+(p.id===selected?' selected':'');d.draggable=true;d.dataset.id=p.id;const im=document.createElement('img');im.loading='lazy';im.src=p.thumbURL;d.appendChild(im);const m=document.createElement('div');m.className='meta';m.innerHTML=`<span>${String(i+1).padStart(2,'0')}</span><span class="chip ${p.material}">${p.material==='paper'?'PAPER':p.material==='pet'?'PET':'TRACING'}</span>`;d.appendChild(m);d.onclick=async()=>{if(busy||dragId)return;selected=p.id;[...list.children].forEach(x=>x.classList.toggle('selected',x.dataset.id===selected));renderSettings();spread=i===0?0:Math.ceil(i/2);await ensureSpread(spread);drawScene()};d.ondragstart=e=>{dragId=p.id;d.classList.add('dragging');e.dataTransfer.effectAllowed='move'};d.ondragend=()=>{d.classList.remove('dragging');dragId=null};d.ondragover=e=>e.preventDefault();d.ondrop=async e=>{e.preventDefault();const a=pages.findIndex(x=>x.id===dragId),b=pages.findIndex(x=>x.id===p.id);if(a<0||b<0||a===b)return;const[mv]=pages.splice(a,1);pages.splice(b,0,mv);spread=clamp(spread,0,maxSpread());renderList();await ensureSpread(spread);drawScene()};frag.appendChild(d)});list.appendChild(frag)}
+function renderSettings(){const p=pages.find(x=>x.id===selected),dis=!p;['material','opacity','name','duplicate','delete'].forEach(id=>$('#'+id).disabled=dis);if(p){$('#material').value=p.material;$('#opacity').value=Math.round(p.opacity*100);$('#name').value=p.name}}
+function flipSound(){if(!soundOn)return;try{const ac=flipSound.ac||(flipSound.ac=new (AudioContext||webkitAudioContext)());const dur=.12,b=ac.createBuffer(1,ac.sampleRate*dur,ac.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++){const t=i/d.length;d[i]=(Math.random()*2-1)*Math.pow(1-t,2.0)*.1}const s=ac.createBufferSource(),f=ac.createBiquadFilter(),g=ac.createGain();s.buffer=b;f.type='bandpass';f.frequency.value=1150;g.gain.value=.15;s.connect(f).connect(g).connect(ac.destination);s.start()}catch(e){}}
+function blobToDataURL(b){return new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(b)})}function dataURLtoBlob(s){const[h,d]=s.split(','),m=h.match(/:(.*?);/)[1],bin=atob(d),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new Blob([u],{type:m})}
+async function exportProject(){const payload={format:'BOOKLAB_V5_WEBGL',spread,selected,soundOn,pages:[]};$('#status').textContent='导出工程…';for(const p of pages)payload.pages.push({id:p.id,name:p.name,material:p.material,opacity:p.opacity,preview:await blobToDataURL(p.preview),thumb:await blobToDataURL(p.thumb)});const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(payload)],{type:'application/json'}));a.download='booklab-v5.booklab';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);$('#status').textContent='WebGL 曲面翻页'}
+async function loadProject(file){try{const j=JSON.parse(await file.text());if(!['BOOKLAB_V2_META','BOOKLAB_V3_META','BOOKLAB_V4_CANVAS','BOOKLAB_V5_WEBGL'].includes(j.format))throw 0;pages.length=0;for(const p of j.pages)pages.push({...p,preview:dataURLtoBlob(p.preview),thumb:dataURLtoBlob(p.thumb),thumbURL:null});selected=j.selected||pages[0]?.id||null;spread=clamp(j.spread||0,0,maxSpread());soundOn=j.soundOn!==false;renderList();renderSettings();await ensureSpread(spread);drawScene();updateSound();toast('工程已载入')}catch(e){console.error(e);toast('工程文件无法读取')}}
+$('#imgInput').onchange=e=>{addFiles(e.target.files);e.target.value=''};$('#folderInput').onchange=e=>{addFiles(e.target.files);e.target.value=''};$('#projectInput').onchange=e=>{if(e.target.files[0])loadProject(e.target.files[0]);e.target.value=''};$('#exportBtn').onclick=exportProject;$('#next').onclick=()=>animate(1);$('#prev').onclick=()=>animate(-1);$('#first').onclick=async()=>{if(busy)return;spread=0;await ensureSpread(spread);drawScene()};$('#last').onclick=async()=>{if(busy)return;spread=maxSpread();await ensureSpread(spread);drawScene()};$('#zoom').oninput=e=>{zoom=e.target.value/100;drawScene()};$('#soundBtn').onclick=()=>{soundOn=!soundOn;updateSound()};function updateSound(){$('#soundBtn').textContent=soundOn?'🔊 翻页音效':'🔇 已静音'}
+$('#material').onchange=e=>{const p=pages.find(x=>x.id===selected);if(!p)return;p.material=e.target.value;if(p.material==='pet'&&p.opacity===1)p.opacity=.72;if(p.material==='tracing'&&p.opacity===1)p.opacity=.84;renderList();renderSettings();drawScene()};$('#opacity').oninput=e=>{const p=pages.find(x=>x.id===selected);if(p){p.opacity=e.target.value/100;drawScene()}};$('#name').onchange=e=>{const p=pages.find(x=>x.id===selected);if(p){p.name=e.target.value;renderList()}};$('#duplicate').onclick=async()=>{const i=pages.findIndex(x=>x.id===selected);if(i<0)return;const p=pages[i],cp={...p,id:uid(),name:p.name+' copy',thumbURL:null};pages.splice(i+1,0,cp);selected=cp.id;renderList();renderSettings();await ensureSpread(spread);drawScene()};$('#delete').onclick=async()=>{const i=pages.findIndex(x=>x.id===selected);if(i<0)return;const[p]=pages.splice(i,1);if(p.thumbURL)URL.revokeObjectURL(p.thumbURL);selected=pages[Math.min(i,pages.length-1)]?.id||null;spread=clamp(spread,0,maxSpread());renderList();renderSettings();await ensureSpread(spread);drawScene()};
+const dz=$('#drop');['dragenter','dragover'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('drag')}));['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('drag')}));dz.addEventListener('drop',e=>addFiles(e.dataTransfer.files));window.addEventListener('keydown',e=>{if(e.key==='ArrowRight')animate(1);if(e.key==='ArrowLeft')animate(-1)});let rr=0;window.addEventListener('resize',()=>{cancelAnimationFrame(rr);rr=requestAnimationFrame(()=>fitCanvas())});fitCanvas(false);setupGL();updateSound();renderSettings();drawScene();
+</script></body></html>
