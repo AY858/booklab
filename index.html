@@ -11,7 +11,7 @@
 </head>
 <body>
 <div class="app">
-<header class="topbar"><div class="brand">BOOK LAB v5.3 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
+<header class="topbar"><div class="brand">BOOK LAB v5.4 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
 <main class="main"><aside class="sidebar"><div class="sidehead"><div class="drop" id="drop">拖图片到这里 · 自动按文件名排序<br>缩略图拖动即可改页序</div></div><div class="list" id="list"></div><div class="settings"><h3>当前页面材质</h3><div class="row"><span>材质</span><select id="material"><option value="paper">普通纸</option><option value="pet">PET 透明封皮</option><option value="tracing">硫酸纸 / 半透明纸</option></select></div><div class="row"><span>不透明度</span><input id="opacity" type="range" min="5" max="100" value="100"></div><div class="row"><span>页名</span><input id="name"></div><div class="actions"><button class="btn" id="duplicate">复制页</button><button class="btn" id="delete">删除页</button></div></div></aside>
 <section class="stagewrap"><div class="toast" id="toast"></div><div class="canvasbox"><canvas id="viewer"></canvas></div><div class="empty" id="empty"><div><b>导入页面开始预览 📖</b><span>WebGL 曲面网格 · 纸张弯曲 · 双面纹理 · 预缓存</span></div></div><div class="controls"><button class="btn" id="first">⟪</button><button class="btn" id="prev">←</button><div class="indicator" id="indicator">0 / 0</div><button class="btn" id="next">→</button><button class="btn" id="last">⟫</button><div class="zoom">缩放 <input id="zoom" type="range" min="65" max="125" value="96"></div></div></section></main></div>
 <script>
@@ -67,6 +67,7 @@ uniform sampler2D uFront;uniform sampler2D uBack;
 uniform float uFrontOpacity;uniform float uBackOpacity;
 uniform float uFrontMat;uniform float uBackMat;
 uniform float uFlip;
+uniform float uMode;
 out vec4 outColor;
 vec4 samplePage(sampler2D tex, vec2 uv,float op,float mat){
   vec4 c=texture(tex,uv);
@@ -77,8 +78,9 @@ vec4 samplePage(sampler2D tex, vec2 uv,float op,float mat){
   return vec4(c.rgb,a);
 }
 void main(){
-  bool front=gl_FrontFacing;
-  if(!front && uFlip < 0.48) discard;
+  bool staticPage = uMode < 0.5;
+  bool front = staticPage ? true : !gl_FrontFacing;
+  if(!staticPage && !front && uFlip < 0.48) discard;
   vec2 uv=front?vUV:vec2(1.0-vUV.x,vUV.y);
   vec4 c=front?samplePage(uFront,uv,uFrontOpacity,uFrontMat):samplePage(uBack,uv,uBackOpacity,uBackMat);
   c.rgb*=vShade;
@@ -103,7 +105,7 @@ const whiteTex=(()=>{const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);
 function matCode(p){return !p?0:p.material==='pet'?1:p.material==='tracing'?2:0}
 function bindTex(unit,p){gl.activeTexture(gl.TEXTURE0+unit);gl.bindTexture(gl.TEXTURE_2D,p?(ensureTexture(p)||whiteTex):whiteTex)}
 function drawMesh(front,back,opt={}){gl.useProgram(prog);gl.bindVertexArray(vao);gl.uniformMatrix4fv(U.uMVP,false,mvp());gl.uniform1f(U.uFlip,opt.flip??0);gl.uniform1f(U.uDir,opt.dir??1);gl.uniform1f(U.uSide,opt.side??1);gl.uniform1f(U.uCurl,opt.curl??.75);gl.uniform1f(U.uMode,opt.mode??0);gl.uniform1f(U.uFrontOpacity,front?.opacity??1);gl.uniform1f(U.uBackOpacity,back?.opacity??1);gl.uniform1f(U.uFrontMat,matCode(front));gl.uniform1f(U.uBackMat,matCode(back));bindTex(0,front);bindTex(1,back);gl.uniform1i(U.uFront,0);gl.uniform1i(U.uBack,1);gl.drawElements(gl.TRIANGLES,idx.length,gl.UNSIGNED_SHORT,0)}
-function setupGL(){gl.frontFace(gl.CW);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.disable(gl.CULL_FACE)}
+function setupGL(){gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.disable(gl.CULL_FACE)}
 function drawScene(s=spread,flipState=null){fitCanvas(false);gl.viewport(0,0,canvas.width,canvas.height);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);if(!pages.length){updateIndicator();return}setupGL();const P=pair(s);if(!flipState){if(P.l)drawMesh(P.l,P.l,{mode:0,side:-1});if(P.r)drawMesh(P.r,P.r,{mode:0,side:1});}else{const {dir,t,from,to}=flipState,A=pair(from),B=pair(to);if(dir>0){
     if(A.l)drawMesh(A.l,A.l,{mode:0,side:-1});
     if(B.r)drawMesh(B.r,B.r,{mode:0,side:1});
