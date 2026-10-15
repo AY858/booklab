@@ -33,8 +33,8 @@ if old_add not in s:
     raise SystemExit('addFiles anchor not found')
 s = s.replace(old_add, new_add)
 
-# Remove accidental duplicate source-name block if present twice in a row.
 block = "const fn=document.createElement('div');fn.style.cssText='margin-top:4px;font-size:10px;color:#b7bdc7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';fn.textContent=p.sourceName||p.name;fn.title=p.sourcePath||p.sourceName||p.name;d.appendChild(fn);"
 s = s.replace(block + block, block)
 
 p.write_text(s)
+# trigger clean v5.7 run
