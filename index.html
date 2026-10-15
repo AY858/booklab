@@ -19,7 +19,7 @@
 </head>
 <body>
 <div class="app">
-<header class="topbar"><div class="brand">BOOK LAB v6 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
+<header class="topbar"><div class="brand">BOOK LAB v6.1 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
 <main class="main"><aside class="sidebar"><div class="sidehead"><div class="drop" id="drop">拖图片到这里 · 按源文件名前缀页码排序<br>Ctrl / ⌘ 多选 · Shift 连选 · 拖动整组选页</div><div class="batch"><span id="selectionCount">已选 0 页</span><button class="btn" id="selectAll">全选</button><input id="movePosition" type="number" min="1" value="1" aria-label="移动到页码"><button class="btn" id="moveSelected">移到此页前</button></div></div><div class="list" id="list"></div><div class="settings"><h3>当前页面材质</h3><div class="row"><span>材质</span><select id="material"><option value="paper">普通纸</option><option value="pet">PET 透明封皮</option><option value="tracing">硫酸纸 / 半透明纸</option></select></div><div class="row"><span>不透明度</span><input id="opacity" type="range" min="5" max="100" value="100"></div><div class="row"><span>页名</span><input id="name"></div><div class="actions"><button class="btn" id="duplicate">复制页</button><button class="btn" id="delete">删除页</button></div></div></aside>
 <div class="resizer" role="separator" tabindex="0" aria-label="调整左侧宽度" aria-orientation="vertical"></div><section class="stagewrap"><div class="viewtools"><button class="btn" id="resetView">复位视角</button><span>拖动旋转 · 滚轮缩放 · 双击复位</span></div><div class="toast" id="toast"></div><div class="canvasbox"><canvas id="viewer"></canvas></div><div class="empty" id="empty"><div><b>导入页面开始预览 📖</b><span>WebGL 曲面网格 · 纸张弯曲 · 双面纹理 · 预缓存</span></div></div><div class="controls"><button class="btn" id="first">⟪</button><button class="btn" id="prev">←</button><div class="indicator" id="indicator">0 / 0</div><button class="btn" id="next">→</button><button class="btn" id="last">⟫</button><div class="zoom">缩放 <input id="zoom" type="range" min="65" max="125" value="96"></div></div></section></main></div>
 <script>
@@ -55,7 +55,17 @@ function sortN(a,b){return sourcePageSort(a,b)}function clamp(v,a,b){return Math
 async function resizeToBlob(file,maxW,maxH,q=.9){const bmp=await createImageBitmap(file,{imageOrientation:'from-image'});const s=Math.min(1,maxW/bmp.width,maxH/bmp.height),w=Math.max(1,Math.round(bmp.width*s)),h=Math.max(1,Math.round(bmp.height*s));const c=typeof OffscreenCanvas!=='undefined'?new OffscreenCanvas(w,h):Object.assign(document.createElement('canvas'),{width:w,height:h});const x=c.getContext('2d',{alpha:true});x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(bmp,0,0,w,h);bmp.close();if(c.convertToBlob)return c.convertToBlob({type:'image/webp',quality:q});return new Promise(r=>c.toBlob(r,'image/webp',q))}
 async function addFiles(fs,preserveOrder=false){const arr=[...fs].filter(f=>f.type.startsWith('image/')).map((f,i)=>{f.__sourceIndex=i;return f});arr.sort(sourcePageSort);if(!arr.length)return;$('#status').textContent='建立纹理…';for(let i=0;i<arr.length;i++){const f=arr[i],preview=await resizeToBlob(f,PREVIEW_W,PREVIEW_H,.9),thumb=await resizeToBlob(f,THUMB_W,THUMB_H,.78);pages.push({id:uid(),name:f.name,sourceName:f.name,sourcePath:f.webkitRelativePath||f.name,material:'paper',opacity:1,preview,thumb,thumbURL:URL.createObjectURL(thumb)});$('#status').textContent=`纹理 ${i+1}/${arr.length}`;await new Promise(requestAnimationFrame)}if(!selected)selected=pages[0]?.id||null;renderList();renderSettings();await ensureSpread(spread);drawScene();$('#status').textContent='WebGL 曲面翻页';toast(`已导入 ${arr.length} 页`)}
 async function getBitmap(p){if(!p)return null;if(bitmapCache.has(p.id))return bitmapCache.get(p.id);const b=await createImageBitmap(p.preview);bitmapCache.set(p.id,b);return b}
-async function ensureSpread(s){const ps=[];for(let k=Math.max(0,s-1);k<=Math.min(maxSpread(),s+1);k++){const a=pair(k);if(a.l)ps.push(a.l);if(a.r)ps.push(a.r)}await Promise.all(ps.map(async p=>{await getBitmap(p);ensureTexture(p)}))}
+async function ensureSpread(s){
+ const needed=new Set();
+ for(let k=Math.max(0,s-1);k<=Math.min(maxSpread(),s+1);k++){
+  const a=pair(k);
+  for(const [p,step] of [[a.l,-2],[a.r,2]]){
+   let i=pages.indexOf(p);
+   while(i>=0&&i<pages.length){const face=pages[i];needed.add(face);const surface=sheetSurface(face);if(surface.material==='paper'&&surface.opacity>=1)break;i+=step}
+  }
+ }
+ await Promise.all([...needed].map(async p=>{await getBitmap(p);ensureTexture(p)}));
+}
 const gl=canvas.getContext('webgl2',{alpha:true,antialias:true,premultipliedAlpha:true,preserveDrawingBuffer:false});
 if(!gl){alert('当前浏览器没有启用 WebGL2，请使用最新版 Chrome/Edge。')}
 const VS=`#version 300 es
@@ -136,22 +146,33 @@ function mat4View(){const cx=Math.cos(cameraPitch),sx=Math.sin(cameraPitch),cy=M
 function mvp(){return mat4Mul(mat4Perspective(.72,canvas.width/canvas.height,.1,30),mat4View())}
 function ensureTexture(p){if(!p)return null;if(textureCache.has(p.id))return textureCache.get(p.id);const bmp=bitmapCache.get(p.id);if(!bmp)return null;const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,bmp);gl.generateMipmap(gl.TEXTURE_2D);textureCache.set(p.id,t);return t}
 const whiteTex=(()=>{const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array([250,250,250,255]));return t})();
-function matCode(p){return !p?0:p.material==='pet'?1:p.material==='tracing'?2:0}
+function sheetSurface(p){
+ if(!p)return {material:'paper',opacity:1};
+ const i=pages.indexOf(p),mate=i<0?null:pageAt(i%2?i-1:i+1);
+ const special=[p,mate].filter(x=>x&&x.material!=='paper');
+ const source=special.find(x=>x.material==='tracing')||special[0];
+ return source?{material:source.material,opacity:Math.min(...special.map(x=>x.opacity??1))}:{material:p.material,opacity:p.opacity??1};
+}
+function matCode(p){const m=sheetSurface(p).material;return m==='pet'?1:m==='tracing'?2:0}
 function bindTex(unit,p){gl.activeTexture(gl.TEXTURE0+unit);gl.bindTexture(gl.TEXTURE_2D,p?(ensureTexture(p)||whiteTex):whiteTex)}
-function drawMesh(front,back,opt={}){gl.useProgram(prog);gl.bindVertexArray(vao);gl.uniformMatrix4fv(U.uMVP,false,mvp());gl.uniform1f(U.uFlip,opt.flip??0);gl.uniform1f(U.uDir,opt.dir??1);gl.uniform1f(U.uSide,opt.side??1);gl.uniform1f(U.uCurl,opt.curl??.75);gl.uniform1f(U.uMode,opt.mode??0);gl.uniform1f(U.uZOffset,opt.z??0);gl.uniform1f(U.uFrontOpacity,front?.opacity??1);gl.uniform1f(U.uBackOpacity,back?.opacity??1);gl.uniform1f(U.uFrontMat,matCode(front));gl.uniform1f(U.uBackMat,matCode(back));bindTex(0,front);bindTex(1,back);gl.uniform1i(U.uFront,0);gl.uniform1i(U.uBack,1);gl.drawElements(gl.TRIANGLES,idx.length,gl.UNSIGNED_SHORT,0)}
+function drawMesh(front,back,opt={}){gl.useProgram(prog);gl.bindVertexArray(vao);gl.uniformMatrix4fv(U.uMVP,false,mvp());gl.uniform1f(U.uFlip,opt.flip??0);gl.uniform1f(U.uDir,opt.dir??1);gl.uniform1f(U.uSide,opt.side??1);gl.uniform1f(U.uCurl,opt.curl??.75);gl.uniform1f(U.uMode,opt.mode??0);gl.uniform1f(U.uZOffset,opt.z??0);gl.uniform1f(U.uFrontOpacity,sheetSurface(front).opacity);gl.uniform1f(U.uBackOpacity,sheetSurface(back).opacity);gl.uniform1f(U.uFrontMat,matCode(front));gl.uniform1f(U.uBackMat,matCode(back));bindTex(0,front);bindTex(1,back);gl.uniform1i(U.uFront,0);gl.uniform1i(U.uBack,1);gl.drawElements(gl.TRIANGLES,idx.length,gl.UNSIGNED_SHORT,0)}
 function setupGL(){gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.disable(gl.CULL_FACE)}
 function underPage(s,side){
   if(side<0)return pageAt(s*2-3);
   return pageAt(s*2+2);
 }
-function drawStatic(p,side,s,z=0){
-  if(!p)return;
-  if(p.material==='tracing'){
-    const under=underPage(s,side);
-    if(under)drawMesh(under,under,{mode:0,side,z:z-.02});
-  }
-  drawMesh(p,p,{mode:0,side,z});
+function drawStack(p,side,z=0){
+ if(!p)return;
+ const layers=[];let i=pages.indexOf(p),depth=0;
+ while(i>=0&&i<pages.length){
+  const face=pageAt(i);layers.push({face,z:z-depth*.002});
+  const surface=sheetSurface(face);
+  if(surface.material==='paper'&&surface.opacity>=1)break;
+  i+=side<0?-2:2;depth++;
+ }
+ for(let n=layers.length-1;n>=0;n--){const layer=layers[n];drawMesh(layer.face,layer.face,{mode:0,side,z:layer.z})}
 }
+function drawStatic(p,side,s,z=0){drawStack(p,side,z)}
 function drawScene(s=spread,flipState=null){fitCanvas(false);gl.viewport(0,0,canvas.width,canvas.height);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);if(!pages.length){updateIndicator();return}setupGL();const P=pair(s);if(!flipState){drawStatic(P.l,-1,s);drawStatic(P.r,1,s);}else{const {dir,t,from,to}=flipState,A=pair(from),B=pair(to);if(dir>0){
     drawStatic(A.l,-1,from);
     drawStatic(B.r,1,to,-.012);
