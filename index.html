@@ -11,7 +11,7 @@
 </head>
 <body>
 <div class="app">
-<header class="topbar"><div class="brand">BOOK LAB v5.9 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
+<header class="topbar"><div class="brand">BOOK LAB v5.10 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
 <main class="main"><aside class="sidebar"><div class="sidehead"><div class="drop" id="drop">拖图片到这里 · 按源文件名前缀页码排序<br>缩略图拖动即可改页序</div></div><div class="list" id="list"></div><div class="settings"><h3>当前页面材质</h3><div class="row"><span>材质</span><select id="material"><option value="paper">普通纸</option><option value="pet">PET 透明封皮</option><option value="tracing">硫酸纸 / 半透明纸</option></select></div><div class="row"><span>不透明度</span><input id="opacity" type="range" min="5" max="100" value="100"></div><div class="row"><span>页名</span><input id="name"></div><div class="actions"><button class="btn" id="duplicate">复制页</button><button class="btn" id="delete">删除页</button></div></div></aside>
 <section class="stagewrap"><div class="toast" id="toast"></div><div class="canvasbox"><canvas id="viewer"></canvas></div><div class="empty" id="empty"><div><b>导入页面开始预览 📖</b><span>WebGL 曲面网格 · 纸张弯曲 · 双面纹理 · 预缓存</span></div></div><div class="controls"><button class="btn" id="first">⟪</button><button class="btn" id="prev">←</button><div class="indicator" id="indicator">0 / 0</div><button class="btn" id="next">→</button><button class="btn" id="last">⟫</button><div class="zoom">缩放 <input id="zoom" type="range" min="65" max="125" value="96"></div></div></section></main></div>
 <script>
@@ -20,6 +20,7 @@ const list=$('#list'),canvas=$('#viewer');
 const PREVIEW_W=920,PREVIEW_H=1300,THUMB_W=180,THUMB_H=255;
 const bitmapCache=new Map(),textureCache=new Map();
 function uid(){return crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2)}
+const fileNameCollator=new Intl.Collator('zh-CN',{numeric:true,sensitivity:'base',ignorePunctuation:false});
 function sourcePageSort(a,b){
   const A=(a.name||'').normalize('NFKC'),B=(b.name||'').normalize('NFKC');
   const ma=A.match(/^(\d+)/),mb=B.match(/^(\d+)/);
@@ -27,12 +28,19 @@ function sourcePageSort(a,b){
     const na=Number(ma[1]),nb=Number(mb[1]);
     if(na!==nb)return na-nb;
     if(ma[1].length!==mb[1].length)return mb[1].length-ma[1].length;
-    return (a.__sourceIndex??0)-(b.__sourceIndex??0);
+    const ra=A.slice(ma[1].length),rb=B.slice(mb[1].length);
+    const ha=(ra.match(/^-+/)||[''])[0].length,hb=(rb.match(/^-+/)||[''])[0].length;
+    if((ha>0)!=(hb>0))return ha>0?1:-1;
+    if(ha!==hb)return ha-hb;
+    const c=fileNameCollator.compare(ra,rb);
+    if(c)return c;
+    return A<B?-1:A>B?1:0;
   }
   if(ma&&!mb)return -1;
   if(!ma&&mb)return 1;
-  const al=A.toLowerCase(),bl=B.toLowerCase();
-  return al<bl?-1:al>bl?1:(a.__sourceIndex??0)-(b.__sourceIndex??0);
+  const la=(A.match(/^[A-Za-z]+/)||[''])[0],lb=(B.match(/^[A-Za-z]+/)||[''])[0];
+  if(la&&lb&&la[0].toLowerCase()===lb[0].toLowerCase()&&la.length!==lb.length)return lb.length-la.length;
+  return fileNameCollator.compare(A,B);
 }
 function sortN(a,b){return sourcePageSort(a,b)}function clamp(v,a,b){return Math.max(a,Math.min(b,v))}function maxSpread(){return pages.length?Math.ceil((pages.length-1)/2):0}function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._);t._=setTimeout(()=>t.classList.remove('show'),1200)}function pageAt(i){return i>=0&&i<pages.length?pages[i]:null}function pair(s=spread){if(!pages.length)return{l:null,r:null};if(s===0)return{l:null,r:pageAt(0)};return{l:pageAt(s*2-1),r:pageAt(s*2)}}
 async function resizeToBlob(file,maxW,maxH,q=.9){const bmp=await createImageBitmap(file,{imageOrientation:'from-image'});const s=Math.min(1,maxW/bmp.width,maxH/bmp.height),w=Math.max(1,Math.round(bmp.width*s)),h=Math.max(1,Math.round(bmp.height*s));const c=typeof OffscreenCanvas!=='undefined'?new OffscreenCanvas(w,h):Object.assign(document.createElement('canvas'),{width:w,height:h});const x=c.getContext('2d',{alpha:true});x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(bmp,0,0,w,h);bmp.close();if(c.convertToBlob)return c.convertToBlob({type:'image/webp',quality:q});return new Promise(r=>c.toBlob(r,'image/webp',q))}
