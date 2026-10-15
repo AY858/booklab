@@ -1,0 +1,31 @@
+name: Fix BOOK LAB folder order
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Preserve folder read order
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text()
+          s = s.replace('BOOK LAB v5.4 WEBGL','BOOK LAB v5.5 WEBGL')
+          s = s.replace("async function addFiles(fs){const arr=[...fs].filter(f=>f.type.startsWith('image/')).sort(sortN);", "async function addFiles(fs,preserveOrder=false){const arr=[...fs].filter(f=>f.type.startsWith('image/'));if(!preserveOrder)arr.sort(sortN);")
+          s = s.replace("$('#folderInput').onchange=e=>{addFiles(e.target.files);e.target.value=''};", "$('#folderInput').onchange=e=>{addFiles(e.target.files,true);e.target.value=''};")
+          s = s.replace('拖图片到这里 · 自动按文件名排序','拖图片到这里 · 导入文件夹保留读取顺序')
+          p.write_text(s)
+          PY
+      - name: Commit fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Preserve folder import order" || exit 0
+          git push
