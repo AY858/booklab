@@ -1,0 +1,32 @@
+name: Show source filenames
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Preserve and display source filenames
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          s=s.replace('BOOK LAB v5.5 WEBGL','BOOK LAB v5.6 WEBGL')
+          s=s.replace("pages.push({id:uid(),name:f.name,material:'paper',opacity:1,preview,thumb,thumbURL:URL.createObjectURL(thumb)})", "pages.push({id:uid(),name:f.name,sourceName:f.name,sourcePath:f.webkitRelativePath||f.name,material:'paper',opacity:1,preview,thumb,thumbURL:URL.createObjectURL(thumb)})")
+          s=s.replace("m.innerHTML=`<span>${String(i+1).padStart(2,'0')}</span><span class=\"chip ${p.material}\">${p.material==='paper'?'PAPER':p.material==='pet'?'PET':'TRACING'}</span>`;d.appendChild(m);", "m.innerHTML=`<span>${String(i+1).padStart(2,'0')}</span><span class=\"chip ${p.material}\">${p.material==='paper'?'PAPER':p.material==='pet'?'PET':'TRACING'}</span>`;d.appendChild(m);const fn=document.createElement('div');fn.style.cssText='margin-top:4px;font-size:10px;color:#b7bdc7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';fn.textContent=p.sourceName||p.name;fn.title=p.sourcePath||p.sourceName||p.name;d.appendChild(fn);")
+          s=s.replace("payload.pages.push({id:p.id,name:p.name,material:p.material,opacity:p.opacity,preview:await blobToDataURL(p.preview),thumb:await blobToDataURL(p.thumb)})", "payload.pages.push({id:p.id,name:p.name,sourceName:p.sourceName||p.name,sourcePath:p.sourcePath||p.sourceName||p.name,material:p.material,opacity:p.opacity,preview:await blobToDataURL(p.preview),thumb:await blobToDataURL(p.thumb)})")
+          s=s.replace("pages.push({...p,preview:dataURLtoBlob(p.preview),thumb:dataURLtoBlob(p.thumb),thumbURL:null})", "pages.push({...p,sourceName:p.sourceName||p.name,sourcePath:p.sourcePath||p.sourceName||p.name,preview:dataURLtoBlob(p.preview),thumb:dataURLtoBlob(p.thumb),thumbURL:null})")
+          p.write_text(s)
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Preserve and display source filenames" || exit 0
+          git push
