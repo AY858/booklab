@@ -15,14 +15,15 @@
 .viewtools{position:absolute;top:12px;left:12px;display:flex;gap:8px;align-items:center;font-size:12px;color:#c6cbd4;z-index:2}
 .batch{padding-top:8px;display:flex;gap:5px;flex-wrap:wrap;font-size:11px;align-items:center}.batch input{width:48px;background:#22262d;border:1px solid var(--line);border-radius:5px;padding:4px}
 @media(max-width:700px){.topbar{overflow-x:auto;white-space:nowrap}.main{grid-template-columns:var(--sidebar-width,220px) 8px minmax(0,1fr)}.controls{max-width:100%;flex-wrap:wrap;justify-content:center}.viewtools span{display:none}}
+dialog.signature{width:min(920px,94vw);max-height:88vh;overflow:auto;border:1px solid #424956;border-radius:14px;background:#17191d;color:#f2f4f7;padding:20px}dialog.signature::backdrop{background:#0009}.sigbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.sigbar h2{font-size:18px;margin:0;flex:1}.signote{font-size:12px;color:#aeb6c5;line-height:1.7}.sigfocus{margin:14px 0;padding:12px;background:#252a3a;border-radius:8px;line-height:1.7;font-size:13px}.siggrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.sigpage{min-width:0;text-align:left;padding:8px;background:#242730;color:#dfe4ed;border:1px solid #3a404c;border-radius:7px;cursor:pointer}.sigpage.active{outline:2px solid #9da6ff}.sigpage.partner{border:2px solid #f4d288}.sigpage small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#aeb6c5;margin-top:4px}.sigpage.tracing{background:#403a28}.sigheading{margin:18px 0 8px;font-size:13px}.siginput{width:64px;background:#252932;color:white;border:1px solid #555;border-radius:5px;padding:5px}@media(max-width:650px){.siggrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
 <body>
 <div class="app">
-<header class="topbar"><div class="brand">BOOK LAB v6.1 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
+<header class="topbar"><div class="brand">BOOK LAB v6.1 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
 <main class="main"><aside class="sidebar"><div class="sidehead"><div class="drop" id="drop">拖图片到这里 · 按源文件名前缀页码排序<br>Ctrl / ⌘ 多选 · Shift 连选 · 拖动整组选页</div><div class="batch"><span id="selectionCount">已选 0 页</span><button class="btn" id="selectAll">全选</button><input id="movePosition" type="number" min="1" value="1" aria-label="移动到页码"><button class="btn" id="moveSelected">移到此页前</button></div></div><div class="list" id="list"></div><div class="settings"><h3>当前页面材质</h3><div class="row"><span>材质</span><select id="material"><option value="paper">普通纸</option><option value="pet">PET 透明封皮</option><option value="tracing">硫酸纸 / 半透明纸</option></select></div><div class="row"><span>不透明度</span><input id="opacity" type="range" min="5" max="100" value="100"></div><div class="row"><span>页名</span><input id="name"></div><div class="actions"><button class="btn" id="duplicate">复制页</button><button class="btn" id="delete">删除页</button></div></div></aside>
 <div class="resizer" role="separator" tabindex="0" aria-label="调整左侧宽度" aria-orientation="vertical"></div><section class="stagewrap"><div class="viewtools"><button class="btn" id="resetView">复位视角</button><span>拖动旋转 · 滚轮缩放 · 双击复位</span></div><div class="toast" id="toast"></div><div class="canvasbox"><canvas id="viewer"></canvas></div><div class="empty" id="empty"><div><b>导入页面开始预览 📖</b><span>WebGL 曲面网格 · 纸张弯曲 · 双面纹理 · 预缓存</span></div></div><div class="controls"><button class="btn" id="first">⟪</button><button class="btn" id="prev">←</button><div class="indicator" id="indicator">0 / 0</div><button class="btn" id="next">→</button><button class="btn" id="last">⟫</button><div class="zoom">缩放 <input id="zoom" type="range" min="65" max="125" value="96"></div></div></section></main></div>
-<script>
+<dialog class="signature" id="signatureDialog"><div class="sigbar"><h2>16P 书帖 · 硫酸纸对轴定位</h2><button class="btn" id="closeSignature">关闭</button></div><p class="signote">按最终阅读页序，每 16P 为一帖（8 张叶／4 张对折纸）。一张完整对折硫酸纸占 4P，左右两张叶必须成对；另一半的位置以书帖中心为轴对应。</p><div class="sigbar"><label>第 1 帖从全书第 <input class="siginput" id="signatureStart" type="number" min="1" value="1"> P 开始</label><span class="signote">独立封面不入帖时，请调整起点。</span></div><div class="sigfocus" id="signatureFocus"></div><div class="sigbar"><button class="btn" id="selectSignaturePair">选中同张折纸的 4P</button><button class="btn" id="traceSignaturePair">这 4P 设为硫酸纸</button></div><p class="signote">金色边框＝另一半的两面；蓝色边框＝当前页。这里定位和设置已有页面，不会自动插页。增删／移动页面后会重新计算，请以最终排版为准。若插入整张对折纸会使书帖增加 4P，需与师傅重新确认分帖。</p><div id="signatureContent"></div></dialog><script>
 const $=s=>document.querySelector(s),pages=[];let selected=null,spread=0,busy=false,dragId=null,soundOn=true,zoom=.96;
 const list=$('#list'),canvas=$('#viewer');
 let cameraPitch=-.11,cameraYaw=0;const selectedIds=new Set();let selectionAnchor=null;
@@ -232,5 +233,40 @@ let orbit=null;canvas.onpointerdown=e=>{if(e.button!==0)return;orbit={x:e.client
 document.addEventListener('input',saveSoon);document.addEventListener('change',saveSoon);document.addEventListener('click',saveSoon);const originalDrawScene=drawScene;let previousSpread=-1;drawScene=function(...args){originalDrawScene(...args);if(!busy&&spread!==previousSpread){previousSpread=spread;saveSoon()}};
 document.addEventListener('visibilitychange',()=>{if(document.hidden)saveWorkspace()});window.addEventListener('pagehide',()=>saveWorkspace());
 (async()=>{try{const db=await database;const data=await new Promise((resolve,reject)=>{const tx=db.transaction('projects');const req=tx.objectStore('projects').get('current');req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)});if(data){pages.push(...data.pages.map(p=>({...p,thumbURL:null})));selected=data.selected;for(const id of data.selection||[])if(pages.some(p=>p.id===id))selectedIds.add(id);spread=clamp(data.spread||0,0,maxSpread());soundOn=data.soundOn!==false;zoom=data.zoom||.96;cameraPitch=data.cameraPitch??-.11;cameraYaw=data.cameraYaw||0;if(data.sidebarWidth)setSidebar(data.sidebarWidth);$('#zoom').value=zoom*100;await ensureSpread(spread)}saveBadge.textContent=data?'已恢复上次资料':'自动保存已开启';navigator.storage?.persist?.().catch(()=>{})}catch(e){console.error(e);saveBadge.textContent='无法读取本地保存，请导入工程'}finally{restoring=false;fitCanvas(false);setupGL();updateSound();renderList();renderSettings();drawScene()}})();
+
+
+let signatureStart=Math.max(1,Number(localStorage.getItem('booklab-signature-start'))||1);
+function signatureInfo(index,start=signatureStart){
+ const offset=index-(start-1);if(offset<0)return null;
+ const group=Math.floor(offset/16),local=offset%16,leaf=Math.floor(local/2),base=start-1+group*16;
+ const otherLeaf=7-leaf;
+ return {group,local,base,own:[base+leaf*2,base+leaf*2+1],other:[base+otherLeaf*2,base+otherLeaf*2+1]};
+}
+function signatureIndices(info){return [...info.own,...info.other].sort((a,b)=>a-b)}
+function refreshSignatures(){
+ const current=pages.findIndex(p=>p.id===selected),info=signatureInfo(current),focus=$('#signatureFocus'),container=$('#signatureContent');container.replaceChildren();
+ $('#signatureStart').value=signatureStart;
+ const valid=!!info&&current>=0;$('#selectSignaturePair').disabled=!valid;$('#traceSignaturePair').disabled=!valid||signatureIndices(info).some(i=>!pages[i]);
+ if(valid){
+ const own=info.own.map(i=>i+1).join('／'),other=info.other.map(i=>i+1).join('／');
+ focus.textContent='当前：全书第 '+(current+1)+'P → 第 '+(info.group+1)+' 帖 · 帖内第 '+(info.local+1)+'P。当前叶两面：全书 '+own+'P；对轴另一叶两面：全书 '+other+'P（帖内 '+info.other.map(i=>i-info.base+1).join('／')+'P）。';
+ if(signatureIndices(info).some(i=>!pages[i]))focus.textContent+=' ⚠ 对轴位置尚无页面，需要先补齐最终页数。';
+ }else focus.textContent=pages.length?'请选择书帖起点之后的一页；起点之前的页面不参与分帖。':'先导入页面或载入工程，再选择要定位的页面。';
+ const total=Math.max(0,pages.length-signatureStart+1),groups=Math.ceil(total/16);
+ for(let g=0;g<groups;g++){
+ const base=signatureStart-1+g*16,count=Math.min(16,pages.length-base),head=document.createElement('h3');head.className='sigheading';head.textContent='第 '+(g+1)+' 帖 · 全书 '+(base+1)+'–'+(base+16)+'P · '+count+'/16P'+(count<16?'（未满帖）':'');container.append(head);
+ const grid=document.createElement('div');grid.className='siggrid';
+ for(let k=0;k<16;k++){
+ const i=base+k,p=pages[i],button=document.createElement('button');button.className='sigpage'+(p?.material==='tracing'?' tracing':'')+(i===current?' active':'')+(valid&&info.other.includes(i)?' partner':'');button.disabled=!p;
+ const title=document.createElement('div');title.textContent='全书 '+(i+1)+'P · 帖内 '+(k+1)+'P';const name=document.createElement('small');name.textContent=p?(p.material==='tracing'?'硫酸纸 · ':'')+(p.name||p.sourceName||'未命名'):'待补页';button.append(title,name);
+ button.onclick=async()=>{if(busy)return;selected=p.id;selectedIds.clear();selectedIds.add(p.id);selectionAnchor=p.id;syncSelection();refreshSignatures();spread=i===0?0:Math.ceil(i/2);await ensureSpread(spread);drawScene();saveSoon()};grid.append(button);
+ }container.append(grid);
+ }
+}
+$('#signatureBtn').onclick=()=>{refreshSignatures();$('#signatureDialog').showModal()};
+$('#closeSignature').onclick=()=>$('#signatureDialog').close();
+$('#signatureStart').onchange=e=>{signatureStart=Math.max(1,Math.floor(Number(e.target.value)||1));localStorage.setItem('booklab-signature-start',signatureStart);refreshSignatures()};
+$('#selectSignaturePair').onclick=()=>{const info=signatureInfo(pages.findIndex(p=>p.id===selected));if(!info)return;selectedIds.clear();signatureIndices(info).forEach(i=>{if(pages[i])selectedIds.add(pages[i].id)});syncSelection();saveSoon();toast('已选中同张折纸的页面')};
+$('#traceSignaturePair').onclick=async()=>{const info=signatureInfo(pages.findIndex(p=>p.id===selected));if(!info)return;const indices=signatureIndices(info);if(indices.some(i=>!pages[i]))return;selectedIds.clear();for(const i of indices){const p=pages[i];p.material='tracing';if(p.opacity===1)p.opacity=.84;selectedIds.add(p.id)}renderList();renderSettings();refreshSignatures();await ensureSpread(spread);drawScene();saveSoon();toast('同张折纸的 4P 已设为硫酸纸')};
 
 </script></body></html>
