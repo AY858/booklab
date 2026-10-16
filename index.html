@@ -19,6 +19,7 @@ dialog.signature{width:min(920px,94vw);max-height:88vh;overflow:auto;border:1px 
 #signatureBtn{display:none}.binding-controls{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:10px;font-size:12px;color:#c3c9d4}.binding-controls input{width:56px;background:#252932;color:white;border:1px solid #50586a;border-radius:5px;padding:5px}.binding-group{grid-column:1/-1;display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:9px 6px;margin-top:9px;border-top:3px solid #69749b;background:#202633;font-size:12px;border-radius:5px}.binding-group input{width:53px;background:#141820;color:#fff;border:1px solid #58647b;border-radius:4px;padding:4px}.binding-group small{width:100%;color:#aeb9ce;line-height:1.5}.thumb.binding-pair{outline:3px solid #f1cc79;outline-offset:1px;background:#443d2a}.thumb.binding-self{border-color:#9da6ff}.binding-info{font-size:12px;color:#f1cc79;line-height:1.6;margin-top:8px}.thumb.binding-before{opacity:.65}
 .binding-controls,#bindingInfo{display:none}.list{display:flex;flex-direction:column;gap:16px;padding:12px}.booklet{flex:none;border:2px solid #556382;border-radius:12px;background:#1d2330;overflow:hidden}.booklet:nth-child(2n){border-color:#75668c;background:#252030}.booklet-heading{padding:12px;background:#2d374d;border-bottom:1px solid #556382;font-size:14px;font-weight:700;display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap}.booklet:nth-child(2n) .booklet-heading{background:#3b304b}.booklet-heading small{font-size:11px;font-weight:400;color:#c4ccdb}.booklet-pages{display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:9px;padding:12px}.thumb.binding-pair{outline:none;background:#242730}.thumb.binding-self{border-color:#333844}
 .thumb.axis-partner{outline:3px solid #f1cc79;outline-offset:1px;background:#453c27}.thumb.axis-current{border-color:#a9b4ff}.axis-badge{font-size:10px;color:#ffdc8a;margin-top:5px;font-weight:600}
+.booklet.pet-shell{border-color:#4e9c9b;background:#193032}.pet-shell .booklet-heading{background:#234344;border-color:#4e9c9b}
 </style>
 </head>
 <body>
@@ -152,7 +153,7 @@ function ensureTexture(p){if(!p)return null;if(textureCache.has(p.id))return tex
 const whiteTex=(()=>{const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array([250,250,250,255]));return t})();
 function sheetSurface(p){
  if(!p)return {material:'paper',opacity:1};
- const i=pages.indexOf(p),mate=i<0?null:pageAt(i%2?i-1:i+1);
+ const sheetPages=pages.filter(x=>(x.material==='pet')===(p.material==='pet'));const i=sheetPages.indexOf(p),mate=i<0?null:sheetPages[i%2?i-1:i+1];
  const special=[p,mate].filter(x=>x&&x.material!=='paper');
  const source=special.find(x=>x.material==='tracing')||special[0];
  return source?{material:source.material,opacity:Math.min(...special.map(x=>x.opacity??1))}:{material:p.material,opacity:p.opacity??1};
@@ -289,33 +290,47 @@ function bindingAt(index){
  return {...group,local,own:[group.base+leaf*2,group.base+leaf*2+1],other:[group.base+mirror*2,group.base+mirror*2+1]};
 }
 function saveBinding(){localStorage.setItem('booklab-binding-groups',JSON.stringify(bindingConfig));saveSoon()}
+function bookletPages(){return pages.filter(p=>p.material!=='pet')}
+function bookletPartner(id){
+ const body=bookletPages(),i=body.findIndex(p=>p.id===id);
+ if(i<0)return null;
+ const base=Math.floor(i/16)*16;
+ return body[base+15-(i-base)]||null;
+}
 function highlightBinding(){
- const current=pages.findIndex(p=>p.id===selected);
- const base=current<0?-1:Math.floor(current/16)*16;
- const partner=current<0?-1:base+15-(current-base);
+ const body=bookletPages(),current=pages.find(p=>p.id===selected),partner=bookletPartner(selected);
  for(const el of list.querySelectorAll('.thumb')){
-  const index=pages.findIndex(p=>p.id===el.dataset.id),paired=index===partner;
+  const paired=!!partner&&el.dataset.id===partner.id;
   el.classList.toggle('axis-partner',paired);
-  el.classList.toggle('axis-current',index===current);
+  el.classList.toggle('axis-current',el.dataset.id===selected);
   let badge=el.querySelector('.axis-badge');
-  if(paired){if(!badge){badge=document.createElement('div');badge.className='axis-badge';el.append(badge)}badge.textContent='↔ 第 '+(current+1)+'P 对轴页'}
+  if(paired){if(!badge){badge=document.createElement('div');badge.className='axis-badge';el.append(badge)}badge.textContent='↔ 册内总第 '+(body.indexOf(current)+1)+'P 对轴页'}
   else if(badge)badge.remove();
  }
 }
 const renderBeforeBinding=renderList;
 renderList=function(){
  renderBeforeBinding();
- const thumbs=[...list.querySelectorAll('.thumb')];
+ const thumbs=new Map([...list.querySelectorAll('.thumb')].map(el=>[el.dataset.id,el]));
  list.replaceChildren();
- for(let base=0,g=0;base<thumbs.length;base+=16,g++){
-  const section=document.createElement('section');section.className='booklet';section.setAttribute('aria-label','第 '+(g+1)+' 册');
+ const pets=pages.filter(p=>p.material==='pet'),body=bookletPages();
+ function addSection(title,detail,items,pet=false){
+  const section=document.createElement('section');section.className='booklet'+(pet?' pet-shell':'');section.setAttribute('aria-label',title);
   const heading=document.createElement('div');heading.className='booklet-heading';
-  const title=document.createElement('span');title.textContent='第 '+(g+1)+' 册';
-  const detail=document.createElement('small'),count=Math.min(16,thumbs.length-base);detail.textContent=(base+1)+'–'+(base+count)+'P · '+count+'/16P'+(count<16?' · 待补齐':'');
-  heading.append(title,detail);
+  const name=document.createElement('span');name.textContent=title;
+  const note=document.createElement('small');note.textContent=detail;heading.append(name,note);
   const grid=document.createElement('div');grid.className='booklet-pages';
-  thumbs.slice(base,base+16).forEach(el=>{el.classList.remove('binding-pair','binding-self','binding-before');grid.append(el)});
+  for(const p of items){const el=thumbs.get(p.id);el.classList.remove('binding-pair','binding-self','binding-before');
+   const meta=el.querySelector('.meta span');
+   if(meta)meta.textContent=pet?'PET':String(body.indexOf(p)+1).padStart(2,'0');
+   grid.append(el);
+  }
   section.append(heading,grid);list.append(section);
+ }
+ if(pets.length)addSection('PET 外壳','独立外壳 · '+pets.length+' 面 · 不计入分册',pets,true);
+ for(let base=0,g=0;base<body.length;base+=16,g++){
+  const items=body.slice(base,base+16),count=items.length;
+  addSection('第 '+(g+1)+' 册',(base+1)+'–'+(base+count)+'P · '+count+'/16P'+(count<16?' · 待补齐':''),items);
  }
  highlightBinding();
 };
