@@ -293,9 +293,9 @@ async function defaultPETCover(){
  return new Promise(resolve=>c.toBlob(resolve,'image/png'));
 }
 $('#petCoverInput').onchange=async e=>{const file=e.target.files[0];e.target.value='';if(!file)return;await setPETCover(file);toast('PET 完整外封已更新（356 × 250 mm）')};
-defaultPETCover().then(setPETCover);
+// The default jacket is installed during workspace restore, never over the user's saved artwork.
 
-function drawScene(s=spread,flipState=null){fitCanvas(false);gl.viewport(0,0,canvas.width,canvas.height);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);if(!pages.length){updateIndicator();return}setupGL();drawBookStructure();drawPETCover(s!==0);const P=pair(s);if(!flipState){drawStatic(P.l,-1,s);drawStatic(P.r,1,s);}else{const {dir,t,from,to}=flipState,A=pair(from),B=pair(to);if(dir>0){
+function drawScene(s=spread,flipState=null){fitCanvas(false);gl.viewport(0,0,canvas.width,canvas.height);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);if(!pages.length){updateIndicator();return}setupGL();drawBookStructure();const P=pair(s);if(!flipState){drawStatic(P.l,-1,s);drawStatic(P.r,1,s);}else{const {dir,t,from,to}=flipState,A=pair(from),B=pair(to);if(dir>0){
     drawStatic(A.l,-1,from);
     drawStatic(B.r,1,to,-.012);
     if(A.r||B.l)drawMesh(A.r,B.l,{mode:1,dir:1,flip:t,curl:.95,z:.004});
@@ -303,7 +303,7 @@ function drawScene(s=spread,flipState=null){fitCanvas(false);gl.viewport(0,0,can
     drawStatic(B.l,-1,to,-.012);
     drawStatic(A.r,1,from);
     if(A.l||B.r)drawMesh(A.l,B.r,{mode:1,dir:-1,flip:t,curl:.95,z:.004});
-  }}updateIndicator()}
+  }}drawPETCover(s!==0);updateIndicator()}
 function fitCanvas(redraw=true){const r=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,1.65),w=Math.max(2,Math.round(r.width*dpr)),h=Math.max(2,Math.round(r.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h}if(redraw)drawScene()}
 function ease(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}
 async function animate(dir){if(busy||!pages.length)return;const to=spread+dir;if(to<0||to>maxSpread())return;flipSound();busy=true;await ensureSpread(to);await ensureSpread(spread);$('#status').textContent='WebGL 翻页中';const from=spread,start=performance.now(),dur=900;function frame(now){const raw=clamp((now-start)/dur,0,1),t=ease(raw);drawScene(from,{dir,t,from,to});if(raw<1)requestAnimationFrame(frame);else{spread=to;busy=false;drawScene();$('#status').textContent='WebGL 曲面翻页'}}requestAnimationFrame(frame)}
@@ -353,7 +353,7 @@ let orbit=null;canvas.onpointerdown=e=>{if(e.button!==0)return;orbit={x:e.client
 // Save navigation, names and preferences, including changes triggered by existing controls.
 document.addEventListener('input',saveSoon);document.addEventListener('change',saveSoon);document.addEventListener('click',saveSoon);const originalDrawScene=drawScene;let previousSpread=-1;drawScene=function(...args){originalDrawScene(...args);if(!busy&&spread!==previousSpread){previousSpread=spread;saveSoon()}};
 document.addEventListener('visibilitychange',()=>{if(document.hidden)saveWorkspace()});window.addEventListener('pagehide',()=>saveWorkspace());
-(async()=>{try{const db=await database;const data=await new Promise((resolve,reject)=>{const tx=db.transaction('projects');const req=tx.objectStore('projects').get('current');req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)});if(data){pages.push(...data.pages.map(p=>({...p,thumbURL:null})));selected=data.selected;for(const id of data.selection||[])if(pages.some(p=>p.id===id))selectedIds.add(id);spread=clamp(data.spread||0,0,maxSpread());soundOn=data.soundOn!==false;zoom=data.zoom||.96;cameraPitch=data.cameraPitch??-.11;cameraYaw=data.cameraYaw||0;if(data.sidebarWidth)setSidebar(data.sidebarWidth);$('#zoom').value=zoom*100;await ensureSpread(spread)}saveBadge.textContent=data?'已恢复上次资料':'自动保存已开启';navigator.storage?.persist?.().catch(()=>{})}catch(e){console.error(e);saveBadge.textContent='无法读取本地保存，请导入工程'}finally{restoring=false;fitCanvas(false);setupGL();updateSound();renderList();renderSettings();drawScene()}})();
+(async()=>{try{const db=await database;const data=await new Promise((resolve,reject)=>{const tx=db.transaction('projects');const req=tx.objectStore('projects').get('current');req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)});if(data){pages.push(...data.pages.map(p=>({...p,thumbURL:null})));selected=data.selected;for(const id of data.selection||[])if(pages.some(p=>p.id===id))selectedIds.add(id);spread=clamp(data.spread||0,0,maxSpread());soundOn=data.soundOn!==false;zoom=data.zoom||.96;cameraPitch=data.cameraPitch??-.11;cameraYaw=data.cameraYaw||0;if(data.petCoverBlob)await setPETCover(data.petCoverBlob);if(data.sidebarWidth)setSidebar(data.sidebarWidth);$('#zoom').value=zoom*100;await ensureSpread(spread)}if(!petCoverBlob){petCoverBlob=await defaultPETCover();await setPETCover(petCoverBlob)}saveBadge.textContent=data?'已恢复上次资料':'自动保存已开启';navigator.storage?.persist?.().catch(()=>{})}catch(e){console.error(e);saveBadge.textContent='无法读取本地保存，请导入工程'}finally{restoring=false;fitCanvas(false);setupGL();updateSound();renderList();renderSettings();drawScene()}})();
 
 
 let signatureStart=Math.max(1,Number(localStorage.getItem('booklab-signature-start'))||1);
