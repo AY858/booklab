@@ -24,13 +24,13 @@ dialog.signature{width:min(920px,94vw);max-height:88vh;overflow:auto;border:1px 
 </head>
 <body>
 <div class="app">
-<header class="topbar"><div class="brand">BOOK LAB v6.1 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
+<header class="topbar"><div class="brand">BOOK LAB v6.2 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
 <main class="main"><aside class="sidebar"><div class="sidehead"><div class="drop" id="drop">拖图片到这里 · 按源文件名前缀页码排序<br>Ctrl / ⌘ 多选 · Shift 连选 · 拖动整组选页</div><div class="binding-controls"><b>书帖分组</b><label>默认 <input id="bindingDefault" type="number" min="4" step="4" value="16"> P</label><label>起点 <input id="bindingStart" type="number" min="1" value="1"> P</label><button class="btn" id="bindingReset">统一分组</button></div><div class="binding-info" id="bindingInfo">点击图片，金框标出同张折纸的另一半。</div><div class="batch"><span id="selectionCount">已选 0 页</span><button class="btn" id="selectAll">全选</button><input id="movePosition" type="number" min="1" value="1" aria-label="移动到页码"><button class="btn" id="moveSelected">移到此页前</button></div></div><div class="list" id="list"></div><div class="settings"><h3>当前页面材质</h3><div class="row"><span>材质</span><select id="material"><option value="paper">普通纸</option><option value="pet">PET 透明封皮</option><option value="tracing">硫酸纸 / 半透明纸</option></select></div><div class="row"><span>不透明度</span><input id="opacity" type="range" min="5" max="100" value="100"></div><div class="row"><span>页名</span><input id="name"></div><div class="actions"><button class="btn" id="duplicate">复制页</button><button class="btn" id="delete">删除页</button></div></div></aside>
-<div class="resizer" role="separator" tabindex="0" aria-label="调整左侧宽度" aria-orientation="vertical"></div><section class="stagewrap"><div class="viewtools"><button class="btn" id="resetView">复位视角</button><span>拖动旋转 · 滚轮缩放 · 双击复位</span></div><div class="toast" id="toast"></div><div class="canvasbox"><canvas id="viewer"></canvas></div><div class="empty" id="empty"><div><b>导入页面开始预览 📖</b><span>WebGL 曲面网格 · 纸张弯曲 · 双面纹理 · 预缓存</span></div></div><div class="controls"><button class="btn" id="first">⟪</button><button class="btn" id="prev">←</button><div class="indicator" id="indicator">0 / 0</div><button class="btn" id="next">→</button><button class="btn" id="last">⟫</button><div class="zoom">缩放 <input id="zoom" type="range" min="65" max="125" value="96"></div></div></section></main></div>
+<div class="resizer" role="separator" tabindex="0" aria-label="调整左侧宽度" aria-orientation="vertical"></div><section class="stagewrap"><div class="viewtools"><button class="btn" id="resetView">复位视角</button><span>拖动旋转 · 滚轮缩放 · 双击复位</span></div><div class="toast" id="toast"></div><div class="canvasbox"><canvas id="viewer"></canvas></div><div class="empty" id="empty"><div><b>导入页面开始预览 📖</b><span>WebGL 曲面网格 · 纸张弯曲 · 双面纹理 · 预缓存</span></div></div><div class="controls"><button class="btn" id="first">⟪</button><button class="btn" id="prev">←</button><div class="indicator" id="indicator">0 / 0</div><button class="btn" id="next">→</button><button class="btn" id="last">⟫</button><div class="zoom">缩放 <input id="zoom" type="range" min="65" max="125" value="96"></div><div class="zoom">书厚 <input id="bookThickness" type="range" min="50" max="180" value="100" aria-label="书本厚度"></div></div></section></main></div>
 <dialog class="signature" id="signatureDialog"><div class="sigbar"><h2>16P 书帖 · 硫酸纸对轴定位</h2><button class="btn" id="closeSignature">关闭</button></div><p class="signote">按最终阅读页序，每 16P 为一帖（8 张叶／4 张对折纸）。一张完整对折硫酸纸占 4P，左右两张叶必须成对；另一半的位置以书帖中心为轴对应。</p><div class="sigbar"><label>第 1 帖从全书第 <input class="siginput" id="signatureStart" type="number" min="1" value="1"> P 开始</label><span class="signote">独立封面不入帖时，请调整起点。</span></div><div class="sigfocus" id="signatureFocus"></div><div class="sigbar"><button class="btn" id="selectSignaturePair">选中同张折纸的 4P</button><button class="btn" id="traceSignaturePair">这 4P 设为硫酸纸</button></div><p class="signote">金色边框＝另一半的两面；蓝色边框＝当前页。这里定位和设置已有页面，不会自动插页。增删／移动页面后会重新计算，请以最终排版为准。若插入整张对折纸会使书帖增加 4P，需与师傅重新确认分帖。</p><div id="signatureContent"></div></dialog><script>
 const $=s=>document.querySelector(s),pages=[];let selected=null,spread=0,busy=false,dragId=null,soundOn=true,zoom=.96;
 const list=$('#list'),canvas=$('#viewer');
-let cameraPitch=-.11,cameraYaw=0;const selectedIds=new Set();let selectionAnchor=null;
+let cameraPitch=-.11,cameraYaw=0,thicknessScale=1;const selectedIds=new Set();let selectionAnchor=null;
 const PREVIEW_W=920,PREVIEW_H=1300,THUMB_W=180,THUMB_H=255;
 const bitmapCache=new Map(),textureCache=new Map();
 function uid(){return crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2)}
@@ -178,7 +178,65 @@ function drawStack(p,side,z=0){
  for(let n=layers.length-1;n>=0;n--){const layer=layers[n];drawMesh(layer.face,layer.face,{mode:0,side,z:layer.z})}
 }
 function drawStatic(p,side,s,z=0){drawStack(p,side,z)}
-function drawScene(s=spread,flipState=null){fitCanvas(false);gl.viewport(0,0,canvas.width,canvas.height);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);if(!pages.length){updateIndicator();return}setupGL();const P=pair(s);if(!flipState){drawStatic(P.l,-1,s);drawStatic(P.r,1,s);}else{const {dir,t,from,to}=flipState,A=pair(from),B=pair(to);if(dir>0){
+
+// Book block is separate from page-turn mesh: it never changes page order or sheet materials.
+const bookSolidVS='#version 300 es\nprecision highp float;layout(location=0) in vec3 p;uniform mat4 matrix;void main(){gl_Position=matrix*vec4(p,1.0);}';
+const bookSolidFS='#version 300 es\nprecision highp float;uniform vec4 pigment;out vec4 color;void main(){color=pigment;}';
+const bookSolid=gl.createProgram();
+gl.attachShader(bookSolid,shader(gl.VERTEX_SHADER,bookSolidVS));
+gl.attachShader(bookSolid,shader(gl.FRAGMENT_SHADER,bookSolidFS));
+gl.linkProgram(bookSolid);
+if(!gl.getProgramParameter(bookSolid,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(bookSolid));
+const bookSolidMatrix=gl.getUniformLocation(bookSolid,'matrix'),bookSolidPigment=gl.getUniformLocation(bookSolid,'pigment');
+const bookSolidVao=gl.createVertexArray(),bookSolidBuffer=gl.createBuffer();
+gl.bindVertexArray(bookSolidVao);gl.bindBuffer(gl.ARRAY_BUFFER,bookSolidBuffer);
+gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,0,0);
+function bookBox(x0,x1,y0,y1,z0,z1,rgba){
+ const corners=[[x0,y0,z0],[x1,y0,z0],[x1,y1,z0],[x0,y1,z0],[x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1]];
+ const faces=[[0,1,2,0,2,3],[5,4,7,5,7,6],[4,0,3,4,3,7],[1,5,6,1,6,2],[3,2,6,3,6,7],[4,5,1,4,1,0]];
+ const vertices=[];for(const f of faces)for(const i of f)vertices.push(...corners[i]);
+ gl.useProgram(bookSolid);gl.bindVertexArray(bookSolidVao);gl.bindBuffer(gl.ARRAY_BUFFER,bookSolidBuffer);
+ gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(vertices),gl.DYNAMIC_DRAW);
+ gl.uniformMatrix4fv(bookSolidMatrix,false,mvp());gl.uniform4fv(bookSolidPigment,rgba);
+ gl.drawArrays(gl.TRIANGLES,0,36);
+}
+function drawBookStructure(){
+ const inner=pages.filter(p=>p.material!=='pet'),hasPET=pages.some(p=>p.material==='pet');
+ const thick=clamp(inner.length*.0027*thicknessScale,.035,.34);
+ // All solids stay behind visible face (z=0). Front-facing cut edge, spine and stitch detail.
+ const back=-.016-thick,front=-.022;
+ bookBox(-1.408,-.018,-1.006,1.006,back,front,[.79,.78,.74,1]);
+ bookBox(.018,1.408,-1.006,1.006,back,front,[.80,.79,.76,1]);
+ // Fine paper edges on the fore-edge: thin, neutral alternating stripes.
+ const stripes=Math.min(48,Math.max(8,Math.ceil(inner.length/2)));
+ for(let i=0;i<stripes;i++){
+  const z=back+(i+.5)*(front-back)/stripes;
+  const tint=i%4===0?.91:i%2===0?.82:.87;
+  for(const x of [-1.408,1.406])bookBox(x,x+.0028,-1,1,z,z+.0015,[tint,tint*.985,tint*.96,1]);
+ }
+ // Exposed binding: folded signatures remain visible; do not count PET as a sewn sheet.
+ const signatures=Math.max(1,Math.ceil(inner.length/16));
+ bookBox(-.021,.021,-1.012,1.012,back-.003,front-.012,[.62,.60,.57,1]);
+ for(let n=1;n<signatures;n++){
+  const z=back+n*thick/signatures;
+  bookBox(-.024,.024,-1.013,1.013,z,z+.003,[.33,.32,.32,1]);
+ }
+ // Stitch lines, along the exposed vertical spine, are subtle until the view is rotated.
+ for(const y of [-.68,-.23,.23,.68]){
+  bookBox(-.029,.029,y-.009,y+.009,front-.011,front+.002,[.90,.86,.73,1]);
+ }
+ if(hasPET){
+  // PET wrapper is a separate thin semi-transparent folded sleeve, not a 16P signature.
+  gl.depthMask(false);
+  bookBox(-.047,.047,-1.016,1.016,back-.018,front+.011,[.72,.83,.87,.24]);
+  bookBox(-1.425,-1.408,-1.017,1.017,back-.014,front+.012,[.79,.88,.93,.26]);
+  bookBox(1.408,1.425,-1.017,1.017,back-.014,front+.012,[.79,.88,.93,.26]);
+  gl.depthMask(true);
+ }
+ gl.bindVertexArray(null);
+}
+
+function drawScene(s=spread,flipState=null){fitCanvas(false);gl.viewport(0,0,canvas.width,canvas.height);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);if(!pages.length){updateIndicator();return}setupGL();drawBookStructure();const P=pair(s);if(!flipState){drawStatic(P.l,-1,s);drawStatic(P.r,1,s);}else{const {dir,t,from,to}=flipState,A=pair(from),B=pair(to);if(dir>0){
     drawStatic(A.l,-1,from);
     drawStatic(B.r,1,to,-.012);
     if(A.r||B.l)drawMesh(A.r,B.l,{mode:1,dir:1,flip:t,curl:.95,z:.004});
@@ -207,7 +265,7 @@ function flipSound(){
 function blobToDataURL(b){return new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(b)})}function dataURLtoBlob(s){const[h,d]=s.split(','),m=h.match(/:(.*?);/)[1],bin=atob(d),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new Blob([u],{type:m})}
 async function exportProject(){const payload={format:'BOOKLAB_V5_WEBGL',bindingConfig,spread,selected,soundOn,pages:[]};$('#status').textContent='导出工程…';for(const p of pages)payload.pages.push({id:p.id,name:p.name,sourceName:p.sourceName||p.name,sourcePath:p.sourcePath||p.sourceName||p.name,material:p.material,opacity:p.opacity,preview:await blobToDataURL(p.preview),thumb:await blobToDataURL(p.thumb)});const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(payload)],{type:'application/json'}));a.download='booklab-v5.booklab';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);$('#status').textContent='WebGL 曲面翻页'}
 async function loadProject(file){try{const j=JSON.parse(await file.text());if(!['BOOKLAB_V2_META','BOOKLAB_V3_META','BOOKLAB_V4_CANVAS','BOOKLAB_V5_WEBGL'].includes(j.format))throw 0;pages.length=0;for(const p of j.pages)pages.push({...p,sourceName:p.sourceName||p.name,sourcePath:p.sourcePath||p.sourceName||p.name,preview:dataURLtoBlob(p.preview),thumb:dataURLtoBlob(p.thumb),thumbURL:null});selected=j.selected||pages[0]?.id||null;spread=clamp(j.spread||0,0,maxSpread());soundOn=j.soundOn!==false;renderList();renderSettings();await ensureSpread(spread);drawScene();updateSound();toast('工程已载入')}catch(e){console.error(e);toast('工程文件无法读取')}}
-$('#imgInput').onchange=e=>{addFiles(e.target.files);e.target.value=''};$('#folderInput').onchange=e=>{addFiles(e.target.files,true);e.target.value=''};$('#projectInput').onchange=e=>{if(e.target.files[0])loadProject(e.target.files[0]);e.target.value=''};$('#exportBtn').onclick=exportProject;$('#next').onclick=()=>animate(1);$('#prev').onclick=()=>animate(-1);$('#first').onclick=async()=>{if(busy)return;spread=0;await ensureSpread(spread);drawScene()};$('#last').onclick=async()=>{if(busy)return;spread=maxSpread();await ensureSpread(spread);drawScene()};$('#zoom').oninput=e=>{zoom=e.target.value/100;drawScene()};$('#soundBtn').onclick=()=>{soundOn=!soundOn;updateSound();if(soundOn)flipSound();else pageTurnAudio.pause()};function updateSound(){$('#soundBtn').textContent=soundOn?'🔊 翻页音效':'🔇 已静音'}
+$('#imgInput').onchange=e=>{addFiles(e.target.files);e.target.value=''};$('#folderInput').onchange=e=>{addFiles(e.target.files,true);e.target.value=''};$('#projectInput').onchange=e=>{if(e.target.files[0])loadProject(e.target.files[0]);e.target.value=''};$('#exportBtn').onclick=exportProject;$('#next').onclick=()=>animate(1);$('#prev').onclick=()=>animate(-1);$('#first').onclick=async()=>{if(busy)return;spread=0;await ensureSpread(spread);drawScene()};$('#last').onclick=async()=>{if(busy)return;spread=maxSpread();await ensureSpread(spread);drawScene()};$('#zoom').oninput=e=>{zoom=e.target.value/100;drawScene()};$('#bookThickness').oninput=e=>{thicknessScale=Number(e.target.value)/100;drawScene()};$('#soundBtn').onclick=()=>{soundOn=!soundOn;updateSound();if(soundOn)flipSound();else pageTurnAudio.pause()};function updateSound(){$('#soundBtn').textContent=soundOn?'🔊 翻页音效':'🔇 已静音'}
 $('#material').onchange=e=>{const p=pages.find(x=>x.id===selected);if(!p)return;p.material=e.target.value;if(p.material==='pet'&&p.opacity===1)p.opacity=.72;if(p.material==='tracing'&&p.opacity===1)p.opacity=.84;renderList();renderSettings();drawScene()};$('#opacity').oninput=e=>{const p=pages.find(x=>x.id===selected);if(p){p.opacity=e.target.value/100;drawScene()}};$('#name').onchange=e=>{const p=pages.find(x=>x.id===selected);if(p){p.name=e.target.value;renderList()}};$('#duplicate').onclick=async()=>{const i=pages.findIndex(x=>x.id===selected);if(i<0)return;const p=pages[i],cp={...p,id:uid(),name:p.name+' copy',thumbURL:null};pages.splice(i+1,0,cp);selected=cp.id;renderList();renderSettings();await ensureSpread(spread);drawScene()};$('#delete').onclick=async()=>{const i=pages.findIndex(x=>x.id===selected);if(i<0)return;const[p]=pages.splice(i,1);if(p.thumbURL)URL.revokeObjectURL(p.thumbURL);selected=pages[Math.min(i,pages.length-1)]?.id||null;spread=clamp(spread,0,maxSpread());renderList();renderSettings();await ensureSpread(spread);drawScene()};
 const dz=$('#drop');['dragenter','dragover'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('drag')}));['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('drag')}));dz.addEventListener('drop',e=>addFiles(e.dataTransfer.files));window.addEventListener('keydown',e=>{if(e.target.closest('input,select,textarea,button'))return;if(e.key==='ArrowRight')animate(1);if(e.key==='ArrowLeft')animate(-1)});let rr=0;window.addEventListener('resize',()=>{cancelAnimationFrame(rr);rr=requestAnimationFrame(()=>fitCanvas())});
 // Stable database and record names deliberately do not include the UI version.
