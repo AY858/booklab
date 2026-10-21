@@ -311,7 +311,7 @@ function drawPETCover(open,layer='back'){
   }
  }else if(open){
   const exterior=-.035-thick; // Outside/rear of the book block, not a layer above the pages.
-  if(layer==='back'){
+  if(layer==='back'&&!(spread===maxSpread()&&petEndClosed)){
    coverPanel(-1.408,0,-1,1,exterior,exterior,frontU0,frontU1,.05,true,null,true);
    coverPanel(0,1.408,-1,1,exterior,exterior,backU0,backU1,.05,true,null,true);
    coverPanel(-.016,.016,-1,1,exterior-.001,exterior-.001,spU0,spU1,.05);
