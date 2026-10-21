@@ -24,7 +24,7 @@ dialog.signature{width:min(920px,94vw);max-height:88vh;overflow:auto;border:1px 
 </head>
 <body>
 <div class="app">
-<header class="topbar"><div class="brand">BOOK LAB v6.30 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="展开：襟片58.67＋封底176＋书脊4＋封面176＋襟片58.67 mm">PET 外封 473.33mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
+<header class="topbar"><div class="brand">BOOK LAB v6.31 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="展开：襟片58.67＋封底176＋书脊4＋封面176＋襟片58.67 mm">PET 外封 473.33mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
 <main class="main"><aside class="sidebar"><div class="sidehead"><div class="drop" id="drop">拖图片到这里 · 按源文件名前缀页码排序<br>Ctrl / ⌘ 多选 · Shift 连选 · 拖动整组选页</div><div class="binding-controls"><b>书帖分组</b><label>默认 <input id="bindingDefault" type="number" min="4" step="4" value="16"> P</label><label>起点 <input id="bindingStart" type="number" min="1" value="1"> P</label><button class="btn" id="bindingReset">统一分组</button></div><div class="binding-info" id="bindingInfo">点击图片，金框标出同张折纸的另一半。</div><div class="batch"><span id="selectionCount">已选 0 页</span><button class="btn" id="selectAll">全选</button><input id="movePosition" type="number" min="1" value="1" aria-label="移动到页码"><button class="btn" id="moveSelected">移到此页前</button></div></div><div class="list" id="list"></div><div class="settings"><h3>当前页面材质</h3><div class="row"><span>材质</span><select id="material"><option value="paper">普通纸</option><option value="pet">PET 透明封皮</option><option value="tracing">硫酸纸 / 半透明纸</option><option value="cover">书芯封面 / 封底</option></select></div><div class="row"><span>不透明度</span><input id="opacity" type="range" min="5" max="100" value="100"></div><div class="row"><span>页名</span><input id="name"></div><div class="actions"><button class="btn" id="replaceImage">替换图像</button><input id="replaceImageInput" type="file" accept="image/png,image/jpeg,image/webp" hidden><button class="btn" id="duplicate">复制页</button><button class="btn" id="delete">删除页</button></div></div></aside>
 <div class="resizer" role="separator" tabindex="0" aria-label="调整左侧宽度" aria-orientation="vertical"></div><section class="stagewrap"><div class="viewtools"><button class="btn" id="resetView">复位视角</button><span>左键旋转 · 中键平移 · 滚轮缩放 · 双击复位</span></div><div class="toast" id="toast"></div><div class="canvasbox"><canvas id="viewer"></canvas></div><div class="empty" id="empty"><div><b>导入页面开始预览 📖</b><span>WebGL 曲面网格 · 纸张弯曲 · 双面纹理 · 预缓存</span></div></div><div class="controls"><button class="btn" id="first">⟪</button><button class="btn" id="prev">←</button><div class="indicator" id="indicator">0 / 0</div><button class="btn" id="next">→</button><button class="btn" id="last">⟫</button><div class="zoom">缩放 <input id="zoom" type="range" min="65" max="125" value="96"></div><div class="zoom">书厚 <input id="bookThickness" type="range" min="50" max="180" value="100" aria-label="书本厚度"></div></div></section></main></div>
 <dialog class="signature" id="signatureDialog"><div class="sigbar"><h2>16P 书帖 · 硫酸纸对轴定位</h2><button class="btn" id="closeSignature">关闭</button></div><p class="signote">按最终阅读页序，每 16P 为一帖（8 张叶／4 张对折纸）。一张完整对折硫酸纸占 4P，左右两张叶必须成对；另一半的位置以书帖中心为轴对应。</p><div class="sigbar"><label>第 1 帖从全书第 <input class="siginput" id="signatureStart" type="number" min="1" value="1"> P 开始</label><span class="signote">独立封面不入帖时，请调整起点。</span></div><div class="sigfocus" id="signatureFocus"></div><div class="sigbar"><button class="btn" id="selectSignaturePair">选中同张折纸的 4P</button><button class="btn" id="traceSignaturePair">这 4P 设为硫酸纸</button></div><p class="signote">金色边框＝另一半的两面；蓝色边框＝当前页。这里定位和设置已有页面，不会自动插页。增删／移动页面后会重新计算，请以最终排版为准。若插入整张对折纸会使书帖增加 4P，需与师傅重新确认分帖。</p><div id="signatureContent"></div></dialog><script>
@@ -324,7 +324,7 @@ function drawPETCover(open,layer='back'){
     coverTurnPanel(petEndTurn,backU0,backU1,.05);
    }else if(petEndClosed){
     // PET outside print faces the viewer on the closed book; do not mirror the artwork.
-    coverPanel(-1.408,0,-1,1,.035,.035,frontU0,frontU1,.05);
+    coverPanel(-1.408,0,-1,1,.035,.035,backU0,backU1,.05);
    }else{
     coverPanel(0,1.408,-1,1,.025,.025,backU0,backU1,.05);
    }
@@ -423,7 +423,7 @@ function drawBookBackFaces(open){
 function drawCoreBackBelowRearPET(s){
  if(s!==0||!petCoverTexture)return;
  const covers=pages.filter(p=>p.material==='cover');
- const back=covers[covers.length-1]||pages[pages.length-1];
+ const back=covers[0]||pages[pages.length-1];
  const texture=back&&ensureTexture(back);
  if(!texture)return;
  const count=pages.filter(p=>p.material!=='pet').length;
@@ -436,7 +436,7 @@ function drawCoreBackBelowRearPET(s){
 function drawCoreCoverBelowFrontPET(s){
  if(s!==0||!petCoverTexture)return;
  const covers=pages.filter(p=>p.material==='cover');
- const core=covers[0]||pages[0];
+ const core=covers[covers.length-1]||pages[0];
  const texture=core&&ensureTexture(core);
  if(!texture)return;
  gl.depthMask(true);
