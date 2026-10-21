@@ -53,11 +53,12 @@ body.layout-page-open .pet-shell .thumb img{height:36px}
 .thumb[data-drop-zone="before"]{box-shadow:inset 5px 0 #5ecac5!important}
 .thumb[data-drop-zone="after"]{box-shadow:inset -5px 0 #5ecac5!important}
 .thumb[data-drop-zone="swap"]{outline:3px solid #f4ca79!important;outline-offset:-3px}
+.signature-size-select{margin-left:6px;padding:3px 7px;background:#111924;border:1px solid #61758d;border-radius:5px;color:#e6f3ff}
 </style>
 </head>
 <body>
 <div class="app">
-<header class="topbar"><div class="brand">BOOK LAB v7.2 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="展开：襟片58.67＋封底176＋书脊4＋封面176＋襟片58.67 mm">PET 外封 473.33mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出四帖排版图 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
+<header class="topbar"><div class="brand">BOOK LAB v7.3 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="展开：襟片58.67＋封底176＋书脊4＋封面176＋襟片58.67 mm">PET 外封 473.33mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出四帖排版图 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
 <main class="main"><aside class="sidebar"><div class="sidehead"><button class="btn" id="mainUndo">↶ 撤销</button><button class="btn" id="mainRedo">↷ 重做</button><button class="btn" id="wideLayoutBtn" type="button" aria-pressed="false">⤢ 展开排版 · 每帖两排</button><div class="drop" id="drop">拖图片到这里 · 按源文件名前缀页码排序<br>Ctrl / ⌘ 多选 · Shift 连选 · 拖动整组选页</div><div class="binding-controls"><b>书帖分组</b><label>默认 <input id="bindingDefault" type="number" min="4" step="4" value="16"> P</label><label>起点 <input id="bindingStart" type="number" min="1" value="1"> P</label><button class="btn" id="bindingReset">统一分组</button></div><div class="binding-info" id="bindingInfo">点击图片，金框标出同张折纸的另一半。</div><div class="batch"><span id="selectionCount">已选 0 页</span><button class="btn" id="selectAll">全选</button><input id="movePosition" type="number" min="1" value="1" aria-label="移动到页码"><button class="btn" id="moveSelected">移到此页前</button></div></div><div class="list" id="list"></div><div class="settings"><h3>当前页面材质</h3><div class="row"><span>材质</span><select id="material"><option value="paper">普通纸</option><option value="pet">PET 透明封皮</option><option value="tracing">硫酸纸 / 半透明纸</option><option value="cover">书芯封面 / 封底</option></select></div><div class="row"><span>不透明度</span><input id="opacity" type="range" min="5" max="100" value="100"></div><div class="row"><span>页名</span><input id="name"></div><div class="actions"><button class="btn" id="replaceImage">替换图像</button><input id="replaceImageInput" type="file" accept="image/png,image/jpeg,image/webp" hidden><button class="btn" id="duplicate">复制页</button><button class="btn" id="delete">删除页</button></div></div></aside>
 <div class="resizer" role="separator" tabindex="0" aria-label="调整左侧宽度" aria-orientation="vertical"></div><section class="stagewrap"><div class="viewtools"><button class="btn" id="resetView">复位视角</button><span>左键旋转 · 中键平移 · 滚轮缩放 · 双击复位</span></div><div class="toast" id="toast"></div><div class="canvasbox"><canvas id="viewer"></canvas></div><div class="empty" id="empty"><div><b>导入页面开始预览 📖</b><span>WebGL 曲面网格 · 纸张弯曲 · 双面纹理 · 预缓存</span></div></div><div class="controls"><button class="btn" id="first">⟪</button><button class="btn" id="prev">←</button><div class="indicator" id="indicator">0 / 0</div><button class="btn" id="next">→</button><button class="btn" id="last">⟫</button><div class="zoom">缩放 <input id="zoom" type="range" min="65" max="125" value="96"></div><div class="zoom">书厚 <input id="bookThickness" type="range" min="50" max="180" value="100" aria-label="书本厚度"></div></div></section></main></div>
 <dialog class="signature" id="signatureDialog"><div class="sigbar"><h2>16P 书帖 · 硫酸纸对轴定位</h2><button class="btn" id="closeSignature">关闭</button></div><p class="signote">按最终阅读页序，每 16P 为一帖（8 张叶／4 张对折纸）。一张完整对折硫酸纸占 4P，左右两张叶必须成对；另一半的位置以书帖中心为轴对应。</p><div class="sigbar"><label>第 1 帖从全书第 <input class="siginput" id="signatureStart" type="number" min="1" value="1"> P 开始</label><span class="signote">独立封面不入帖时，请调整起点。</span></div><div class="sigfocus" id="signatureFocus"></div><div class="sigbar"><button class="btn" id="selectSignaturePair">选中同张折纸的 4P</button><button class="btn" id="traceSignaturePair">这 4P 设为硫酸纸</button></div><p class="signote">金色边框＝另一半的两面；蓝色边框＝当前页。这里定位和设置已有页面，不会自动插页。增删／移动页面后会重新计算，请以最终排版为准。若插入整张对折纸会使书帖增加 4P，需与师傅重新确认分帖。</p><div id="signatureContent"></div></dialog><script>
@@ -650,13 +651,13 @@ $('#traceSignaturePair').onclick=async()=>{const info=signatureInfo(pages.findIn
 
 let bindingConfig;
 try{bindingConfig=JSON.parse(localStorage.getItem('booklab-binding-groups')||'null')}catch(e){}
-bindingConfig={size:16,start:1,sizes:[]};
+bindingConfig=bindingConfig&&typeof bindingConfig==='object'?bindingConfig:{size:16,start:1,sizes:[]};
 function validBindingSize(n){return Number.isInteger(n)&&n>=4&&n<=256&&n%4===0}
 if(!validBindingSize(bindingConfig.size))bindingConfig.size=16;
 bindingConfig.start=Math.max(1,Math.floor(Number(bindingConfig.start)||1));if(!Array.isArray(bindingConfig.sizes))bindingConfig.sizes=[];
 function bindingGroups(){
- const result=[];let base=bindingConfig.start-1,g=0;
- while(base<pages.length){const custom=bindingConfig.sizes[g],size=validBindingSize(custom)?custom:bindingConfig.size;result.push({g,base,size,end:base+size});base+=size;g++}return result;
+ const result=[];let base=0,g=0;
+ while(base<bookletPages().length){const custom=bindingConfig.sizes[g],size=validBindingSize(custom)?custom:bindingConfig.size;result.push({g,base,size,end:base+size});base+=size;g++}return result;
 }
 function bindingAt(index){
  const group=bindingGroups().find(g=>index>=g.base&&index<g.end);if(!group)return null;
@@ -668,8 +669,9 @@ function bookletPages(){return pages.filter(p=>p.material!=='pet')}
 function bookletPartner(id){
  const body=bookletPages(),i=body.findIndex(p=>p.id===id);
  if(i<0)return null;
- const base=Math.floor(i/16)*16;
- return body[base+15-(i-base)]||null;
+ const group=bindingGroups().find(g=>i>=g.base&&i<g.end);
+ if(!group||group.end>body.length)return null;
+ return body[group.base+group.size-1-(i-group.base)]||null;
 }
 function highlightBinding(){
  const body=bookletPages(),current=pages.find(p=>p.id===selected),partner=bookletPartner(selected);
@@ -678,7 +680,7 @@ function highlightBinding(){
   el.classList.toggle('axis-partner',paired);
   el.classList.toggle('axis-current',el.dataset.id===selected);
   let badge=el.querySelector('.axis-badge');
-  if(paired){if(!badge){badge=document.createElement('div');badge.className='axis-badge';el.append(badge)}badge.textContent='↔ 册内总第 '+(body.indexOf(current)+1)+'P 对轴页'}
+  if(paired){if(!badge){badge=document.createElement('div');badge.className='axis-badge';el.append(badge)}badge.textContent='↔ 对轴：'+(body.indexOf(partner)+1)+'P'}
   else if(badge)badge.remove();
  }
 }
@@ -709,11 +711,12 @@ renderList=function(){
  const thumbs=new Map([...list.querySelectorAll('.thumb')].map(el=>[el.dataset.id,el]));
  list.replaceChildren();
  const pets=pages.filter(p=>p.material==='pet'),body=bookletPages();
- function addSection(title,detail,items,pet=false){
+ function addSection(title,detail,items,pet=false,group=null){
   const section=document.createElement('section');section.className='booklet'+(pet?' pet-shell':'');section.setAttribute('aria-label',title);
   const heading=document.createElement('div');heading.className='booklet-heading';
   const name=document.createElement('span');name.textContent=title;
   const note=document.createElement('small');note.textContent=detail;heading.append(name,note);
+  if(group){const label=document.createElement('label');label.textContent='本册页数 ';label.style.cssText='margin-left:auto;font-size:12px';const select=document.createElement('select');select.className='signature-size-select';for(let n=4;n<=64;n+=4){const option=document.createElement('option');option.value=n;option.textContent=n+'P';if(group.size===n)option.selected=true;select.append(option)}select.onchange=()=>{bindingConfig.sizes[group.g]=Number(select.value);saveBinding();renderList();toast('已重新计算本册对轴')};label.append(select);heading.append(label)}
   const grid=document.createElement('div');grid.className='booklet-pages';
   for(const p of items){const el=thumbs.get(p.id);el.classList.remove('binding-pair','binding-self','binding-before');
    const meta=el.querySelector('.meta span');
@@ -723,9 +726,9 @@ renderList=function(){
   section.append(heading,grid);list.append(section);
  }
  if(pets.length)addSection('PET 外壳','独立外壳 · '+pets.length+' 面 · 不计入分册',pets,true);
- for(let base=0,g=0;base<body.length;base+=16,g++){
-  const items=body.slice(base,base+16),count=items.length;
-  addSection('第 '+(g+1)+' 册',(base+1)+'–'+(base+count)+'P · '+count+'/16P'+(count<16?' · 待补齐':''),items);
+ for(const group of bindingGroups()){
+  const {g,base,size}=group,items=body.slice(base,base+size),count=items.length;
+  addSection('第 '+(g+1)+' 册',(base+1)+'–'+(base+count)+'P · '+count+'/'+size+'P'+(count<size?' · 待补齐':''),items,false,group);
  }
  highlightBinding();
 };
@@ -733,7 +736,7 @@ renderList=function(){
 const layoutHome=list.parentElement;
 const layoutWorkspace=document.createElement('div');
 layoutWorkspace.id='layoutWorkspace';
-layoutWorkspace.innerHTML='<div class="layout-page-toolbar"><strong>BOOK LAB · 四帖总览</strong><span>每册16P · 边缘插入 / 中央交换 · 青色为硫酸纸</span><button class="btn" id="layoutUndo">↶ 撤销</button><button class="btn" id="layoutRedo">↷ 重做</button><button class="btn" id="closeLayoutPage">返回 3D 编辑</button></div><div class="layout-page-content" id="layoutPageContent"></div>';
+layoutWorkspace.innerHTML='<div class="layout-page-toolbar"><strong>BOOK LAB · 分册总览</strong><span>每册可设 4 的倍数 · 边缘插入 / 中央交换 · 点击图片显示对轴</span><button class="btn" id="layoutUndo">↶ 撤销</button><button class="btn" id="layoutRedo">↷ 重做</button><button class="btn" id="closeLayoutPage">返回 3D 编辑</button></div><div class="layout-page-content" id="layoutPageContent"></div>';
 document.body.appendChild(layoutWorkspace);
 let layoutPageOpen=false;
 function setLayoutPage(open){
