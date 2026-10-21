@@ -726,10 +726,9 @@ renderList=function(){
     const bodyNow=bookletPages(),targets=bodyNow.slice(group.base,group.base+group.size);
     if(!targets.length)return;
     if(!confirm('确定删除第 '+(group.g+1)+' 册的全部 '+targets.length+' 张图片吗？\n此操作可以用 Ctrl+Z 撤销。'))return;
-    const before={kind:'booklet',pages:[...pages],sizes:[...bindingConfig.sizes]},removed=new Set(targets.map(p=>p.id));
+    const before={kind:'booklet',pages:[...pages],sizes:[...bindingConfig.sizes]},oldGroups=bindingGroups(),removed=new Set(targets.map(p=>p.id));
     pages.splice(0,pages.length,...pages.filter(p=>!removed.has(p.id)));
     // Delete the signature definition too: later signatures retain their own sizes.
-    const oldGroups=bindingGroups();
     const oldSizes=oldGroups.map((g,i)=>before.sizes[i]&&validBindingSize(before.sizes[i])?before.sizes[i]:bindingConfig.size);
     oldSizes.splice(group.g,1);bindingConfig.sizes=oldSizes;saveBinding();
     selectedIds.clear();selected=pages[0]?.id||null;
