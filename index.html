@@ -959,39 +959,6 @@ function groupOfPage(id){
  const body=bookletPages(),at=body.findIndex(p=>p.id===id);
  return at<0?null:bindingGroups().find(g=>at>=g.base&&at<g.end);
 }
-list.addEventListener('dragover',e=>{
- if(!dragId||isExternalImageDrag(e))return;
- const target=e.target?.closest?.('.thumb');
- if(!target||!list.contains(target))return;
- const from=groupOfPage(dragId),to=groupOfPage(target.dataset.id);
- if(!from||!to||from.g===to.g)return;
- e.preventDefault();e.stopImmediatePropagation();trackListDrag(e);
- for(const el of list.querySelectorAll('.thumb[data-cross-booklet]'))delete el.dataset.crossBooklet;
- target.dataset.crossBooklet='true';
- e.dataTransfer.dropEffect='move';
-},true);
-list.addEventListener('drop',async e=>{
- if(!dragId||isExternalImageDrag(e))return;
- const target=e.target?.closest?.('.thumb');
- if(!target||!list.contains(target))return;
- const from=groupOfPage(dragId),to=groupOfPage(target.dataset.id);
- if(!from||!to||from.g===to.g)return;
- e.preventDefault();e.stopImmediatePropagation();stopListAutoScroll();
- if(busy||dragId===target.dataset.id)return;
- const a=pages.findIndex(p=>p.id===dragId),b=pages.findIndex(p=>p.id===target.dataset.id);
- if(a<0||b<0)return;
- const before=[...pages];
- if(pages[b].blankSlot){
-  pages[a]=await createEmptyLayoutSlot();
-  pages[b]=before[a];
- }else{
-  [pages[a],pages[b]]=[pages[b],pages[a]];
- }
- dragId=null;
- layoutUndo.push(before);if(layoutUndo.length>60)layoutUndo.shift();layoutRedo.length=0;updateLayoutHistory();
- renderList();await ensureSpread(spread);drawScene();saveSoon();
- toast('已跨册移动 · 两册页数保持不变');
-},true);
 // Single delegated native drag/drop controller. Capture before legacy handlers.
 function internalDragSource(e){
  if(isExternalImageDrag(e))return null;
