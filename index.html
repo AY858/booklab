@@ -126,8 +126,11 @@ function sortN(a,b){return sourcePageSort(a,b)}function clamp(v,a,b){return Math
   if(p.material==='tracing'){
    const blank={id:'tracing-back-'+p.id,material:'tracing',opacity:0.08,unprintedTracingBack:true};
    // The inked face and its unprinted reverse must always form ONE sheet.
-   if(faces.length%2===1)faces.push(p,blank);
-   else faces.push(blank,p);
+   if(faces.length%2===0){
+    // Complete the preceding sheet before starting an independent tracing leaf.
+    faces.push({id:'sheet-gap-'+p.id,material:'paper',opacity:0.08,unprintedTracingBack:true});
+   }
+   faces.push(p,blank);
   }else faces.push(p);
  }
  return faces;
