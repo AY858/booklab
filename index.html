@@ -633,7 +633,7 @@ async function runCascadeShowcase(){
  busy=true;
  $('#status').textContent='连续翻书展示中';
  const started=performance.now();
- let lastPrefetched=-1,lastSound=-1;
+ let lastPrefetched=-1,lastSound=-1,stopAt=null;
  await new Promise(resolve=>{
   function frame(now){
    const position=Math.min(final,initial+(now-started)/interval);
@@ -646,7 +646,8 @@ async function runCascadeShowcase(){
    spread=Math.min(final,integer);
    drawScene(spread,{cascade:true,position,duration,interval});
    // On stop, allow already airborne sheets to land naturally.
-   if((autoFlipping&&position<final)||(!autoFlipping&&position<Math.min(final,integer+duration/interval))){
+   if(!autoFlipping&&stopAt===null)stopAt=Math.min(final,position+duration/interval);
+   if(position<(stopAt===null?final:stopAt)){
     requestAnimationFrame(frame);
    }else{
     spread=Math.min(final,Math.ceil(position));
