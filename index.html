@@ -75,7 +75,7 @@ body.layout-page-open .sidebar .booklet-pages{grid-template-columns:repeat(8,var
 </head>
 <body>
 <div class="app">
-<header class="topbar"><div class="brand">BOOK LAB v7.35 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="展开：襟片58.67＋封底176＋书脊4＋封面176＋襟片58.67 mm">PET 外封 473.33mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
+<header class="topbar"><div class="brand">BOOK LAB v7.36 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="展开：襟片58.67＋封底176＋书脊4＋封面176＋襟片58.67 mm">PET 外封 473.33mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
 <main class="main"><aside class="sidebar"><div class="sidehead"><div class="sidebar-zoom-controls"><span>左侧图片大小</span><button class="btn" id="sideZoomOut" title="缩小左侧缩略图">−</button><input type="range" id="sideZoomSlider" min="50" max="200" step="5" value="100" aria-label="左侧图片缩放"><output id="sideZoomValue">100%</output><button class="btn" id="sideZoomIn" title="放大左侧缩略图">＋</button><button class="btn" id="sideZoomReset">重置</button></div><button class="btn" id="mainUndo">↶ 撤销</button><button class="btn" id="mainRedo">↷ 重做</button><button class="btn" id="wideLayoutBtn" type="button" aria-pressed="false">⤢ 展开排版 · 每帖两排</button><div class="drop" id="drop">拖图片到这里 · 按源文件名前缀页码排序<br>Ctrl / ⌘ 多选 · Shift 连选 · 拖动整组选页</div><div class="binding-controls"><b>书帖分组</b><label>默认 <input id="bindingDefault" type="number" min="4" step="4" value="16"> P</label><label>起点 <input id="bindingStart" type="number" min="1" value="1"> P</label><button class="btn" id="bindingReset">统一分组</button></div><div class="binding-info" id="bindingInfo">点击图片，金框标出同张折纸的另一半。</div><div class="batch"><span id="selectionCount">已选 0 页 · Ctrl多选 / Shift连选 · 拖动选中图片集体移动</span><button class="btn" id="selectAll">全选</button><input id="movePosition" type="number" min="1" value="1" aria-label="移动到页码"><button class="btn" id="moveSelected">移到此页前</button></div></div><div class="list" id="list"></div><div class="settings"><h3>当前页面材质</h3><div class="row"><span>材质</span><select id="material"><option value="paper">普通纸</option><option value="pet">PET 透明封皮</option><option value="tracing">硫酸纸 / 半透明纸</option><option value="cover">书芯封面 / 封底</option></select></div><div class="row"><span>不透明度</span><input id="opacity" type="range" min="5" max="100" value="100"></div><div class="row"><span>页名</span><input id="name"></div><div class="actions"><button class="btn" id="replaceImage">替换图像</button><input id="replaceImageInput" type="file" accept="image/png,image/jpeg,image/webp" hidden><button class="btn" id="duplicate">复制页</button><button class="btn" id="delete">删除页</button></div></div></aside>
 <div class="resizer" role="separator" tabindex="0" aria-label="调整左侧宽度" aria-orientation="vertical"></div><section class="stagewrap"><div class="viewtools"><button class="btn" id="resetView">复位视角</button><span>左键旋转 · 中键平移 · 滚轮缩放 · 双击复位</span></div><div class="toast" id="toast"></div><div class="canvasbox"><canvas id="viewer"></canvas></div><div class="empty" id="empty"><div><b>导入页面开始预览 📖</b><span>WebGL 曲面网格 · 纸张弯曲 · 双面纹理 · 预缓存</span></div></div><div class="controls"><button class="btn" id="first">⟪</button><button class="btn" id="prev">←</button><div class="indicator" id="indicator">0 / 0</div><button class="btn" id="next">→</button><button class="btn" id="last">⟫</button><button class="btn" id="autoFlipBtn" title="连续叠页动画展示，可再次点击停止">▶ 一键动画</button><div class="zoom">缩放 <input id="zoom" type="range" min="65" max="125" value="96"></div><div class="zoom">书厚 <input id="bookThickness" type="range" min="50" max="180" value="100" aria-label="书本厚度"></div></div></section></main></div>
 <dialog class="signature" id="signatureDialog"><div class="sigbar"><h2>16P 书帖 · 硫酸纸对轴定位</h2><button class="btn" id="closeSignature">关闭</button></div><p class="signote">按最终阅读页序，每 16P 为一帖（8 张叶／4 张对折纸）。一张完整对折硫酸纸占 4P，左右两张叶必须成对；另一半的位置以书帖中心为轴对应。</p><div class="sigbar"><label>第 1 帖从全书第 <input class="siginput" id="signatureStart" type="number" min="1" value="1"> P 开始</label><span class="signote">独立封面不入帖时，请调整起点。</span></div><div class="sigfocus" id="signatureFocus"></div><div class="sigbar"><button class="btn" id="selectSignaturePair">选中同张折纸的 4P</button><button class="btn" id="traceSignaturePair">这 4P 设为硫酸纸</button></div><p class="signote">金色边框＝另一半的两面；蓝色边框＝当前页。这里定位和设置已有页面，不会自动插页。增删／移动页面后会重新计算，请以最终排版为准。若插入整张对折纸会使书帖增加 4P，需与师傅重新确认分帖。</p><div id="signatureContent"></div></dialog><script>
@@ -126,7 +126,7 @@ function sortN(a,b){return sourcePageSort(a,b)}function clamp(v,a,b){return Math
   if(p.material==='tracing'){
    const blank={id:'tracing-back-'+p.id,material:'tracing',opacity:0.08,unprintedTracingBack:true};
    // The inked face and its unprinted reverse must always form ONE sheet.
-   if(faces.length%2===0){
+   if(faces.length%2===1){
     // Complete the preceding sheet before starting an independent tracing leaf.
     faces.push({id:'sheet-gap-'+p.id,material:'paper',opacity:0.08,unprintedTracingBack:true});
    }
@@ -136,8 +136,11 @@ function sortN(a,b){return sourcePageSort(a,b)}function clamp(v,a,b){return Math
  return faces;
 }
 function maxSpread(){const faces=renderFaces();return faces.length?Math.ceil((faces.length-1)/2):0}function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._);t._=setTimeout(()=>t.classList.remove('show'),1200)}function pageAt(i){return i>=0&&i<pages.length?pages[i]:null}function pair(s=spread){const faces=renderFaces();if(!faces.length)return{l:null,r:null};if(s===0)return{l:null,r:faces[0]};return{l:faces[s*2-1]||null,r:faces[s*2]||null}}
-async function resizeToBlob(file,maxW,maxH,q=.9){const bmp=await createImageBitmap(file,{imageOrientation:'from-image'});const s=Math.min(1,maxW/bmp.width,maxH/bmp.height),w=Math.max(1,Math.round(bmp.width*s)),h=Math.max(1,Math.round(bmp.height*s));const c=typeof OffscreenCanvas!=='undefined'?new OffscreenCanvas(w,h):Object.assign(document.createElement('canvas'),{width:w,height:h});const x=c.getContext('2d',{alpha:true});x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(bmp,0,0,w,h);bmp.close();if(c.convertToBlob)return c.convertToBlob({type:'image/webp',quality:q});return new Promise(r=>c.toBlob(r,'image/webp',q))}
-async function addFiles(fs,preserveOrder=false){const arr=[...fs].filter(f=>f.type.startsWith('image/')).map((f,i)=>{f.__sourceIndex=i;return f});arr.sort(sourcePageSort);if(!arr.length)return;$('#status').textContent='建立纹理…';for(let i=0;i<arr.length;i++){const f=arr[i],preview=await resizeToBlob(f,PREVIEW_W,PREVIEW_H,.9),thumb=await resizeToBlob(f,THUMB_W,THUMB_H,.78);pages.push({id:uid(),name:f.name,sourceName:f.name,sourcePath:f.webkitRelativePath||f.name,material:'paper',opacity:1,preview,thumb,thumbURL:URL.createObjectURL(thumb)});$('#status').textContent=`纹理 ${i+1}/${arr.length}`;await new Promise(requestAnimationFrame)}if(!selected)selected=pages[0]?.id||null;renderList();renderSettings();await ensureSpread(spread);drawScene();$('#status').textContent='WebGL 曲面翻页';toast(`已导入 ${arr.length} 页`)}
+async function resizeToBlob(file,maxW,maxH,q=.9){const bmp=await createImageBitmap(file,{imageOrientation:'from-image'});const s=Math.min(1,maxW/bmp.width,maxH/bmp.height),w=Math.max(1,Math.round(bmp.width*s)),h=Math.max(1,Math.round(bmp.height*s));const c=typeof OffscreenCanvas!=='undefined'?new OffscreenCanvas(w,h):Object.assign(document.createElement('canvas'),{width:w,height:h});const x=c.getContext('2d',{alpha:true});x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';const ratio=bmp.width/bmp.height,bleedRatio=182/256;
+ const crop=Math.abs(ratio-bleedRatio)<0.012&&bmp.width>=300&&bmp.height>=400;
+ const sx=crop?bmp.width*3/182:0,sy=crop?bmp.height*3/256:0;
+ x.drawImage(bmp,sx,sy,bmp.width-2*sx,bmp.height-2*sy,0,0,w,h);bmp.close();if(c.convertToBlob)return c.convertToBlob({type:'image/webp',quality:q});return new Promise(r=>c.toBlob(r,'image/webp',q))}
+async function addFiles(fs,preserveOrder=false){const arr=[...fs].filter(f=>f.type.startsWith('image/')).map((f,i)=>{f.__sourceIndex=i;return f});arr.sort(sourcePageSort);if(!arr.length)return;$('#status').textContent='建立纹理…';for(let i=0;i<arr.length;i++){const f=arr[i],preview=await resizeToBlob(f,PREVIEW_W,PREVIEW_H,.9),thumb=await resizeToBlob(f,THUMB_W,THUMB_H,.78);pages.push({id:uid(),name:f.name,sourceName:f.name,sourcePath:f.webkitRelativePath||f.name,material:'paper',opacity:1,preview,thumb,sourceFile:f,thumbURL:URL.createObjectURL(thumb)});$('#status').textContent=`纹理 ${i+1}/${arr.length}`;await new Promise(requestAnimationFrame)}if(!selected)selected=pages[0]?.id||null;renderList();renderSettings();await ensureSpread(spread);drawScene();$('#status').textContent='WebGL 曲面翻页';toast(`已导入 ${arr.length} 页`)}
 async function getBitmap(p){if(!p)return null;if(bitmapCache.has(p.id))return bitmapCache.get(p.id);if(bitmapPending.has(p.id))return bitmapPending.get(p.id);const promise=createImageBitmap(p.preview).then(b=>{if(pages.includes(p)){bitmapCache.set(p.id,b)}else b.close();return b}).finally(()=>bitmapPending.delete(p.id));bitmapPending.set(p.id,promise);return promise}
 async function ensureSpread(s){
  const faces=renderFaces(),needed=new Set();
@@ -642,8 +645,8 @@ async function exportSignatureLayout(){
  }catch(err){console.error(err);toast('总览导出失败：'+err.message)}
  finally{btn.disabled=false;btn.textContent='导出总体排版 PNG'}
 }
-async function exportProject(){const payload={format:'BOOKLAB_V5_WEBGL',bindingConfig,spread,petOpened,petEndClosed,selected,soundOn,pages:[],petCover:petCoverBlob?await blobToDataURL(petCoverBlob):null,petCoverName};$('#status').textContent='导出工程…';for(const p of pages)payload.pages.push({id:p.id,name:p.name,sourceName:p.sourceName||p.name,sourcePath:p.sourcePath||p.sourceName||p.name,material:p.material,opacity:p.opacity,preview:await blobToDataURL(p.preview),thumb:await blobToDataURL(p.thumb)});const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(payload)],{type:'application/json'}));a.download='booklab-v5.booklab';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);$('#status').textContent='WebGL 曲面翻页'}
-async function loadProject(file){try{const j=JSON.parse(await file.text());if(!['BOOKLAB_V2_META','BOOKLAB_V3_META','BOOKLAB_V4_CANVAS','BOOKLAB_V5_WEBGL'].includes(j.format))throw 0;pages.length=0;for(const p of j.pages)pages.push({...p,sourceName:p.sourceName||p.name,sourcePath:p.sourcePath||p.sourceName||p.name,preview:dataURLtoBlob(p.preview),thumb:dataURLtoBlob(p.thumb),thumbURL:null});if(j.petCover)await setPETCover(await migrateLegacyPETPlaceholder(dataURLtoBlob(j.petCover)),j.petCoverName||'工程中的 PET 外封');selected=j.selected||pages[0]?.id||null;spread=clamp(j.spread||0,0,maxSpread());petOpened=!!j.petOpened;petTurn=petOpened?1:0;petEndClosed=!!j.petEndClosed;petEndTurn=petEndClosed?1:0;soundOn=j.soundOn!==false;renderList();renderSettings();await ensureSpread(spread);drawScene();updateSound();toast('工程已载入')}catch(e){console.error(e);toast('工程文件无法读取')}}
+async function exportProject(){const payload={format:'BOOKLAB_V5_WEBGL',bindingConfig,spread,petOpened,petEndClosed,selected,soundOn,pages:[],petCover:petCoverBlob?await blobToDataURL(petCoverBlob):null,petCoverName};$('#status').textContent='导出工程…';for(const p of pages)payload.pages.push({id:p.id,name:p.name,sourceName:p.sourceName||p.name,sourcePath:p.sourcePath||p.sourceName||p.name,material:p.material,opacity:p.opacity,preview:await blobToDataURL(p.preview),thumb:await blobToDataURL(p.thumb),sourceFile:p.sourceFile?await blobToDataURL(p.sourceFile):null});const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(payload)],{type:'application/json'}));a.download='booklab-v5.booklab';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);$('#status').textContent='WebGL 曲面翻页'}
+async function loadProject(file){try{const j=JSON.parse(await file.text());if(!['BOOKLAB_V2_META','BOOKLAB_V3_META','BOOKLAB_V4_CANVAS','BOOKLAB_V5_WEBGL'].includes(j.format))throw 0;pages.length=0;for(const p of j.pages)pages.push({...p,sourceName:p.sourceName||p.name,sourcePath:p.sourcePath||p.sourceName||p.name,preview:dataURLtoBlob(p.preview),thumb:dataURLtoBlob(p.thumb),sourceFile:p.sourceFile?dataURLtoBlob(p.sourceFile):null,thumbURL:null});if(j.petCover)await setPETCover(await migrateLegacyPETPlaceholder(dataURLtoBlob(j.petCover)),j.petCoverName||'工程中的 PET 外封');selected=j.selected||pages[0]?.id||null;spread=clamp(j.spread||0,0,maxSpread());petOpened=!!j.petOpened;petTurn=petOpened?1:0;petEndClosed=!!j.petEndClosed;petEndTurn=petEndClosed?1:0;soundOn=j.soundOn!==false;renderList();renderSettings();await ensureSpread(spread);drawScene();updateSound();toast('工程已载入')}catch(e){console.error(e);toast('工程文件无法读取')}}
 $('#imgInput').onchange=e=>{addFiles(e.target.files);e.target.value=''};$('#folderInput').onchange=e=>{addFiles(e.target.files,true);e.target.value=''};$('#projectInput').onchange=e=>{if(e.target.files[0])loadProject(e.target.files[0]);e.target.value=''};$('#exportLayoutBtn').onclick=exportSignatureLayout;$('#exportBtn').onclick=exportProject;let autoFlipping=false;
 function updateAutoFlipButton(){
  const button=$('#autoFlipBtn');
@@ -727,7 +730,7 @@ $('#replaceImageInput').onchange=async e=>{
   const staleBitmap=bitmapCache.get(id);if(staleBitmap){staleBitmap.close();bitmapCache.delete(id)}
   const staleTexture=textureCache.get(id);if(staleTexture){gl.deleteTexture(staleTexture);textureCache.delete(id)}
   if(p.thumbURL)URL.revokeObjectURL(p.thumbURL);
-  p.preview=preview;p.thumb=thumb;p.thumbURL=URL.createObjectURL(thumb);
+  p.preview=preview;p.thumb=thumb;p.sourceFile=f;p.thumbURL=URL.createObjectURL(thumb);
   p.name=f.name;p.sourceName=f.name;p.sourcePath=f.webkitRelativePath||f.name;
   await getBitmap(p);ensureTexture(p);
   renderList();renderSettings();drawScene();saveSoon();
@@ -1039,7 +1042,7 @@ async function replacePageByDroppedFile(id,f){
   const bitmap=bitmapCache.get(id);if(bitmap){bitmap.close();bitmapCache.delete(id)}
   const texture=textureCache.get(id);if(texture){gl.deleteTexture(texture);textureCache.delete(id)}
   if(p.thumbURL)URL.revokeObjectURL(p.thumbURL);
-  p.preview=preview;p.thumb=thumb;p.thumbURL=URL.createObjectURL(thumb);
+  p.preview=preview;p.thumb=thumb;p.sourceFile=f;p.thumbURL=URL.createObjectURL(thumb);
   p.name=f.name;p.sourceName=f.name;p.sourcePath=f.webkitRelativePath||f.name;p.blankSlot=false;
   layoutUndo.push(before);if(layoutUndo.length>60)layoutUndo.shift();layoutRedo.length=0;
   selected=id;selectedIds.clear();selectedIds.add(id);
@@ -1245,6 +1248,39 @@ renderList=function(){
   });
  }
 };
+
+function invalidTracingIds(){
+ const invalid=new Set();let regularCount=0;
+ for(const p of bookletPages()){
+  if(p.material==='tracing'){if(regularCount%2===1)invalid.add(p.id)}
+  else regularCount++;
+ }
+ return invalid;
+}
+const renderBeforeTracingWarnings=renderList;
+renderList=function(){
+ renderBeforeTracingWarnings();
+ const invalid=invalidTracingIds();
+ for(const el of list.querySelectorAll('.thumb')){
+  if(!invalid.has(el.dataset.id))continue;
+  el.style.outline='3px solid #ef4444';el.style.outlineOffset='-3px';
+  el.title='⚠ 硫酸纸插位错误：夹在普通纸同一张的正反面之间，请移动到完整纸张之间';
+  const warning=document.createElement('div');
+  warning.textContent='⚠ 插位错误';warning.style.cssText='background:#b91c1c;color:white;padding:3px 6px;font-size:11px;font-weight:bold;border-radius:3px;margin-top:3px';
+  el.appendChild(warning);
+ }
+ for(const group of bindingGroups()){
+  const inside=bookletPages().slice(group.base,group.end);
+  if(!inside.some(p=>invalid.has(p.id)))continue;
+  const headers=[...list.querySelectorAll('.booklet-heading')];
+  const header=headers.find(h=>h.textContent.includes('第 '+(group.g+1)+' 册'));
+  if(header){
+   header.style.outline='2px solid #ef4444';
+   const note=document.createElement('span');note.textContent='⚠ 硫酸纸插位冲突';note.style.cssText='color:#f87171;font-size:12px;font-weight:bold';header.append(note);
+  }
+ }
+};
+
 list.addEventListener('mousedown',e=>{if(e.button===1)e.preventDefault()},true);
 list.addEventListener('auxclick',e=>{if(e.button===1)e.preventDefault()});
 list.addEventListener('pointermove',e=>{
