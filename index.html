@@ -75,7 +75,7 @@ body.layout-page-open .sidebar .booklet-pages{grid-template-columns:repeat(8,var
 </head>
 <body>
 <div class="app">
-<header class="topbar"><div class="brand">BOOK LAB v7.45 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="展开：襟片58.67＋封底176＋书脊4＋封面176＋襟片58.67 mm">PET 外封 473.33mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
+<header class="topbar"><div class="brand">BOOK LAB v7.46 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="展开：襟片58.67＋封底176＋书脊4＋封面176＋襟片58.67 mm">PET 外封 473.33mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
 <div id="bookSpecs" role="status" aria-live="polite" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:8px 14px;background:#1b1e25;border-bottom:1px solid var(--line);font-size:12px;color:#cbd3e1">
  <strong style="color:#e8ecf9">📖 本册实时规格</strong>
  <span>成品：176 × 250 mm</span>
@@ -915,8 +915,9 @@ window.addEventListener('dragend',stopListAutoScroll);
 
 async function resizeIndependentBooklet(group,newSize){
  if(busy||newSize===group.size)return;
- const before={kind:'booklet',pages:[...pages],sizes:bindingGroups().map(g=>g.size)};
  const oldGroups=bindingGroups(),oldSizes=oldGroups.map(g=>g.size);
+ const oldAnchors=[...bindingConfig.boundaryIds];
+ const before={kind:'booklet',pages:[...pages],sizes:[...oldSizes],boundaryIds:[...oldAnchors]};
  const body=bookletPages(),start=group.base,end=Math.min(body.length,group.end);
  const current=body.slice(start,end),pets=pages.filter(p=>p.material==='pet');
  if(newSize>group.size){
@@ -938,9 +939,10 @@ async function resizeIndependentBooklet(group,newSize){
    const successor=body[end],insertAt=successor?pages.indexOf(successor):pages.length;
    pages.splice(insertAt,0,...kept,...slots);
    oldSizes.splice(group.g+1,0,extraSize);
+   oldAnchors.splice(group.g+1,0,kept[0].id);
   }
  }
- bindingConfig.sizes=oldSizes;bindingConfig.boundaryIds=oldSizes.map((_,g)=>{if(g<=group.g)return bookletPages()[g===group.g?group.base:(oldGroups[g]?.base||0)]?.id;return bookletPages()[oldGroups[g-1]?.end||0]?.id}).filter(Boolean);saveBinding();
+ bindingConfig.sizes=oldSizes;bindingConfig.boundaryIds=oldAnchors.filter(id=>bookletPages().some(p=>p.id===id));saveBinding();
  layoutUndo.push(before);if(layoutUndo.length>60)layoutUndo.shift();layoutRedo.length=0;
  renderList();updateLayoutHistory();await ensureSpread(spread);drawScene();saveSoon();
  toast('已调整本册 · 后续册图片保持原组');
