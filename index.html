@@ -75,7 +75,7 @@ body.layout-page-open .sidebar .booklet-pages{grid-template-columns:repeat(8,var
 </head>
 <body>
 <div class="app">
-<header class="topbar"><div class="brand">BOOK LAB v7.48 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="展开：襟片58.67＋封底176＋书脊4＋封面176＋襟片58.67 mm">PET 外封 473.33mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
+<header class="topbar"><div class="brand">BOOK LAB v7.49 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="展开：襟片58.67＋封底176＋书脊4＋封面176＋襟片58.67 mm">PET 外封 473.33mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
 <div id="bookSpecs" role="status" aria-live="polite" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:8px 14px;background:#1b1e25;border-bottom:1px solid var(--line);font-size:12px;color:#cbd3e1">
  <strong style="color:#e8ecf9">📖 本册实时规格</strong>
  <span>成品：176 × 250 mm</span>
@@ -929,6 +929,27 @@ async function resizeIndependentBooklet(group,newSize){
  const used=physicalCount(bookletPages().slice(group.base,group.end));
  toast(used>newSize?'已调整容量：本册内容超出 '+(used-newSize)+'P，请在本册内处理':'已调整本册容量，其他册内容不变');
 }
+async function moveSelectionToPreviousBooklet(sourceIndex){
+ if(busy||sourceIndex<=0)return;
+ const groups=bindingGroups(),source=groups[sourceIndex];
+ if(!source)return;
+ const body=bookletPages(),selectedPages=body.slice(source.base,source.end).filter(p=>selectedIds.has(p.id));
+ if(!selectedPages.length){toast('请先在第 '+(sourceIndex+1)+' 册选中要上移的图片');return}
+ if(selectedPages.length===source.end-source.base){toast('至少保留本册一张图片，或使用整册上移');return}
+ const before={kind:'booklet',pages:[...pages],sizes:groups.map(g=>g.size),boundaryIds:[...(bindingConfig.boundaryIds||[])]};
+ const chunks=groups.map(g=>body.slice(g.base,g.end));
+ const ids=new Set(selectedPages.map(p=>p.id));
+ chunks[sourceIndex]=chunks[sourceIndex].filter(p=>!ids.has(p.id));
+ chunks[sourceIndex-1].push(...selectedPages);
+ const reordered=chunks.flat();let cursor=0;
+ pages.splice(0,pages.length,...pages.map(p=>p.material==='pet'?p:reordered[cursor++]));
+ bindingConfig.sizes=groups.map(g=>g.size);
+ bindingConfig.boundaryIds=chunks.map(c=>c[0].id);
+ saveBinding();
+ layoutUndo.push(before);if(layoutUndo.length>60)layoutUndo.shift();layoutRedo.length=0;
+ updateLayoutHistory();renderList();await ensureSpread(spread);drawScene();saveSoon();
+ toast('已主动移入上一册 '+selectedPages.length+' 张；其他册不变');
+}
 async function swapAdjacentBooklets(index,direction){
  if(busy)return;
  const groups=bindingGroups(),other=index+direction;
@@ -958,6 +979,13 @@ renderList=function(){
   const name=document.createElement('span');name.textContent=title;
   const note=document.createElement('small');note.textContent=detail;heading.append(name,note);
   if(group){
+   if(group.g>0){
+    const manual=document.createElement('button');manual.type='button';manual.className='btn';
+    manual.textContent='↑ 选中移至上一册';
+    manual.title='仅移动本册选中的图稿至上一册末尾，不改变其他册';
+    manual.onclick=()=>moveSelectionToPreviousBooklet(group.g);
+    heading.append(manual);
+   }
    for(const [direction,labelText] of [[-1,'↑ 上移'],[1,'↓ 下移']]){
     const control=document.createElement('button');control.type='button';control.className='btn';
     control.textContent=labelText;control.title='整册交换位置，保留图片与页数';
