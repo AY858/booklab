@@ -75,7 +75,7 @@ body.layout-page-open .sidebar .booklet-pages{grid-template-columns:repeat(8,var
 </head>
 <body>
 <div class="app">
-<header class="topbar"><div class="brand">BOOK LAB v7.40 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="展开：襟片58.67＋封底176＋书脊4＋封面176＋襟片58.67 mm">PET 外封 473.33mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
+<header class="topbar"><div class="brand">BOOK LAB v7.41 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="展开：襟片58.67＋封底176＋书脊4＋封面176＋襟片58.67 mm">PET 外封 473.33mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
 <div id="bookSpecs" role="status" aria-live="polite" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:8px 14px;background:#1b1e25;border-bottom:1px solid var(--line);font-size:12px;color:#cbd3e1">
  <strong style="color:#e8ecf9">📖 本册实时规格</strong>
  <span>成品：176 × 250 mm</span>
@@ -583,7 +583,7 @@ function bookDesignPageCount(){return bookletPrintBreakdown(bookletPages()).tota
 function bookletPrintBreakdown(items){
  const tracing=items.filter(p=>p.material==='tracing').length;
  const other=items.length-tracing;
- return {tracing,other,total:other*2+tracing};
+ return {tracing,other,total:other+tracing};
 }
 function updateIndicator(){$('#empty').style.display=pages.length?'none':'grid';if(spread===maxSpread()&&petEndClosed){$('#indicator').textContent='PET 64+1 已合上 · 书芯 '+bookDesignPageCount()+'P';return}if(spread===maxSpread()&&spread>0){$('#indicator').textContent='PET 封底 · '+bookDesignPageCount()+'P 书芯';return}if(spread===0&&petOpened){$('#indicator').textContent='PET 1-1 已翻开 · 书芯未展开';return}if(spread===0){$('#indicator').textContent='PET 1-1 · '+bookDesignPageCount()+'P 书芯';return}$('#indicator').textContent=pages.length?(spread===0?`封面 · ${bookDesignPageCount()}页`:`${spread*2}-${Math.min(spread*2+1,pages.length)} · ${bookDesignPageCount()}页`):'0 / 0'}
 function renderList(){list.innerHTML='';const frag=document.createDocumentFragment();pages.forEach((p,i)=>{if(!p.thumbURL)p.thumbURL=URL.createObjectURL(p.thumb);const d=document.createElement('div');d.className='thumb'+(p.id===selected?' selected':'');d.draggable=true;d.dataset.id=p.id;const im=document.createElement('img');im.loading='lazy';im.src=p.thumbURL;d.appendChild(im);const m=document.createElement('div');m.className='meta';m.innerHTML=`<span>${String(i+1).padStart(2,'0')}</span><span class="chip ${p.material}">${p.material==='paper'?'PAPER':p.material==='pet'?'PET':p.material==='cover'?'COVER':'TRACING'}</span>`;d.appendChild(m);const fn=document.createElement('div');fn.style.cssText='margin-top:4px;font-size:10px;color:#b7bdc7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';fn.textContent=p.sourceName||p.name;fn.title=p.sourcePath||p.sourceName||p.name;d.appendChild(fn);d.onclick=async()=>{if(busy||dragId)return;selected=p.id;[...list.querySelectorAll('.thumb')].forEach(x=>x.classList.toggle('selected',x.dataset.id===selected));renderSettings();spread=Math.ceil(renderFaces().indexOf(p)/2);await ensureSpread(spread);drawScene()};d.ondragstart=e=>{dragId=p.id;d.classList.add('dragging');e.dataTransfer.effectAllowed='move';startListAutoScroll()};d.ondragend=()=>{d.classList.remove('dragging');dragId=null;stopListAutoScroll()};d.ondragover=e=>{e.preventDefault();trackListDrag(e)};d.ondrop=async e=>{e.preventDefault();stopListAutoScroll();const a=pages.findIndex(x=>x.id===dragId),b=pages.findIndex(x=>x.id===p.id);if(a<0||b<0||a===b)return;const[mv]=pages.splice(a,1);pages.splice(b,0,mv);spread=clamp(spread,0,maxSpread());renderList();await ensureSpread(spread);drawScene()};frag.appendChild(d)});list.appendChild(frag)}
@@ -1004,7 +1004,7 @@ renderList=function(){
  for(const group of bindingGroups()){
   const {g,base,size}=group,items=body.slice(base,base+size),count=items.length;
   const tally=bookletPrintBreakdown(items);
-  addSection('第 '+(g+1)+' 册',(base+1)+'–'+(base+count)+' 张 · '+count+'/'+size+' 个排版位 · 印刷计 '+tally.total+'P（普通 '+(tally.other*2)+'P · 硫酸纸 '+tally.tracing+'P，单面印刷）'+(count<size?' · 待补齐':''),items,false,group);
+  addSection('第 '+(g+1)+' 册',(base+1)+'–'+(base+count)+' 张 · '+count+'/'+size+' 个排版位 · 印刷计 '+tally.total+'P（普通 '+tally.other+'P · 硫酸纸 '+tally.tracing+'P，单面印刷）'+(count<size?' · 待补齐':''),items,false,group);
  }
  highlightBinding();
 };
@@ -1333,10 +1333,10 @@ $('#bindingStart').onchange=e=>{bindingConfig.start=Math.max(1,Math.floor(Number
 $('#bindingReset').onclick=()=>{bindingConfig.sizes=[];saveBinding();renderList();toast('已按默认页数重新分组')};
 function updateBookSpecs(){
  const body=bookletPages(),count=bookletPrintBreakdown(body);
- $('#specOrdinary').textContent=(count.other*2)+'P';
+ $('#specOrdinary').textContent=count.other+'P';
  $('#specTracing').textContent=count.tracing+'P';
  $('#specTotal').textContent=count.total+'P';
- $('#specUnits').textContent='普通纸 '+count.other+' 张 · 硫酸纸 '+count.tracing+' 张 · PET 不计入';
+ $('#specUnits').textContent='普通纸 '+Math.ceil(count.other/2)+' 张（'+count.other+'P）· 硫酸纸 '+count.tracing+' 张（单面）· PET 不计入';
 }
 const renderBeforeBookSpecs=renderList;
 renderList=function(){renderBeforeBookSpecs();updateBookSpecs()};
