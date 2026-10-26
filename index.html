@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>BOOK LAB — WebGL Flipbook v8.1</title>
+<title>BOOK LAB — WebGL Flipbook v8.1.1</title>
 <style>
 :root{--bg:#101114;--panel:#17191d;--panel2:#21242a;--line:#30343c;--text:#f2f4f7;--muted:#8f97a4;--accent:#9da6ff}
 *{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}button,input,select{font:inherit;color:inherit}button{cursor:pointer}.app{height:100%;display:grid;grid-template-rows:52px auto minmax(0,1fr)}.topbar{display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid var(--line);background:#131519}.brand{font-weight:800;letter-spacing:.08em;margin-right:8px}.btn{height:32px;padding:0 11px;border:1px solid var(--line);background:var(--panel2);border-radius:8px;display:inline-flex;align-items:center;justify-content:center;gap:6px}.btn.primary{background:#eef0ff;color:#11131a;border-color:#eef0ff}.spacer{flex:1}.status{font-size:12px;color:var(--muted)}input[type=file]{display:none}.main{display:grid;grid-template-columns:286px 1fr;min-height:0}.sidebar{min-height:0;border-right:1px solid var(--line);background:var(--panel);display:grid;grid-template-rows:auto 1fr auto}.sidehead{padding:10px;border-bottom:1px solid var(--line)}.drop{padding:12px;border:1px dashed #4a505b;border-radius:9px;color:var(--muted);font-size:12px;text-align:center}.drop.drag{border-color:var(--accent);background:#22253b}.list{overflow:auto;padding:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start}.thumb{border:1px solid #333844;background:#242730;border-radius:7px;padding:5px;user-select:none}.thumb.selected{outline:2px solid var(--accent);outline-offset:1px}.thumb.dragging{opacity:.4}.thumb img{display:block;width:100%;aspect-ratio:.707/1;object-fit:contain;background:#0b0c0e;border-radius:4px}.meta{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:10px;margin-top:4px}.chip{padding:2px 5px;border-radius:99px;background:#333843}.chip.pet{background:#203b3e;color:#b8f0eb}.chip.tracing{background:#403a28;color:#ffe7a4}.settings{padding:11px;border-top:1px solid var(--line);display:grid;gap:9px}.settings h3{margin:0;font-size:12px}.row{display:grid;grid-template-columns:86px 1fr;align-items:center;gap:8px;color:var(--muted);font-size:12px}.row input,.row select{width:100%;background:#22262d;border:1px solid var(--line);border-radius:6px;padding:6px}.actions{display:flex;gap:6px}.actions .btn{flex:1;font-size:11px}.stagewrap{position:relative;overflow:hidden;background:radial-gradient(circle at 50% 42%,#3d414a 0,#1b1d22 48%,#0e0f12 100%)}.canvasbox{position:absolute;inset:0 0 52px;display:grid;place-items:center}.canvasbox canvas{display:block;width:min(90vw,1160px);height:min(80vh,790px)}.controls{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);display:flex;align-items:center;gap:7px;padding:7px;border:1px solid #343944;background:#121418df;border-radius:12px}.indicator{min-width:128px;text-align:center;color:#c6cbd4;font-size:12px}.zoom{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:11px}.zoom input{width:86px}.empty{position:absolute;inset:0 0 52px;display:grid;place-items:center;color:var(--muted);pointer-events:none}.empty b{display:block;text-align:center;color:#e1e4ea;font-size:18px;margin-bottom:7px}.toast{position:absolute;right:14px;top:14px;background:#eef0ff;color:#11131a;padding:8px 11px;border-radius:8px;font-size:12px;opacity:0;transform:translateY(-5px);transition:.18s;z-index:50}.toast.show{opacity:1;transform:none}@media(max-width:920px){.main{grid-template-columns:230px 1fr}}
@@ -78,7 +78,7 @@ body.layout-page-open .sidebar .booklet-pages{grid-template-columns:repeat(8,var
 </head>
 <body>
 <div class="app">
-<header class="topbar"><div class="brand">BOOK LAB v8.1 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="pdfInput" title="将单页 PDF 按顺序导入为新书帖">导入 PDF</label><input id="pdfInput" type="file" accept=".pdf,application/pdf"><button class="btn" id="topAutoFlipBtn">▶ 翻页动画</button><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="展开：襟片58.67＋封底176＋书脊4＋封面176＋襟片58.67 mm">PET 外封 473.33mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
+<header class="topbar"><div class="brand">BOOK LAB v8.1.1 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="pdfInput" title="将单页 PDF 按顺序导入为新书帖">导入 PDF</label><input id="pdfInput" type="file" accept=".pdf,application/pdf"><button class="btn" id="topAutoFlipBtn">▶ 翻页动画</button><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="展开：襟片58.67＋封底176＋书脊4＋封面176＋襟片58.67 mm">PET 外封 473.33mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
 <div id="bookSpecs" role="status" aria-live="polite" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:8px 14px;background:#1b1e25;border-bottom:1px solid var(--line);font-size:12px;color:#cbd3e1">
  <strong style="color:#e8ecf9">📖 本册实时规格</strong>
  <span>成品：176 × 250 mm</span>
@@ -605,26 +605,27 @@ function flipSound(){
 function blobToDataURL(b){return new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(b)})}function dataURLtoBlob(s){const[h,d]=s.split(','),m=h.match(/:(.*?);/)[1],bin=atob(d),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new Blob([u],{type:m})}
 
 async function exportSignatureLayout(){
- const body=bookletPages();if(!body.length){toast('请先导入页面');return}
+ const body=bookletPages().map(p=>({...p}));if(!body.length){toast('请先导入页面');return}
  const groups=bindingGroups(),btn=$('#exportLayoutBtn');
  btn.disabled=true;btn.textContent='正在生成…';
  const cols=8,cw=184,ch=273,margin=60,header=115,groupTitleH=65,groupGap=26;
- const blocks=groups.map(gr=>({...gr,items:body.slice(gr.base,gr.end),rows:Math.ceil(Math.min(gr.size,body.length-gr.base)/cols)}));
+ const blocks=groups.map(gr=>{const items=body.slice(gr.base,gr.end);return {...gr,items,rows:Math.ceil(items.length/cols)}});
  const width=margin*2+cols*cw;
  const height=header+blocks.reduce((sum,g)=>sum+groupTitleH+g.rows*ch+groupGap,0)+30;
  try{
+  if(document.fonts){await document.fonts.load('bold 24px "Microsoft YaHei"','空位');await document.fonts.ready}
   if(height>32767)throw Error('排版过长，请减少页面数量');
   const c=document.createElement('canvas');c.width=width;c.height=height;
   const ctx=c.getContext('2d');ctx.fillStyle='#f6f8fc';ctx.fillRect(0,0,width,height);
-  ctx.fillStyle='#243247';ctx.font='bold 34px Arial';ctx.fillText('BOOK LAB  /  OVERALL LAYOUT',margin,48);
-  ctx.fillStyle='#607084';ctx.font='18px Arial';ctx.fillText(groups.length+' booklets  |  '+body.length+' pages  |  current arrangement  |  PET excluded  |  tracing = 1P printed face',margin,82);
+  ctx.fillStyle='#243247';ctx.font='bold 34px "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif';ctx.fillText('BOOK LAB  /  OVERALL LAYOUT',margin,48);
+  ctx.fillStyle='#607084';ctx.font='18px "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif';ctx.fillText(groups.length+' booklets  |  '+body.length+' pages  |  current arrangement  |  PET excluded  |  tracing = 1P printed face',margin,82);
   let y=header;
   for(const block of blocks){
    const {g,items,rows}=block;
    ctx.fillStyle=g%2?'#e8eaf2':'#e1eaf0';
    ctx.fillRect(margin-12,y,width-2*margin+24,groupTitleH+rows*ch+8);
-   ctx.fillStyle='#243247';ctx.font='bold 25px Arial';ctx.fillText('BOOKLET '+(g+1)+'    /    '+items.length+'P',margin,y+32);
-   ctx.fillStyle='#536276';ctx.font='15px Arial';ctx.fillText('Page '+(block.base+1)+' - '+(block.base+items.length),margin,y+56);
+   ctx.fillStyle='#243247';ctx.font='bold 25px "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif';ctx.fillText('BOOKLET '+(g+1)+'    /    '+items.length+'P',margin,y+32);
+   ctx.fillStyle='#536276';ctx.font='15px "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif';ctx.fillText('Page '+(block.base+1)+' - '+(block.base+items.length),margin,y+56);
    y+=groupTitleH;
    for(let j=0;j<items.length;j++){
     const p=items[j],x=margin+(j%cols)*cw,yy=y+Math.floor(j/cols)*ch;
@@ -632,18 +633,18 @@ async function exportSignatureLayout(){
     ctx.fillStyle=p.blankSlot?'#dce5eb':trace?'#51b5af':'#ffffff';ctx.fillRect(x,yy,w,h);
     if(p.blankSlot){
      ctx.strokeStyle='#91a3b1';ctx.lineWidth=2;ctx.setLineDash([7,6]);ctx.strokeRect(x+9,yy+9,w-18,h-57);ctx.setLineDash([]);
-     ctx.fillStyle='#698092';ctx.font='bold 24px sans-serif';ctx.textAlign='center';ctx.fillText('空位',x+w/2,yy+h/2);ctx.textAlign='left';
+     ctx.fillStyle='#698092';ctx.font='bold 24px "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif';ctx.textAlign='center';ctx.fillText('空位',x+w/2,yy+h/2);ctx.textAlign='left';
     }else{
      ctx.fillStyle='#fff';ctx.fillRect(x+7,yy+7,w-14,h-55);
      try{
       const im=await createImageBitmap(p.preview),mw=w-14,mh=h-55,k=Math.min(mw/im.width,mh/im.height);
       const dw=im.width*k,dh=im.height*k;
       ctx.drawImage(im,x+7+(mw-dw)/2,yy+7+(mh-dh)/2,dw,dh);im.close();
-     }catch(err){ctx.fillStyle='#b04545';ctx.font='15px Arial';ctx.fillText('Image error',x+12,yy+55)}
+     }catch(err){ctx.fillStyle='#b04545';ctx.font='15px "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif';ctx.fillText('Image error',x+12,yy+55)}
     }
-    ctx.fillStyle=trace?'#143e3b':'#243247';ctx.font='bold 18px Arial';
+    ctx.fillStyle=trace?'#143e3b':'#243247';ctx.font='bold 18px "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif';
     ctx.fillText(String(block.base+j+1).padStart(2,'0')+'P',x+10,yy+h-14);
-    ctx.font='bold 12px Arial';
+    ctx.font='bold 12px "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif';
     if(trace)ctx.fillText('TRACING 1P',x+80,yy+h-16);
     else if(p.material==='cover')ctx.fillText('COVER',x+101,yy+h-16);
    }
