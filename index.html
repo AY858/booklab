@@ -75,7 +75,7 @@ body.layout-page-open .sidebar .booklet-pages{grid-template-columns:repeat(8,var
 </head>
 <body>
 <div class="app">
-<header class="topbar"><div class="brand">BOOK LAB v7.46 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="展开：襟片58.67＋封底176＋书脊4＋封面176＋襟片58.67 mm">PET 外封 473.33mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
+<header class="topbar"><div class="brand">BOOK LAB v7.47 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="展开：襟片58.67＋封底176＋书脊4＋封面176＋襟片58.67 mm">PET 外封 473.33mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
 <div id="bookSpecs" role="status" aria-live="polite" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:8px 14px;background:#1b1e25;border-bottom:1px solid var(--line);font-size:12px;color:#cbd3e1">
  <strong style="color:#e8ecf9">📖 本册实时规格</strong>
  <span>成品：176 × 250 mm</span>
@@ -915,37 +915,19 @@ window.addEventListener('dragend',stopListAutoScroll);
 
 async function resizeIndependentBooklet(group,newSize){
  if(busy||newSize===group.size)return;
- const oldGroups=bindingGroups(),oldSizes=oldGroups.map(g=>g.size);
- const oldAnchors=[...bindingConfig.boundaryIds];
- const before={kind:'booklet',pages:[...pages],sizes:[...oldSizes],boundaryIds:[...oldAnchors]};
- const body=bookletPages(),start=group.base,end=Math.min(body.length,group.end);
- const current=body.slice(start,end),pets=pages.filter(p=>p.material==='pet');
- if(newSize>group.size){
-  const added=await Promise.all(Array.from({length:newSize-group.used},()=>createEmptyLayoutSlot()));
-  // Insert blank slots after this booklet, NOT pages from the following one.
-  const next=body[end],insertAt=next?pages.indexOf(next):pages.length;
-  pages.splice(insertAt,0,...added);oldSizes[group.g]=newSize;
- }else{
-  let units=0,cut=0;while(cut<current.length&&units+physicalP(current[cut])<=newSize){units+=physicalP(current[cut]);cut++}
-  const overflow=current.slice(cut),vacant=overflow.filter(p=>p.blankSlot);
-  // Remove trailing empty slots only; occupied pages stay together as a new booklet.
-  const removed=overflow.filter(p=>p.blankSlot),kept=overflow.filter(p=>!p.blankSlot);
-  const removedIds=new Set(overflow.map(p=>p.id));
-  pages.splice(0,pages.length,...pages.filter(p=>!removedIds.has(p.id)));
-  oldSizes[group.g]=newSize;
-  if(kept.length){
-   const extraSize=Math.ceil(physicalCount(kept)/4)*4;
-   const slots=await Promise.all(Array.from({length:extraSize-physicalCount(kept)},()=>createEmptyLayoutSlot()));
-   const successor=body[end],insertAt=successor?pages.indexOf(successor):pages.length;
-   pages.splice(insertAt,0,...kept,...slots);
-   oldSizes.splice(group.g+1,0,extraSize);
-   oldAnchors.splice(group.g+1,0,kept[0].id);
-  }
- }
- bindingConfig.sizes=oldSizes;bindingConfig.boundaryIds=oldAnchors.filter(id=>bookletPages().some(p=>p.id===id));saveBinding();
+ // Changing one signature's CAPACITY must never create/delete/move images or
+ // borrow any artwork from adjacent signatures. Capacity is metadata only.
+ const groups=bindingGroups();
+ const before={kind:'booklet',pages:[...pages],sizes:groups.map(g=>g.size),boundaryIds:[...(bindingConfig.boundaryIds||[])]};
+ const sizes=groups.map(g=>g.size);
+ sizes[group.g]=newSize;
+ bindingConfig.sizes=sizes;
+ bindingConfig.boundaryIds=groups.map(g=>bookletPages()[g.base]?.id).filter(Boolean);
+ saveBinding();
  layoutUndo.push(before);if(layoutUndo.length>60)layoutUndo.shift();layoutRedo.length=0;
  renderList();updateLayoutHistory();await ensureSpread(spread);drawScene();saveSoon();
- toast('已调整本册 · 后续册图片保持原组');
+ const used=physicalCount(bookletPages().slice(group.base,group.end));
+ toast(used>newSize?'已调整容量：本册内容超出 '+(used-newSize)+'P，请在本册内处理':'已调整本册容量，其他册内容不变');
 }
 async function swapAdjacentBooklets(index,direction){
  if(busy)return;
@@ -1029,9 +1011,9 @@ renderList=function(){
  }
  if(pets.length)addSection('PET 外壳','独立外壳 · '+pets.length+' 面 · 不计入分册',pets,true);
  for(const group of bindingGroups()){
-  const {g,base,size}=group,items=body.slice(base,base+size),count=items.length;
+  const {g,base,size}=group,items=body.slice(base,group.end),count=items.length;
   const tally=bookletPrintBreakdown(items);
-  addSection('第 '+(g+1)+' 册',(base+1)+'–'+(base+count)+' 图稿 · 实体装订 '+group.used+'/'+size+'P · 印刷 '+tally.total+'P（普通 '+tally.other+'P，硫酸纸 '+tally.tracing+'P单面；硫酸纸实体 '+(tally.tracing*2)+'P）'+(count<size?' · 待补齐':''),items,false,group);
+  addSection('第 '+(g+1)+' 册',(base+1)+'–'+(base+count)+' 图稿 · 实体装订 '+group.used+'/'+size+'P · 印刷 '+tally.total+'P（普通 '+tally.other+'P，硫酸纸 '+tally.tracing+'P单面；硫酸纸实体 '+(tally.tracing*2)+'P）'+(group.used<size?' · 未满 '+(size-group.used)+'P':group.used>size?' · 超出 '+(group.used-size)+'P':''),items,false,group);
  }
  highlightBinding();
 };
