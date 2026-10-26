@@ -75,7 +75,7 @@ body.layout-page-open .sidebar .booklet-pages{grid-template-columns:repeat(8,var
 </head>
 <body>
 <div class="app">
-<header class="topbar"><div class="brand">BOOK LAB v7.41 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="展开：襟片58.67＋封底176＋书脊4＋封面176＋襟片58.67 mm">PET 外封 473.33mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
+<header class="topbar"><div class="brand">BOOK LAB v7.42 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="展开：襟片58.67＋封底176＋书脊4＋封面176＋襟片58.67 mm">PET 外封 473.33mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
 <div id="bookSpecs" role="status" aria-live="polite" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:8px 14px;background:#1b1e25;border-bottom:1px solid var(--line);font-size:12px;color:#cbd3e1">
  <strong style="color:#e8ecf9">📖 本册实时规格</strong>
  <span>成品：176 × 250 mm</span>
@@ -1004,7 +1004,7 @@ renderList=function(){
  for(const group of bindingGroups()){
   const {g,base,size}=group,items=body.slice(base,base+size),count=items.length;
   const tally=bookletPrintBreakdown(items);
-  addSection('第 '+(g+1)+' 册',(base+1)+'–'+(base+count)+' 张 · '+count+'/'+size+' 个排版位 · 印刷计 '+tally.total+'P（普通 '+tally.other+'P · 硫酸纸 '+tally.tracing+'P，单面印刷）'+(count<size?' · 待补齐':''),items,false,group);
+  addSection('第 '+(g+1)+' 册',(base+1)+'–'+(base+count)+' 张 · '+count+'/'+size+' 个排版位 · 印刷计 '+tally.total+'P / '+(Math.ceil(tally.other/2)+tally.tracing)+'张（普通 '+tally.other+'P / '+Math.ceil(tally.other/2)+'张 · 硫酸纸 '+tally.tracing+'P / '+tally.tracing+'张）'+(count<size?' · 待补齐':''),items,false,group);
  }
  highlightBinding();
 };
@@ -1333,10 +1333,10 @@ $('#bindingStart').onchange=e=>{bindingConfig.start=Math.max(1,Math.floor(Number
 $('#bindingReset').onclick=()=>{bindingConfig.sizes=[];saveBinding();renderList();toast('已按默认页数重新分组')};
 function updateBookSpecs(){
  const body=bookletPages(),count=bookletPrintBreakdown(body);
- $('#specOrdinary').textContent=count.other+'P';
- $('#specTracing').textContent=count.tracing+'P';
- $('#specTotal').textContent=count.total+'P';
- $('#specUnits').textContent='普通纸 '+Math.ceil(count.other/2)+' 张（'+count.other+'P）· 硫酸纸 '+count.tracing+' 张（单面）· PET 不计入';
+ $('#specOrdinary').textContent=count.other+'P / '+Math.ceil(count.other/2)+'张';
+ $('#specTracing').textContent=count.tracing+'P / '+count.tracing+'张';
+ $('#specTotal').textContent=count.total+'P / '+(Math.ceil(count.other/2)+count.tracing)+'张';
+ $('#specUnits').textContent='普通纸 2P/张 · 硫酸纸 1P/张（单面）· PET 不计入';
 }
 const renderBeforeBookSpecs=renderList;
 renderList=function(){renderBeforeBookSpecs();updateBookSpecs()};
