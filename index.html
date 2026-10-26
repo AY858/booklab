@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>BOOK LAB — WebGL Flipbook v8.2</title>
+<title>BOOK LAB — WebGL Flipbook v8.3</title>
 <style>
 :root{--bg:#101114;--panel:#17191d;--panel2:#21242a;--line:#30343c;--text:#f2f4f7;--muted:#8f97a4;--accent:#9da6ff}
 *{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}button,input,select{font:inherit;color:inherit}button{cursor:pointer}.app{height:100%;display:grid;grid-template-rows:52px auto minmax(0,1fr)}.topbar{display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid var(--line);background:#131519}.brand{font-weight:800;letter-spacing:.08em;margin-right:8px}.btn{height:32px;padding:0 11px;border:1px solid var(--line);background:var(--panel2);border-radius:8px;display:inline-flex;align-items:center;justify-content:center;gap:6px}.btn.primary{background:#eef0ff;color:#11131a;border-color:#eef0ff}.spacer{flex:1}.status{font-size:12px;color:var(--muted)}input[type=file]{display:none}.main{display:grid;grid-template-columns:286px 1fr;min-height:0}.sidebar{min-height:0;border-right:1px solid var(--line);background:var(--panel);display:grid;grid-template-rows:auto 1fr auto}.sidehead{padding:10px;border-bottom:1px solid var(--line)}.drop{padding:12px;border:1px dashed #4a505b;border-radius:9px;color:var(--muted);font-size:12px;text-align:center}.drop.drag{border-color:var(--accent);background:#22253b}.list{overflow:auto;padding:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start}.thumb{border:1px solid #333844;background:#242730;border-radius:7px;padding:5px;user-select:none}.thumb.selected{outline:2px solid var(--accent);outline-offset:1px}.thumb.dragging{opacity:.4}.thumb img{display:block;width:100%;aspect-ratio:.707/1;object-fit:contain;background:#0b0c0e;border-radius:4px}.meta{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:10px;margin-top:4px}.chip{padding:2px 5px;border-radius:99px;background:#333843}.chip.pet{background:#203b3e;color:#b8f0eb}.chip.tracing{background:#403a28;color:#ffe7a4}.settings{padding:11px;border-top:1px solid var(--line);display:grid;gap:9px}.settings h3{margin:0;font-size:12px}.row{display:grid;grid-template-columns:86px 1fr;align-items:center;gap:8px;color:var(--muted);font-size:12px}.row input,.row select{width:100%;background:#22262d;border:1px solid var(--line);border-radius:6px;padding:6px}.actions{display:flex;gap:6px}.actions .btn{flex:1;font-size:11px}.stagewrap{position:relative;overflow:hidden;background:radial-gradient(circle at 50% 42%,#3d414a 0,#1b1d22 48%,#0e0f12 100%)}.canvasbox{position:absolute;inset:0 0 52px;display:grid;place-items:center}.canvasbox canvas{display:block;width:min(90vw,1160px);height:min(80vh,790px)}.controls{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);display:flex;align-items:center;gap:7px;padding:7px;border:1px solid #343944;background:#121418df;border-radius:12px}.indicator{min-width:128px;text-align:center;color:#c6cbd4;font-size:12px}.zoom{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:11px}.zoom input{width:86px}.empty{position:absolute;inset:0 0 52px;display:grid;place-items:center;color:var(--muted);pointer-events:none}.empty b{display:block;text-align:center;color:#e1e4ea;font-size:18px;margin-bottom:7px}.toast{position:absolute;right:14px;top:14px;background:#eef0ff;color:#11131a;padding:8px 11px;border-radius:8px;font-size:12px;opacity:0;transform:translateY(-5px);transition:.18s;z-index:50}.toast.show{opacity:1;transform:none}@media(max-width:920px){.main{grid-template-columns:230px 1fr}}
@@ -87,12 +87,12 @@ body.layout-page-open.layout-spreads .reading-spread .booklet-heading{font-size:
 </head>
 <body>
 <div class="app">
-<header class="topbar"><div class="brand">BOOK LAB v8.2 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="pdfInput" title="将单页 PDF 按顺序导入为新书帖">导入 PDF</label><input id="pdfInput" type="file" accept=".pdf,application/pdf"><button class="btn" id="topAutoFlipBtn">▶ 翻页动画</button><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="展开：襟片58.67＋封底176＋书脊4＋封面176＋襟片58.67 mm">PET 外封 473.33mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
+<header class="topbar"><div class="brand">BOOK LAB v8.3 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="pdfInput" title="将单页 PDF 按顺序导入为新书帖">导入 PDF</label><input id="pdfInput" type="file" accept=".pdf,application/pdf"><button class="btn" id="topAutoFlipBtn">▶ 翻页动画</button><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="展开：襟片58.67＋封底176＋书脊4＋封面176＋襟片58.67 mm">PET 外封 473.33mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
 <div id="bookSpecs" role="status" aria-live="polite" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:8px 14px;background:#1b1e25;border-bottom:1px solid var(--line);font-size:12px;color:#cbd3e1">
  <strong style="color:#e8ecf9">📖 本册实时规格</strong>
  <span>成品：176 × 250 mm</span>
  <span>普通纸：<b id="specOrdinary">0P</b></span>
- <span>硫酸纸（单面）：<b id="specTracing">0P</b></span>
+ <span>硫酸纸（正反两面）：<b id="specTracing">0P</b></span>
  <span style="color:#a7e4df">合计：<b id="specTotal">0P</b></span>
  <span id="specUnits" style="color:#9a9eac"></span>
 </div>
@@ -140,21 +140,7 @@ function sourcePageSort(a,b){
   if(la&&lb&&la[0].toLowerCase()===lb[0].toLowerCase()&&la.length!==lb.length)return lb.length-la.length;
   return fileNameCollator.compare(A,B);
 }
-function sortN(a,b){return sourcePageSort(a,b)}function clamp(v,a,b){return Math.max(a,Math.min(b,v))}function renderFaces(){
- const faces=[];
- for(const p of pages){
-  if(p.material==='tracing'){
-   const blank={id:'tracing-back-'+p.id,material:'tracing',opacity:Math.min(.46,(p.opacity??.84)*.50),sourcePage:p,unprintedTracingBack:true};
-   // The inked face and its unprinted reverse must always form ONE sheet.
-   if(faces.length%2===1){
-    // Complete the preceding sheet before starting an independent tracing leaf.
-    faces.push({id:'sheet-gap-'+p.id,material:'paper',opacity:0.08,unprintedTracingBack:true});
-   }
-   faces.push(p,blank);
-  }else faces.push(p);
- }
- return faces;
-}
+function sortN(a,b){return sourcePageSort(a,b)}function clamp(v,a,b){return Math.max(a,Math.min(b,v))}function renderFaces(){return pages.slice()}
 function maxSpread(){const faces=renderFaces();return faces.length?Math.ceil((faces.length-1)/2):0}function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._);t._=setTimeout(()=>t.classList.remove('show'),1200)}function pageAt(i){return i>=0&&i<pages.length?pages[i]:null}function pair(s=spread){const faces=renderFaces();if(!faces.length)return{l:null,r:null};if(s===0)return{l:null,r:faces[0]};return{l:faces[s*2-1]||null,r:faces[s*2]||null}}
 async function resizeToBlob(file,maxW,maxH,q=.9){const bmp=await createImageBitmap(file,{imageOrientation:'from-image'});const s=Math.min(1,maxW/bmp.width,maxH/bmp.height),w=Math.max(1,Math.round(bmp.width*s)),h=Math.max(1,Math.round(bmp.height*s));const c=typeof OffscreenCanvas!=='undefined'?new OffscreenCanvas(w,h):Object.assign(document.createElement('canvas'),{width:w,height:h});const x=c.getContext('2d',{alpha:true});x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';const ratio=bmp.width/bmp.height,bleedRatio=182/256;
  const crop=Math.abs(ratio-bleedRatio)<0.012&&bmp.width>=300&&bmp.height>=400;
@@ -595,7 +581,7 @@ function bookDesignPageCount(){return bookletPrintBreakdown(bookletPages()).tota
 function bookletPrintBreakdown(items){
  const tracing=items.filter(p=>p.material==='tracing').length;
  const other=items.length-tracing;
- return {tracing,other,total:other+tracing,physical:other+2*tracing};
+ return {tracing,other,total:other+tracing,physical:items.length};
 }
 function updateIndicator(){$('#empty').style.display=pages.length?'none':'grid';if(spread===maxSpread()&&petEndClosed){$('#indicator').textContent='PET 64+1 已合上 · 书芯 '+bookDesignPageCount()+'P';return}if(spread===maxSpread()&&spread>0){$('#indicator').textContent='PET 封底 · '+bookDesignPageCount()+'P 书芯';return}if(spread===0&&petOpened){$('#indicator').textContent='PET 1-1 已翻开 · 书芯未展开';return}if(spread===0){$('#indicator').textContent='PET 1-1 · '+bookDesignPageCount()+'P 书芯';return}$('#indicator').textContent=pages.length?(spread===0?`封面 · ${bookDesignPageCount()}页`:`${spread*2}-${Math.min(spread*2+1,pages.length)} · ${bookDesignPageCount()}页`):'0 / 0'}
 function renderList(){list.innerHTML='';const frag=document.createDocumentFragment();pages.forEach((p,i)=>{if(!p.thumbURL)p.thumbURL=URL.createObjectURL(p.thumb);const d=document.createElement('div');d.className='thumb'+(p.id===selected?' selected':'');d.draggable=true;d.dataset.id=p.id;const im=document.createElement('img');im.loading='lazy';im.src=p.thumbURL;d.appendChild(im);const m=document.createElement('div');m.className='meta';m.innerHTML=`<span>${String(i+1).padStart(2,'0')}</span><span class="chip ${p.material}">${p.material==='paper'?'PAPER':p.material==='pet'?'PET':p.material==='cover'?'COVER':'TRACING'}</span>`;d.appendChild(m);const fn=document.createElement('div');fn.style.cssText='margin-top:4px;font-size:10px;color:#b7bdc7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';fn.textContent=p.sourceName||p.name;fn.title=p.sourcePath||p.sourceName||p.name;d.appendChild(fn);d.onclick=async()=>{if(busy||dragId)return;selected=p.id;[...list.querySelectorAll('.thumb')].forEach(x=>x.classList.toggle('selected',x.dataset.id===selected));renderSettings();spread=Math.ceil(renderFaces().indexOf(p)/2);await ensureSpread(spread);drawScene()};d.ondragstart=e=>{dragId=p.id;d.classList.add('dragging');e.dataTransfer.effectAllowed='move';startListAutoScroll()};d.ondragend=()=>{d.classList.remove('dragging');dragId=null;stopListAutoScroll()};d.ondragover=e=>{e.preventDefault();trackListDrag(e)};d.ondrop=async e=>{e.preventDefault();stopListAutoScroll();const a=pages.findIndex(x=>x.id===dragId),b=pages.findIndex(x=>x.id===p.id);if(a<0||b<0||a===b)return;const[mv]=pages.splice(a,1);pages.splice(b,0,mv);spread=clamp(spread,0,maxSpread());renderList();await ensureSpread(spread);drawScene()};frag.appendChild(d)});list.appendChild(frag)}
@@ -627,7 +613,7 @@ async function exportSignatureLayout(){
   const c=document.createElement('canvas');c.width=width;c.height=height;
   const ctx=c.getContext('2d');ctx.fillStyle='#f6f8fc';ctx.fillRect(0,0,width,height);
   ctx.fillStyle='#243247';ctx.font='bold 34px "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif';ctx.fillText('BOOK LAB  /  OVERALL LAYOUT',margin,48);
-  ctx.fillStyle='#607084';ctx.font='18px "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif';ctx.fillText(groups.length+' booklets  |  '+body.length+' pages  |  current arrangement  |  PET excluded  |  tracing = 1P printed face',margin,82);
+  ctx.fillStyle='#607084';ctx.font='18px "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif';ctx.fillText(groups.length+' booklets  |  '+body.length+' pages  |  current arrangement  |  PET excluded  |  each imported page = 1P, including tracing backs',margin,82);
   let y=header;
   for(const block of blocks){
    const {g,items,rows}=block;
@@ -668,7 +654,7 @@ async function exportSignatureLayout(){
  }catch(err){console.error(err);toast('总览导出失败：'+err.message)}
  finally{btn.disabled=false;btn.textContent='导出总体排版 PNG'}
 }
-async function exportProject(){const payload={format:'BOOKLAB_V5_WEBGL',bindingConfig,spread,petOpened,petEndClosed,selected,soundOn,pages:[],petCover:petCoverBlob?await blobToDataURL(petCoverBlob):null,petCoverName};$('#status').textContent='导出工程…';for(const p of pages)payload.pages.push({id:p.id,name:p.name,sourceName:p.sourceName||p.name,sourcePath:p.sourcePath||p.sourceName||p.name,material:p.material,opacity:p.opacity,blankSlot:!!p.blankSlot,preview:await blobToDataURL(p.preview),thumb:await blobToDataURL(p.thumb),sourceFile:p.sourceFile?await blobToDataURL(p.sourceFile):null});const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(payload)],{type:'application/json'}));a.download='booklab-v5.booklab';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);$('#status').textContent='WebGL 曲面翻页'}
+async function exportProject(){const payload={format:'BOOKLAB_V5_WEBGL',tracingModel:'EXPLICIT_FACES_1P',bindingConfig,spread,petOpened,petEndClosed,selected,soundOn,pages:[],petCover:petCoverBlob?await blobToDataURL(petCoverBlob):null,petCoverName};$('#status').textContent='导出工程…';for(const p of pages)payload.pages.push({id:p.id,name:p.name,sourceName:p.sourceName||p.name,sourcePath:p.sourcePath||p.sourceName||p.name,material:p.material,opacity:p.opacity,blankSlot:!!p.blankSlot,preview:await blobToDataURL(p.preview),thumb:await blobToDataURL(p.thumb),sourceFile:p.sourceFile?await blobToDataURL(p.sourceFile):null});const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(payload)],{type:'application/json'}));a.download='booklab-v5.booklab';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);$('#status').textContent='WebGL 曲面翻页'}
 async function loadProject(file){try{const j=JSON.parse(await file.text());if(!['BOOKLAB_V2_META','BOOKLAB_V3_META','BOOKLAB_V4_CANVAS','BOOKLAB_V5_WEBGL'].includes(j.format))throw 0;pages.length=0;for(const p of j.pages)pages.push({...p,sourceName:p.sourceName||p.name,sourcePath:p.sourcePath||p.sourceName||p.name,preview:dataURLtoBlob(p.preview),thumb:dataURLtoBlob(p.thumb),sourceFile:p.sourceFile?dataURLtoBlob(p.sourceFile):null,thumbURL:null});if(j.petCover)await setPETCover(await migrateLegacyPETPlaceholder(dataURLtoBlob(j.petCover)),j.petCoverName||'工程中的 PET 外封');selected=pages.some(p=>p.id===j.selected)?j.selected:(pages[0]?.id||null);spread=clamp(j.spread||0,0,maxSpread());petOpened=!!j.petOpened;petTurn=petOpened?1:0;petEndClosed=!!j.petEndClosed;petEndTurn=petEndClosed?1:0;soundOn=j.soundOn!==false;renderList();renderSettings();await ensureSpread(spread);drawScene();updateSound();toast('工程已载入')}catch(e){console.error(e);toast('工程文件无法读取')}}
 $('#imgInput').onchange=e=>{addFiles(e.target.files);e.target.value=''};$('#folderInput').onchange=e=>{addFiles(e.target.files,true);e.target.value=''};$('#projectInput').onchange=e=>{if(e.target.files[0])loadProject(e.target.files[0]);e.target.value=''};$('#exportLayoutBtn').onclick=exportSignatureLayout;$('#exportBtn').onclick=exportProject;let autoFlipping=false;
 function updateAutoFlipButton(){
@@ -753,7 +739,7 @@ const saveBadge=document.createElement('span');saveBadge.className='status';save
 const database=new Promise((resolve,reject)=>{const request=indexedDB.open('booklab-workspace',1);request.onupgradeneeded=()=>request.result.createObjectStore('projects');request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error)});
 let restoring=true,saveTimer,saveChain=Promise.resolve();
 function saveSoon(){if(restoring)return;saveBadge.textContent='待保存…';clearTimeout(saveTimer);saveTimer=setTimeout(saveWorkspace,350)}
-function saveWorkspace(){if(restoring)return;clearTimeout(saveTimer);const snapshot={bindingConfig:JSON.parse(JSON.stringify(bindingConfig)),pages:pages.map(({thumbURL,...p})=>({...p})),selected,selection:[...selectedIds],spread,petOpened,petEndClosed,soundOn,zoom,cameraPitch,cameraYaw,cameraPanX,cameraPanY,petCoverBlob,petCoverName,sidebarWidth:$('.sidebar').getBoundingClientRect().width};saveBadge.textContent='保存中…';saveChain=saveChain.catch(()=>{}).then(async()=>{const db=await database;await new Promise((resolve,reject)=>{const tx=db.transaction('projects','readwrite');tx.objectStore('projects').put(snapshot,'current');tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error)});saveBadge.textContent='已自动保存到此浏览器'}).catch(e=>{console.error(e);saveBadge.textContent='保存失败，请导出工程备份';toast('自动保存失败，请导出工程备份')});return saveChain}
+function saveWorkspace(){if(restoring)return;clearTimeout(saveTimer);const snapshot={tracingModel:'EXPLICIT_FACES_1P',bindingConfig:JSON.parse(JSON.stringify(bindingConfig)),pages:pages.map(({thumbURL,...p})=>({...p})),selected,selection:[...selectedIds],spread,petOpened,petEndClosed,soundOn,zoom,cameraPitch,cameraYaw,cameraPanX,cameraPanY,petCoverBlob,petCoverName,sidebarWidth:$('.sidebar').getBoundingClientRect().width};saveBadge.textContent='保存中…';saveChain=saveChain.catch(()=>{}).then(async()=>{const db=await database;await new Promise((resolve,reject)=>{const tx=db.transaction('projects','readwrite');tx.objectStore('projects').put(snapshot,'current');tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error)});saveBadge.textContent='已自动保存到此浏览器'}).catch(e=>{console.error(e);saveBadge.textContent='保存失败，请导出工程备份';toast('自动保存失败，请导出工程备份')});return saveChain}
 function releaseCaches(){for(const p of pages)if(p.thumbURL)URL.revokeObjectURL(p.thumbURL);for(const b of bitmapCache.values())b.close();bitmapCache.clear();for(const t of textureCache.values())gl.deleteTexture(t);textureCache.clear()}
 const originalLoadProject=loadProject;
 loadProject=async function(file){ // Validate before replacing the current workspace.
@@ -837,7 +823,7 @@ function validBindingSize(n){return Number.isInteger(n)&&n>=4&&n<=256&&n%4===0}
 if(!validBindingSize(bindingConfig.size))bindingConfig.size=16;
 bindingConfig.start=Math.max(1,Math.floor(Number(bindingConfig.start)||1));if(!Array.isArray(bindingConfig.sizes))bindingConfig.sizes=[];
 function validGroupSize(n){return Number.isInteger(n)&&n>=1&&n<=256}
-function physicalP(p){return p?.material==='tracing'?2:1}
+function physicalP(p){return 1}
 function physicalCount(items){return items.reduce((sum,p)=>sum+physicalP(p),0)}
 function bindingGroups(){
  const body=bookletPages(),result=[];
@@ -1056,7 +1042,7 @@ renderList=function(){
  for(const group of bindingGroups()){
   const {g,base,size}=group,items=body.slice(base,group.end),count=items.length;
   const tally=bookletPrintBreakdown(items);
-  addSection('第 '+(g+1)+' 册',(base+1)+'–'+(base+count)+' 图稿 · 实体装订 '+group.used+'/'+size+'P · 印刷 '+tally.total+'P（普通 '+tally.other+'P，硫酸纸 '+tally.tracing+'P单面；硫酸纸实体 '+(tally.tracing*2)+'P）'+(group.used<size?' · 未满 '+(size-group.used)+'P':group.used>size?' · 超出 '+(group.used-size)+'P':''),items,false,group);
+  addSection('第 '+(g+1)+' 册',(base+1)+'–'+(base+count)+' 图稿 · 实体装订 '+group.used+'/'+size+'P · 印刷 '+tally.total+'P（普通 '+tally.other+'P，硫酸纸 '+tally.tracing+'P，正反面均需录入）'+(group.used<size?' · 未满 '+(size-group.used)+'P':group.used>size?' · 超出 '+(group.used-size)+'P':''),items,false,group);
  }
  highlightBinding();
 };
@@ -1386,10 +1372,11 @@ renderList=function(){
 };
 
 function invalidTracingIds(){
- const invalid=new Set();let regularCount=0;
- for(const p of bookletPages()){
-  if(p.material==='tracing'){if(regularCount%2===1)invalid.add(p.id)}
-  else regularCount++;
+ const invalid=new Set(),body=bookletPages();
+ // Consecutive physical faces (1/2, 3/4, ...) must share sheet material.
+ for(let i=0;i<body.length;i+=2){
+  const a=body[i],b=body[i+1],ta=a?.material==='tracing',tb=b?.material==='tracing';
+  if(ta!==tb){if(ta)invalid.add(a.id);if(tb)invalid.add(b.id)}
  }
  return invalid;
 }
@@ -1400,9 +1387,9 @@ renderList=function(){
  for(const el of list.querySelectorAll('.thumb')){
   if(!invalid.has(el.dataset.id))continue;
   el.style.outline='3px solid #ef4444';el.style.outlineOffset='-3px';
-  el.title='⚠ 硫酸纸插位错误：夹在普通纸同一张的正反面之间，请移动到完整纸张之间';
+  el.title='⚠ 硫酸纸正反面未配对：同一张纸的两面（1/2、3/4…）都需要标为硫酸纸；背面不印也请导入空白页';
   const warning=document.createElement('div');
-  warning.textContent='⚠ 插位错误';warning.style.cssText='background:#b91c1c;color:white;padding:3px 6px;font-size:11px;font-weight:bold;border-radius:3px;margin-top:3px';
+  warning.textContent='⚠ 正反未配对';warning.style.cssText='background:#b91c1c;color:white;padding:3px 6px;font-size:11px;font-weight:bold;border-radius:3px;margin-top:3px';
   el.appendChild(warning);
  }
  for(const group of bindingGroups()){
@@ -1412,7 +1399,7 @@ renderList=function(){
   const header=headers.find(h=>h.textContent.includes('第 '+(group.g+1)+' 册'));
   if(header){
    header.style.outline='2px solid #ef4444';
-   const note=document.createElement('span');note.textContent='⚠ 硫酸纸插位冲突';note.style.cssText='color:#f87171;font-size:12px;font-weight:bold';header.append(note);
+   const note=document.createElement('span');note.textContent='⚠ 硫酸纸正反未配对';note.style.cssText='color:#f87171;font-size:12px;font-weight:bold';header.append(note);
   }
  }
 };
@@ -1446,9 +1433,9 @@ $('#bindingReset').onclick=()=>{bindingConfig.sizes=[];bindingConfig.members=[];
 function updateBookSpecs(){
  const body=bookletPages(),count=bookletPrintBreakdown(body);
  $('#specOrdinary').textContent=count.other+'P / '+Math.ceil(count.other/2)+'张';
- $('#specTracing').textContent=count.tracing+'P / '+count.tracing+'张';
- $('#specTotal').textContent=count.total+'P / '+(Math.ceil(count.other/2)+count.tracing)+'张';
- $('#specUnits').textContent='实体装订 '+count.physical+'P（硫酸纸背面留白）· PET 不计入';
+ $('#specTracing').textContent=count.tracing+'P / '+(count.tracing/2)+'张';
+ $('#specTotal').textContent=count.total+'P / '+Math.ceil(count.total/2)+'张';
+ $('#specUnits').textContent='实体装订 '+count.physical+'P · 每个导入页面计 1P，硫酸纸 2P 为 1 张 · PET 不计入';
 }
 const renderBeforeBookSpecs=renderList;
 renderList=function(){renderBeforeBookSpecs();updateBookSpecs()};
@@ -1557,7 +1544,7 @@ function buildReadingSpreads(items){
  const front=body[0],back=body.length>1?body[body.length-1]:null,faces=[];
  for(const page of body.slice(1,back?-1:undefined)){
   faces.push({page,duplicate:false});
-  if(page.material==='tracing')faces.push({page,duplicate:true});
+  // Front and back are explicit user-supplied pages. Never synthesize a face.
  }
  const spreads=[];
  for(let i=0;i<faces.length;i+=2)spreads.push([faces[i],faces[i+1]||null]);
@@ -1572,13 +1559,7 @@ renderList=function(){
  function thumb(face){
   if(!face){const empty=document.createElement('div');empty.className='reading-empty';empty.textContent='空白位置（不计页数）';return empty}
   const original=originals.get(face.page.id);
-  if(!face.duplicate)return original;
-  const copy=original.cloneNode(true);
-  for(const key of ['onclick','ondragstart','ondragend','ondragover','ondragleave','ondrop'])copy[key]=original[key];
-  copy.dataset.readingDuplicate='true';
-  const badge=document.createElement('div');badge.className='reading-copy-label';badge.textContent='硫酸纸重复预览 · 同一张图';copy.append(badge);
-  copy.title='仅在双页视图中重复展示，不增加工程页数；修改仍作用于原图';
-  return copy;
+  return original;
  }
  function section(title,left,right){
   const el=document.createElement('section');el.className='booklet reading-spread';
