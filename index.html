@@ -75,7 +75,7 @@ body.layout-page-open .sidebar .booklet-pages{grid-template-columns:repeat(8,var
 </head>
 <body>
 <div class="app">
-<header class="topbar"><div class="brand">BOOK LAB v7.43 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="展开：襟片58.67＋封底176＋书脊4＋封面176＋襟片58.67 mm">PET 外封 473.33mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
+<header class="topbar"><div class="brand">BOOK LAB v7.44 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="展开：襟片58.67＋封底176＋书脊4＋封面176＋襟片58.67 mm">PET 外封 473.33mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
 <div id="bookSpecs" role="status" aria-live="polite" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:8px 14px;background:#1b1e25;border-bottom:1px solid var(--line);font-size:12px;color:#cbd3e1">
  <strong style="color:#e8ecf9">📖 本册实时规格</strong>
  <span>成品：176 × 250 mm</span>
@@ -583,7 +583,7 @@ function bookDesignPageCount(){return bookletPrintBreakdown(bookletPages()).tota
 function bookletPrintBreakdown(items){
  const tracing=items.filter(p=>p.material==='tracing').length;
  const other=items.length-tracing;
- return {tracing,other,total:other+tracing};
+ return {tracing,other,total:other+tracing,physical:other+2*tracing};
 }
 function updateIndicator(){$('#empty').style.display=pages.length?'none':'grid';if(spread===maxSpread()&&petEndClosed){$('#indicator').textContent='PET 64+1 已合上 · 书芯 '+bookDesignPageCount()+'P';return}if(spread===maxSpread()&&spread>0){$('#indicator').textContent='PET 封底 · '+bookDesignPageCount()+'P 书芯';return}if(spread===0&&petOpened){$('#indicator').textContent='PET 1-1 已翻开 · 书芯未展开';return}if(spread===0){$('#indicator').textContent='PET 1-1 · '+bookDesignPageCount()+'P 书芯';return}$('#indicator').textContent=pages.length?(spread===0?`封面 · ${bookDesignPageCount()}页`:`${spread*2}-${Math.min(spread*2+1,pages.length)} · ${bookDesignPageCount()}页`):'0 / 0'}
 function renderList(){list.innerHTML='';const frag=document.createDocumentFragment();pages.forEach((p,i)=>{if(!p.thumbURL)p.thumbURL=URL.createObjectURL(p.thumb);const d=document.createElement('div');d.className='thumb'+(p.id===selected?' selected':'');d.draggable=true;d.dataset.id=p.id;const im=document.createElement('img');im.loading='lazy';im.src=p.thumbURL;d.appendChild(im);const m=document.createElement('div');m.className='meta';m.innerHTML=`<span>${String(i+1).padStart(2,'0')}</span><span class="chip ${p.material}">${p.material==='paper'?'PAPER':p.material==='pet'?'PET':p.material==='cover'?'COVER':'TRACING'}</span>`;d.appendChild(m);const fn=document.createElement('div');fn.style.cssText='margin-top:4px;font-size:10px;color:#b7bdc7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';fn.textContent=p.sourceName||p.name;fn.title=p.sourcePath||p.sourceName||p.name;d.appendChild(fn);d.onclick=async()=>{if(busy||dragId)return;selected=p.id;[...list.querySelectorAll('.thumb')].forEach(x=>x.classList.toggle('selected',x.dataset.id===selected));renderSettings();spread=Math.ceil(renderFaces().indexOf(p)/2);await ensureSpread(spread);drawScene()};d.ondragstart=e=>{dragId=p.id;d.classList.add('dragging');e.dataTransfer.effectAllowed='move';startListAutoScroll()};d.ondragend=()=>{d.classList.remove('dragging');dragId=null;stopListAutoScroll()};d.ondragover=e=>{e.preventDefault();trackListDrag(e)};d.ondrop=async e=>{e.preventDefault();stopListAutoScroll();const a=pages.findIndex(x=>x.id===dragId),b=pages.findIndex(x=>x.id===p.id);if(a<0||b<0||a===b)return;const[mv]=pages.splice(a,1);pages.splice(b,0,mv);spread=clamp(spread,0,maxSpread());renderList();await ensureSpread(spread);drawScene()};frag.appendChild(d)});list.appendChild(frag)}
@@ -839,9 +839,18 @@ function validBindingSize(n){return Number.isInteger(n)&&n>=4&&n<=256&&n%4===0}
 if(!validBindingSize(bindingConfig.size))bindingConfig.size=16;
 bindingConfig.start=Math.max(1,Math.floor(Number(bindingConfig.start)||1));if(!Array.isArray(bindingConfig.sizes))bindingConfig.sizes=[];
 function validGroupSize(n){return Number.isInteger(n)&&n>=1&&n<=256}
+function physicalP(p){return p?.material==='tracing'?2:1}
+function physicalCount(items){return items.reduce((sum,p)=>sum+physicalP(p),0)}
 function bindingGroups(){
- const result=[];let base=0,g=0;
- while(base<bookletPages().length){const custom=bindingConfig.sizes[g],size=validGroupSize(custom)?custom:bindingConfig.size;result.push({g,base,size,end:base+size});base+=size;g++}return result;
+ const body=bookletPages(),result=[];let base=0,g=0;
+ while(base<body.length){
+  const custom=bindingConfig.sizes[g],size=validGroupSize(custom)?custom:bindingConfig.size;
+  let end=base,used=0;
+  while(end<body.length&&used+physicalP(body[end])<=size){used+=physicalP(body[end]);end++}
+  if(end===base){end++;used=physicalP(body[base])}
+  result.push({g,base,size,end,used});base=end;g++;
+ }
+ return result;
 }
 function bindingAt(index){
  const group=bindingGroups().find(g=>index>=g.base&&index<g.end);if(!group)return null;
@@ -855,7 +864,7 @@ function bookletPartner(id){
  if(i<0)return null;
  const group=bindingGroups().find(g=>i>=g.base&&i<g.end);
  if(!group||group.end>body.length)return null;
- return body[group.base+group.size-1-(i-group.base)]||null;
+ return body[group.end-1-(i-group.base)]||null;
 }
 function highlightBinding(){
  const body=bookletPages(),current=pages.find(p=>p.id===selected),partner=bookletPartner(selected);
@@ -896,20 +905,21 @@ async function resizeIndependentBooklet(group,newSize){
  const body=bookletPages(),start=group.base,end=Math.min(body.length,group.end);
  const current=body.slice(start,end),pets=pages.filter(p=>p.material==='pet');
  if(newSize>group.size){
-  const added=await Promise.all(Array.from({length:newSize-group.size},()=>createEmptyLayoutSlot()));
+  const added=await Promise.all(Array.from({length:newSize-group.used},()=>createEmptyLayoutSlot()));
   // Insert blank slots after this booklet, NOT pages from the following one.
   const next=body[end],insertAt=next?pages.indexOf(next):pages.length;
   pages.splice(insertAt,0,...added);oldSizes[group.g]=newSize;
  }else{
-  const overflow=current.slice(newSize),vacant=overflow.filter(p=>p.blankSlot);
+  let units=0,cut=0;while(cut<current.length&&units+physicalP(current[cut])<=newSize){units+=physicalP(current[cut]);cut++}
+  const overflow=current.slice(cut),vacant=overflow.filter(p=>p.blankSlot);
   // Remove trailing empty slots only; occupied pages stay together as a new booklet.
   const removed=overflow.filter(p=>p.blankSlot),kept=overflow.filter(p=>!p.blankSlot);
   const removedIds=new Set(overflow.map(p=>p.id));
   pages.splice(0,pages.length,...pages.filter(p=>!removedIds.has(p.id)));
   oldSizes[group.g]=newSize;
   if(kept.length){
-   const extraSize=Math.ceil(kept.length/4)*4;
-   const slots=await Promise.all(Array.from({length:extraSize-kept.length},()=>createEmptyLayoutSlot()));
+   const extraSize=Math.ceil(physicalCount(kept)/4)*4;
+   const slots=await Promise.all(Array.from({length:extraSize-physicalCount(kept)},()=>createEmptyLayoutSlot()));
    const successor=body[end],insertAt=successor?pages.indexOf(successor):pages.length;
    pages.splice(insertAt,0,...kept,...slots);
    oldSizes.splice(group.g+1,0,extraSize);
@@ -957,11 +967,11 @@ renderList=function(){
     heading.append(control);
    }
   }
-  if(group){const label=document.createElement('label');label.textContent='本册排版位 ';label.style.cssText='margin-left:auto;font-size:12px';const select=document.createElement('select');select.className='signature-size-select';if(group.size%4!==0){const current=document.createElement('option');current.value=group.size;current.textContent=group.size+'P（当前）';current.selected=true;select.append(current)}for(let n=4;n<=64;n+=4){const option=document.createElement('option');option.value=n;option.textContent=n+'P';if(group.size===n)option.selected=true;select.append(option)}select.onchange=()=>resizeIndependentBooklet(group,Number(select.value));label.append(select);heading.append(label);
+  if(group){const label=document.createElement('label');label.textContent='本册实体P数 ';label.style.cssText='margin-left:auto;font-size:12px';const select=document.createElement('select');select.className='signature-size-select';if(group.size%4!==0){const current=document.createElement('option');current.value=group.size;current.textContent=group.size+'P（当前）';current.selected=true;select.append(current)}for(let n=4;n<=64;n+=4){const option=document.createElement('option');option.value=n;option.textContent=n+'P';if(group.size===n)option.selected=true;select.append(option)}select.onchange=()=>resizeIndependentBooklet(group,Number(select.value));label.append(select);heading.append(label);
    const del=document.createElement('button');del.type='button';del.className='btn delete-booklet';del.textContent='删除本册';del.title='删除这一册所有图片（可撤销）';
    del.onclick=async()=>{
     if(busy)return;
-    const bodyNow=bookletPages(),targets=bodyNow.slice(group.base,group.base+group.size);
+    const bodyNow=bookletPages(),targets=bodyNow.slice(group.base,group.end);
     if(!targets.length)return;
     if(!confirm('确定删除第 '+(group.g+1)+' 册的全部 '+targets.length+' 张图片吗？\n此操作可以用 Ctrl+Z 撤销。'))return;
     const before={kind:'booklet',pages:[...pages],sizes:[...bindingConfig.sizes]},oldGroups=bindingGroups(),removed=new Set(targets.map(p=>p.id));
@@ -1004,7 +1014,7 @@ renderList=function(){
  for(const group of bindingGroups()){
   const {g,base,size}=group,items=body.slice(base,base+size),count=items.length;
   const tally=bookletPrintBreakdown(items);
-  addSection('第 '+(g+1)+' 册',(base+1)+'–'+(base+count)+' 张 · '+count+'/'+size+' 个排版位 · 印刷计 '+tally.total+'P / '+(Math.ceil(tally.other/2)+tally.tracing)+'张（普通 '+tally.other+'P / '+Math.ceil(tally.other/2)+'张 · 硫酸纸 '+tally.tracing+'P / '+tally.tracing+'张）'+(count<size?' · 待补齐':''),items,false,group);
+  addSection('第 '+(g+1)+' 册',(base+1)+'–'+(base+count)+' 图稿 · 实体装订 '+group.used+'/'+size+'P · 印刷 '+tally.total+'P（普通 '+tally.other+'P，硫酸纸 '+tally.tracing+'P单面；硫酸纸实体 '+(tally.tracing*2)+'P）'+(count<size?' · 待补齐':''),items,false,group);
  }
  highlightBinding();
 };
@@ -1336,7 +1346,7 @@ function updateBookSpecs(){
  $('#specOrdinary').textContent=count.other+'P / '+Math.ceil(count.other/2)+'张';
  $('#specTracing').textContent=count.tracing+'P / '+count.tracing+'张';
  $('#specTotal').textContent=count.total+'P / '+(Math.ceil(count.other/2)+count.tracing)+'张';
- $('#specUnits').textContent='普通纸 2P/张 · 硫酸纸 1P/张（单面）· PET 不计入';
+ $('#specUnits').textContent='实体装订 '+count.physical+'P（硫酸纸背面留白）· PET 不计入';
 }
 const renderBeforeBookSpecs=renderList;
 renderList=function(){renderBeforeBookSpecs();updateBookSpecs()};
