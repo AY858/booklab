@@ -75,7 +75,7 @@ body.layout-page-open .sidebar .booklet-pages{grid-template-columns:repeat(8,var
 </head>
 <body>
 <div class="app">
-<header class="topbar"><div class="brand">BOOK LAB v7.44 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="展开：襟片58.67＋封底176＋书脊4＋封面176＋襟片58.67 mm">PET 外封 473.33mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
+<header class="topbar"><div class="brand">BOOK LAB v7.45 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="展开：襟片58.67＋封底176＋书脊4＋封面176＋襟片58.67 mm">PET 外封 473.33mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
 <div id="bookSpecs" role="status" aria-live="polite" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:8px 14px;background:#1b1e25;border-bottom:1px solid var(--line);font-size:12px;color:#cbd3e1">
  <strong style="color:#e8ecf9">📖 本册实时规格</strong>
  <span>成品：176 × 250 mm</span>
@@ -759,7 +759,7 @@ function saveWorkspace(){if(restoring)return;clearTimeout(saveTimer);const snaps
 function releaseCaches(){for(const p of pages)if(p.thumbURL)URL.revokeObjectURL(p.thumbURL);for(const b of bitmapCache.values())b.close();bitmapCache.clear();for(const t of textureCache.values())gl.deleteTexture(t);textureCache.clear()}
 const originalLoadProject=loadProject;
 loadProject=async function(file){ // Validate before replacing the current workspace.
- try{const j=JSON.parse(await file.text());if(!['BOOKLAB_V2_META','BOOKLAB_V3_META','BOOKLAB_V4_CANVAS','BOOKLAB_V5_WEBGL'].includes(j.format)||!Array.isArray(j.pages))throw Error('无效工程');for(const p of j.pages){dataURLtoBlob(p.preview);dataURLtoBlob(p.thumb)}if(j.bindingConfig&&validBindingSize(j.bindingConfig.size)){bindingConfig={size:j.bindingConfig.size,start:Math.max(1,Math.floor(Number(j.bindingConfig.start)||1)),sizes:Array.isArray(j.bindingConfig.sizes)?j.bindingConfig.sizes:[]};saveBinding()}releaseCaches();selectedIds.clear();await originalLoadProject(file);if(selected)selectedIds.add(selected);renderList();saveSoon()}catch(e){toast('工程文件无法读取')}};
+ try{const j=JSON.parse(await file.text());if(!['BOOKLAB_V2_META','BOOKLAB_V3_META','BOOKLAB_V4_CANVAS','BOOKLAB_V5_WEBGL'].includes(j.format)||!Array.isArray(j.pages))throw Error('无效工程');for(const p of j.pages){dataURLtoBlob(p.preview);dataURLtoBlob(p.thumb)}if(j.bindingConfig&&validBindingSize(j.bindingConfig.size)){bindingConfig={size:j.bindingConfig.size,start:Math.max(1,Math.floor(Number(j.bindingConfig.start)||1)),sizes:Array.isArray(j.bindingConfig.sizes)?j.bindingConfig.sizes:[],boundaryIds:Array.isArray(j.bindingConfig.boundaryIds)?j.bindingConfig.boundaryIds:[]};saveBinding()}releaseCaches();selectedIds.clear();await originalLoadProject(file);if(selected)selectedIds.add(selected);renderList();saveSoon()}catch(e){toast('工程文件无法读取')}};
 function syncSelection(){for(const el of list.querySelectorAll('.thumb'))el.classList.toggle('selected',selectedIds.has(el.dataset.id));$('#selectionCount').textContent=`已选 ${selectedIds.size} 页`;renderSettings()}
 const originalRenderList=renderList;
 renderList=function(){originalRenderList();if(selected&&!selectedIds.size)selectedIds.add(selected);for(const el of list.querySelectorAll('.thumb')){const id=el.dataset.id;el.onclick=async e=>{if(busy||dragId)return;const i=pages.findIndex(p=>p.id===id);if(e.shiftKey&&selectionAnchor){const a=pages.findIndex(p=>p.id===selectionAnchor);if(!e.ctrlKey&&!e.metaKey)selectedIds.clear();pages.slice(Math.min(a,i),Math.max(a,i)+1).forEach(p=>selectedIds.add(p.id))}else if(e.ctrlKey||e.metaKey){selectedIds.has(id)?selectedIds.delete(id):selectedIds.add(id);selectionAnchor=id}else{selectedIds.clear();selectedIds.add(id);selectionAnchor=id}selected=selectedIds.has(id)?id:([...selectedIds][0]||null);syncSelection();spread=Math.ceil(renderFaces().findIndex(face=>face===pages[i]||face.id===pages[i]?.id)/2);await ensureSpread(spread);drawScene();saveSoon()};el.ondragstart=e=>{if(busy){e.preventDefault();return}if(!selectedIds.has(id)){selectedIds.clear();selectedIds.add(id);selected=id}dragId=id;e.dataTransfer.setData('text/plain',id);e.dataTransfer.effectAllowed='move';syncSelection();for(const x of list.querySelectorAll('.thumb'))if(selectedIds.has(x.dataset.id))x.classList.add('dragging')};el.ondragend=()=>{dragId=null;for(const x of list.querySelectorAll('.thumb'))x.classList.remove('dragging')};el.ondrop=async e=>{e.preventDefault();if(!dragId)return;const after=e.clientY>el.getBoundingClientRect().top+el.clientHeight/2;await moveGroup(id,after);dragId=null}}syncSelection();saveSoon()};
@@ -774,7 +774,7 @@ $('#delete').onclick=async()=>{
  const groups=bindingGroups(),body=bookletPages(),counts=groups.map(g=>g.size),removed=new Set(selectedIds);
  const actual=pages.filter(p=>removed.has(p.id));
  if(!actual.length)return;
- const before={kind:'booklet',pages:[...pages],sizes:[...bindingConfig.sizes]};
+ const before={kind:'booklet',pages:[...pages],sizes:[...bindingConfig.sizes],boundaryIds:[...(bindingConfig.boundaryIds||[])]};
  for(const g of groups){
   const n=body.slice(g.base,g.end).filter(p=>removed.has(p.id)).length;
   counts[g.g]-=n;
@@ -842,7 +842,21 @@ function validGroupSize(n){return Number.isInteger(n)&&n>=1&&n<=256}
 function physicalP(p){return p?.material==='tracing'?2:1}
 function physicalCount(items){return items.reduce((sum,p)=>sum+physicalP(p),0)}
 function bindingGroups(){
- const body=bookletPages(),result=[];let base=0,g=0;
+ const body=bookletPages(),result=[];
+ if(!body.length)return result;
+ // Stable signature boundaries: subsequent booklets start at their own first
+ // artwork, not wherever the previous booklet's variable P count happens to end.
+ const anchors=Array.isArray(bindingConfig.boundaryIds)?bindingConfig.boundaryIds:[];
+ const positions=anchors.map(id=>body.findIndex(p=>p.id===id));
+ if(anchors.length&&positions[0]===0&&positions.every((v,i)=>v>=0&&(i===0||v>positions[i-1]))){
+  for(let g=0;g<positions.length;g++){
+   const base=positions[g],end=g+1<positions.length?positions[g+1]:body.length;
+   const custom=bindingConfig.sizes[g],size=validGroupSize(custom)?custom:bindingConfig.size;
+   result.push({g,base,end,size,used:physicalCount(body.slice(base,end))});
+  }
+  return result;
+ }
+ let base=0,g=0;
  while(base<body.length){
   const custom=bindingConfig.sizes[g],size=validGroupSize(custom)?custom:bindingConfig.size;
   let end=base,used=0;
@@ -850,6 +864,7 @@ function bindingGroups(){
   if(end===base){end++;used=physicalP(body[base])}
   result.push({g,base,size,end,used});base=end;g++;
  }
+ bindingConfig.boundaryIds=result.map(group=>body[group.base].id);
  return result;
 }
 function bindingAt(index){
@@ -925,7 +940,7 @@ async function resizeIndependentBooklet(group,newSize){
    oldSizes.splice(group.g+1,0,extraSize);
   }
  }
- bindingConfig.sizes=oldSizes;saveBinding();
+ bindingConfig.sizes=oldSizes;bindingConfig.boundaryIds=oldSizes.map((_,g)=>{if(g<=group.g)return bookletPages()[g===group.g?group.base:(oldGroups[g]?.base||0)]?.id;return bookletPages()[oldGroups[g-1]?.end||0]?.id}).filter(Boolean);saveBinding();
  layoutUndo.push(before);if(layoutUndo.length>60)layoutUndo.shift();layoutRedo.length=0;
  renderList();updateLayoutHistory();await ensureSpread(spread);drawScene();saveSoon();
  toast('已调整本册 · 后续册图片保持原组');
@@ -942,7 +957,7 @@ async function swapAdjacentBooklets(index,direction){
  const reordered=chunks.flat();
  let cursor=0;
  pages.splice(0,pages.length,...pages.map(p=>p.material==='pet'?p:reordered[cursor++]));
- bindingConfig.sizes=sizes;saveBinding();
+ bindingConfig.sizes=sizes;bindingConfig.boundaryIds=chunks.map(c=>c[0]?.id).filter(Boolean);saveBinding();
  layoutUndo.push(before);if(layoutUndo.length>60)layoutUndo.shift();layoutRedo.length=0;updateLayoutHistory();
  renderList();await ensureSpread(spread);drawScene();saveSoon();
  toast('已交换第 '+(index+1)+' 册与第 '+(other+1)+' 册 · 可撤销');
@@ -978,7 +993,7 @@ renderList=function(){
     pages.splice(0,pages.length,...pages.filter(p=>!removed.has(p.id)));
     // Delete the signature definition too: later signatures retain their own sizes.
     const oldSizes=oldGroups.map(g=>g.size);
-    oldSizes.splice(group.g,1);bindingConfig.sizes=oldSizes;saveBinding();
+    oldSizes.splice(group.g,1);bindingConfig.sizes=oldSizes;bindingConfig.boundaryIds.splice(group.g,1);saveBinding();
     selectedIds.clear();selected=pages[0]?.id||null;
     if(selected)selectedIds.add(selected);
     spread=clamp(spread,0,maxSpread());
@@ -995,7 +1010,7 @@ renderList=function(){
     const bodyNow=bookletPages(),next=bodyNow[group.end],at=next?pages.indexOf(next):pages.length;
     const blanks=await Promise.all(Array.from({length:16},()=>createEmptyLayoutSlot()));
     pages.splice(at,0,...blanks);
-    sizes.splice(group.g+1,0,16);bindingConfig.sizes=sizes;saveBinding();
+    sizes.splice(group.g+1,0,16);bindingConfig.sizes=sizes;bindingConfig.boundaryIds.splice(group.g+1,0,blanks[0].id);saveBinding();
     layoutUndo.push(before);if(layoutUndo.length>60)layoutUndo.shift();layoutRedo.length=0;
     renderList();updateLayoutHistory();await ensureSpread(spread);drawScene();saveSoon();
     toast('已在第 '+(group.g+1)+' 册后新增16P空白册 · 可撤销');
@@ -1048,7 +1063,7 @@ const layoutUndo=[],layoutRedo=[];
 function pageOrderIds(){return pages.map(p=>p.id)}
 function updateLayoutHistory(){for(const pre of ['layout','main']){$('#'+pre+'Undo').disabled=!layoutUndo.length;$('#'+pre+'Redo').disabled=!layoutRedo.length}}
 function recordLayoutHistory(before){if(before.join('|')===pageOrderIds().join('|'))return;layoutUndo.push(before);if(layoutUndo.length>60)layoutUndo.shift();layoutRedo.length=0;updateLayoutHistory()}
-async function restoreLayoutOrder(ids){if(ids&&ids.kind==='replace'){const n=pages.findIndex(p=>p.id===ids.id);if(n<0)return false;const old=pages[n],cached=bitmapCache.get(ids.id);if(cached){cached.close();bitmapCache.delete(ids.id)}const texture=textureCache.get(ids.id);if(texture){gl.deleteTexture(texture);textureCache.delete(ids.id)}if(old.thumbURL)URL.revokeObjectURL(old.thumbURL);pages[n]={...ids.page,thumbURL:null};renderList();renderSettings();await ensureSpread(spread);drawScene();saveSoon();return true}if(ids&&ids.kind==='booklet'){bindingConfig.sizes=[...ids.sizes];saveBinding();ids=ids.pages}let restored;if(ids.length&&typeof ids[0]==='object'){restored=ids}else{const lookup=new Map(pages.map(p=>[p.id,p]));if(ids.length!==pages.length||ids.some(id=>!lookup.has(id))){toast('页面数量已变化，无法撤销');return false}restored=ids.map(id=>lookup.get(id))}pages.splice(0,pages.length,...restored);selectedIds.clear();if(!pages.some(p=>p.id===selected))selected=pages[0]?.id||null;if(selected)selectedIds.add(selected);spread=clamp(spread,0,maxSpread());renderList();await ensureSpread(spread);drawScene();saveSoon();return true}
+async function restoreLayoutOrder(ids){if(ids&&ids.kind==='replace'){const n=pages.findIndex(p=>p.id===ids.id);if(n<0)return false;const old=pages[n],cached=bitmapCache.get(ids.id);if(cached){cached.close();bitmapCache.delete(ids.id)}const texture=textureCache.get(ids.id);if(texture){gl.deleteTexture(texture);textureCache.delete(ids.id)}if(old.thumbURL)URL.revokeObjectURL(old.thumbURL);pages[n]={...ids.page,thumbURL:null};renderList();renderSettings();await ensureSpread(spread);drawScene();saveSoon();return true}if(ids&&ids.kind==='booklet'){bindingConfig.sizes=[...ids.sizes];bindingConfig.boundaryIds=[...(ids.boundaryIds||[])];saveBinding();ids=ids.pages}let restored;if(ids.length&&typeof ids[0]==='object'){restored=ids}else{const lookup=new Map(pages.map(p=>[p.id,p]));if(ids.length!==pages.length||ids.some(id=>!lookup.has(id))){toast('页面数量已变化，无法撤销');return false}restored=ids.map(id=>lookup.get(id))}pages.splice(0,pages.length,...restored);selectedIds.clear();if(!pages.some(p=>p.id===selected))selected=pages[0]?.id||null;if(selected)selectedIds.add(selected);spread=clamp(spread,0,maxSpread());renderList();await ensureSpread(spread);drawScene();saveSoon();return true}
 async function stepLayoutHistory(undo){if(busy)return;const src=undo?layoutUndo:layoutRedo,dst=undo?layoutRedo:layoutUndo;if(!src.length)return;const ids=src.pop(),current=ids&&ids.kind==='replace'?{kind:'replace',id:ids.id,page:{...pages.find(p=>p.id===ids.id)}}:ids&&ids.kind==='booklet'?{kind:'booklet',pages:[...pages],sizes:[...bindingConfig.sizes]}:ids.length&&typeof ids[0]==='object'?[...pages]:pageOrderIds();if(await restoreLayoutOrder(ids))dst.push(current);updateLayoutHistory()}
 const beforeDragZoneRender=renderList;
 renderList=function(){beforeDragZoneRender();for(const el of list.querySelectorAll('.thumb')){const id=el.dataset.id;el.ondragover=e=>{e.preventDefault();e.stopPropagation();trackListDrag(e);const rect=el.getBoundingClientRect(),q=(e.clientX-rect.left)/Math.max(1,rect.width);el.dataset.dropZone=q<.25?'before':q>.75?'after':'swap'};el.ondragleave=()=>delete el.dataset.dropZone;el.ondrop=async e=>{e.preventDefault();e.stopPropagation();stopListAutoScroll();const source=dragId;if(!source||source===id||busy)return;const rect=el.getBoundingClientRect(),q=(e.clientX-rect.left)/Math.max(1,rect.width),a=pages.findIndex(p=>p.id===source),b=pages.findIndex(p=>p.id===id);if(a<0||b<0)return;const previous=pageOrderIds();if(q>=.25&&q<=.75&&selectedIds.size===1){[pages[a],pages[b]]=[pages[b],pages[a]];renderList();await ensureSpread(spread);drawScene();saveSoon()}else{await moveGroup(id,q>.5)}if(q>=.25&&q<=.75&&selectedIds.size===1)recordLayoutHistory(previous);dragId=null}}updateLayoutHistory()};
