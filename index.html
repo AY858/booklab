@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>BOOK LAB — WebGL Flipbook v8.9.0</title>
+<title>BOOK LAB — WebGL Flipbook v8.9.1</title>
 <style>
 :root{--bg:#101114;--panel:#17191d;--panel2:#21242a;--line:#30343c;--text:#f2f4f7;--muted:#8f97a4;--accent:#9da6ff}
 *{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}button,input,select{font:inherit;color:inherit}button{cursor:pointer}.app{height:100%;display:grid;grid-template-rows:52px auto minmax(0,1fr)}.topbar{display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid var(--line);background:#131519}.brand{font-weight:800;letter-spacing:.08em;margin-right:8px}.btn{height:32px;padding:0 11px;border:1px solid var(--line);background:var(--panel2);border-radius:8px;display:inline-flex;align-items:center;justify-content:center;gap:6px}.btn.primary{background:#eef0ff;color:#11131a;border-color:#eef0ff}.spacer{flex:1}.status{font-size:12px;color:var(--muted)}input[type=file]{display:none}.main{display:grid;grid-template-columns:286px 1fr;min-height:0}.sidebar{min-height:0;border-right:1px solid var(--line);background:var(--panel);display:grid;grid-template-rows:auto 1fr auto}.sidehead{padding:10px;border-bottom:1px solid var(--line)}.drop{padding:12px;border:1px dashed #4a505b;border-radius:9px;color:var(--muted);font-size:12px;text-align:center}.drop.drag{border-color:var(--accent);background:#22253b}.list{overflow:auto;padding:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start}.thumb{border:1px solid #333844;background:#242730;border-radius:7px;padding:5px;user-select:none}.thumb.selected{outline:2px solid var(--accent);outline-offset:1px}.thumb.dragging{opacity:.4}.thumb img{display:block;width:100%;aspect-ratio:.707/1;object-fit:contain;background:#0b0c0e;border-radius:4px}.meta{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:10px;margin-top:4px}.chip{padding:2px 5px;border-radius:99px;background:#333843}.chip.pet{background:#203b3e;color:#b8f0eb}.chip.tracing{background:#403a28;color:#ffe7a4}.settings{padding:11px;border-top:1px solid var(--line);display:grid;gap:9px}.settings h3{margin:0;font-size:12px}.row{display:grid;grid-template-columns:86px 1fr;align-items:center;gap:8px;color:var(--muted);font-size:12px}.row input,.row select{width:100%;background:#22262d;border:1px solid var(--line);border-radius:6px;padding:6px}.actions{display:flex;gap:6px}.actions .btn{flex:1;font-size:11px}.stagewrap{position:relative;overflow:hidden;background:radial-gradient(circle at 50% 42%,#3d414a 0,#1b1d22 48%,#0e0f12 100%)}.canvasbox{position:absolute;inset:0 0 52px;display:grid;place-items:center}.canvasbox canvas{display:block;width:min(90vw,1160px);height:min(80vh,790px)}.controls{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);display:flex;align-items:center;gap:7px;padding:7px;border:1px solid #343944;background:#121418df;border-radius:12px}.indicator{min-width:128px;text-align:center;color:#c6cbd4;font-size:12px}.zoom{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:11px}.zoom input{width:86px}.empty{position:absolute;inset:0 0 52px;display:grid;place-items:center;color:var(--muted);pointer-events:none}.empty b{display:block;text-align:center;color:#e1e4ea;font-size:18px;margin-bottom:7px}.toast{position:absolute;right:14px;top:14px;background:#eef0ff;color:#11131a;padding:8px 11px;border-radius:8px;font-size:12px;opacity:0;transform:translateY(-5px);transition:.18s;z-index:50}.toast.show{opacity:1;transform:none}@media(max-width:920px){.main{grid-template-columns:230px 1fr}}
@@ -97,7 +97,7 @@ body.layout-page-open .pet-preview-section{max-width:600px;width:100%;margin:0 a
 </head>
 <body>
 <div class="app">
-<header class="topbar"><div class="brand">BOOK LAB v8.9.0 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="pdfInput" title="将单页 PDF 按顺序导入为新书帖">导入 PDF</label><input id="pdfInput" type="file" accept=".pdf,application/pdf"><button class="btn" id="topAutoFlipBtn">▶ 翻页动画</button><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><label class="btn" for="coreCoverInput" title="352×250mm，不含书脊：整图等比居中，不裁出血；左封底，右封面">单独上传封底＋封面整图</label><input id="coreCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><span id="coreCoverFileLabel" style="font-size:11px;color:#c7d6e9">未单独上传封面</span><label style="font-size:11px;display:flex;align-items:center;gap:4px"><input id="coreCoverReplaceEnds" type="checkbox" checked>替换已有首尾页</label><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="净尺寸479×250mm，不裁出血：勒口60＋封底176＋书脊7＋封面176＋勒口60">单独上传 PET · 479mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><label style="font-size:12px;color:#acd4d6;display:flex;gap:5px;align-items:center"><input id="petFlapsVisible" type="checkbox" checked>3D 显示60mm勒口</label><span style="font-size:11px;color:#9badbf" title="彩色/黑色图案不透明，白色背景近乎透明；白色图案需要另外指定白墨区域">PET：彩色不透／白底透</span><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
+<header class="topbar"><div class="brand">BOOK LAB v8.9.1 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="pdfInput" title="将单页 PDF 按顺序导入为新书帖">导入 PDF</label><input id="pdfInput" type="file" accept=".pdf,application/pdf"><button class="btn" id="topAutoFlipBtn">▶ 翻页动画</button><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><label class="btn" for="coreCoverInput" title="352×250mm，不含书脊：整图等比居中，不裁出血；左封底，右封面">单独上传封底＋封面整图</label><input id="coreCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><span id="coreCoverFileLabel" style="font-size:11px;color:#c7d6e9">未单独上传封面</span><label style="font-size:11px;display:flex;align-items:center;gap:4px"><input id="coreCoverReplaceEnds" type="checkbox" checked>替换已有首尾页</label><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="净尺寸479×250mm，不裁出血：勒口60＋封底176＋书脊7＋封面176＋勒口60">单独上传 PET · 479mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><label style="font-size:12px;color:#acd4d6;display:flex;gap:5px;align-items:center"><input id="petFlapsVisible" type="checkbox" checked>3D 显示60mm勒口</label><span style="font-size:11px;color:#9badbf" title="彩色/黑色图案不透明，白色背景近乎透明；白色图案需要另外指定白墨区域">PET：彩色不透／白底透</span><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
 <div id="bookSpecs" role="status" aria-live="polite" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:8px 14px;background:#1b1e25;border-bottom:1px solid var(--line);font-size:12px;color:#cbd3e1">
  <strong style="color:#e8ecf9">📖 本册实时规格</strong>
  <span>成品：176 × 250 mm</span>
@@ -398,8 +398,9 @@ function coverPanel(x0,x1,y0,y1,z0,z1,u0,u1,a=.65,doubleSided=true,sourceTexture
  gl.uniform1i(gl.getUniformLocation(coverProgram,'cover'),0);
  gl.drawArrays(gl.TRIANGLES,0,6);
 }
-function coverTurnPanel(t,u0,u1,alpha=.63){
+function coverTurnPanel(t,u0,u1,alpha=.63,mirrorU=false){
  if(!petCoverTexture)return;
+ if(mirrorU)[u0,u1]=[u1,u0];
  const phi=Math.PI*t,c=Math.cos(phi),sn=Math.sin(phi),atX=(x)=>c*x;
  const z=(x)=>PET_FRONT_Z+.85*sn*x/1.408;
  const v=[0,-1,PET_FRONT_Z,u0,1,atX(1.408),-1,z(1.408),u1,1,atX(1.408),1,z(1.408),u1,0,
@@ -424,7 +425,7 @@ function petSpinePose(foldProgress,closedSide=-1){
 }
 function drawPETSpine(open,regions,foldProgress=open?0:1,closedSide=-1){
  const p=petSpinePose(foldProgress,closedSide);
- coverPanel(p.x0,p.x1,-1,1,p.z0,p.z1,...regions.spine,1);
+ coverPanel(p.x0,p.x1,-1,1,p.z0,p.z1,...regions.spine,1,true,null,true);
 }
 function drawPETFlap(x0,x1,z,u0,u1,mirrorU=true){
  if(petFlapsVisible&&petCoverLayout==='flaps')coverPanel(x0,x1,-1,1,z,z,u0,u1,1,true,null,mirrorU);
@@ -446,7 +447,7 @@ function drawPETCover(open,layer='back'){
  gl.disable(gl.CULL_FACE);gl.depthMask(true);
  if(spread===0){
   if(layer==='back'){
-   coverPanel(0,w,-1,1,PET_BACK_Z,PET_BACK_Z,...r.back,1,true,null,true);
+   coverPanel(0,w,-1,1,PET_BACK_Z,PET_BACK_Z,...r.back,1,true,null,false);
    drawPETSpine(false,r);
    if(petOpened)coverTurnPanel(1,...r.front,1);
   }
@@ -468,7 +469,7 @@ function drawPETCover(open,layer='back'){
    // The final PET back is owned ONLY by the foreground turn below.
    // Keeping its old right-side plane would leave a duplicate after landing.
    if(spread!==maxSpread())
-    coverPanel(0,w,-1,1,PET_BACK_Z,PET_BACK_Z,...r.back,1,true,null,true);
+    coverPanel(0,w,-1,1,PET_BACK_Z,PET_BACK_Z,...r.back,1,true,null,false);
    const finalJacket=spread===maxSpread();
    drawPETSpine(true,r,finalJacket?(petEndClosed?1:petEndTurn):0,1);
   }
@@ -476,10 +477,10 @@ function drawPETCover(open,layer='back'){
   // paper spread. The flap overlays that cover, not arbitrary later pages.
   if(layer==='front'&&spread===1)drawWrappedPETLeft(r,true);
   if(layer==='front'&&spread===maxSpread()){
-   if(petEndTurn>.001&&petEndTurn<.999)coverTurnPanel(petEndTurn,...r.back,1);
-   else if(petEndClosed)coverTurnPanel(1,...r.back,1);
+   if(petEndTurn>.001&&petEndTurn<.999)coverTurnPanel(petEndTurn,...r.back,1,true);
+   else if(petEndClosed)coverTurnPanel(1,...r.back,1,true);
    else{
-    coverPanel(0,w,-1,1,PET_FRONT_Z,PET_FRONT_Z,...r.back,1);
+    coverPanel(0,w,-1,1,PET_FRONT_Z,PET_FRONT_Z,...r.back,1,true,null,true);
     drawPETFlap(w-flap,w,PET_FRONT_Z+.001,...r.leftFlap);
    }
   }
