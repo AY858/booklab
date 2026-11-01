@@ -966,6 +966,15 @@ async function finishManualBookletChange(before,message){
  await ensureSpread(spread);drawScene();saveSoon();toast(message+' · Ctrl+Z 撤销');
 }
 
+function resetPDFBooklets(){
+ const body=bookletPages(),pattern=[16,16,16,8,16],chunks=[];
+ let base=0,g=0;
+ while(base<body.length){
+  const size=pattern[g]||16,end=Math.min(body.length,base+size);
+  chunks.push(body.slice(base,end));base=end;g++;
+ }
+ setManualBookletChunks(chunks,false);
+}
 function preferredBookletGroups(body=bookletPages()){
  const pattern=[16,16,24,16],groups=[];
  for(let base=0,g=0;base<body.length;g++){
@@ -1632,7 +1641,7 @@ async function importPDF(file){
  if(!file)return;
  if(busy||autoFlipping){toast('请先停止动画，等待当前翻页完成');return}
  const dialog=document.createElement('dialog');dialog.className='pdf-progress';
- dialog.innerHTML='<strong>导入 PDF</strong><p>导入成功后替换当前书芯，保持 PDF 页序，默认按16/16/24/16P分册，不足不补页；仍可手动拆分或合并。PET 外封保留，旧书芯可整体撤销恢复。硫酸纸正反面均需在 PDF 中占 1P；导入后设置材质。</p><p><label>预览裁切 <select class="pdf-crop-mode" style="max-width:100%;background:#252932;color:white;padding:8px"><option value="auto">自动：裁掉2mm出血；净尺寸不裁</option><option value="center">按176×250mm居中裁切（含裁切标记）</option><option value="bleed2">无论页面大小，四边各裁2mm</option><option value="none">不裁切（其他尺寸）</option></select></label></p><p style="font-size:12px;color:#aeb6c5">自动支持176×250mm净页、180×254mm含出血页。带裁切标记的PDF需选居中裁切，要求成品区域位于页面中心。只处理预览，不修改原PDF。</p><progress></progress><div class="pdf-message">确认裁切方式后开始导入</div><p><button class="btn pdf-start">开始导入</button> <button class="btn pdf-cancel">取消</button></p>';
+ dialog.innerHTML='<strong>导入 PDF</strong><p>导入成功后替换当前书芯，保持 PDF 页序，默认按16/16/16/8/16P分册（共72P）；不足不补页，超过72P后按16P续分；仍可手动拆分或合并。PET 外封保留，旧书芯可整体撤销恢复。硫酸纸正反面均需在 PDF 中占 1P；导入后设置材质。</p><p><label>预览裁切 <select class="pdf-crop-mode" style="max-width:100%;background:#252932;color:white;padding:8px"><option value="auto">自动：裁掉2mm出血；净尺寸不裁</option><option value="center">按176×250mm居中裁切（含裁切标记）</option><option value="bleed2">无论页面大小，四边各裁2mm</option><option value="none">不裁切（其他尺寸）</option></select></label></p><p style="font-size:12px;color:#aeb6c5">自动支持176×250mm净页、180×254mm含出血页。带裁切标记的PDF需选居中裁切，要求成品区域位于页面中心。只处理预览，不修改原PDF。</p><progress></progress><div class="pdf-message">确认裁切方式后开始导入</div><p><button class="btn pdf-start">开始导入</button> <button class="btn pdf-cancel">取消</button></p>';
  document.body.append(dialog);dialog.showModal();busy=true;
  let cancelled=false,task=null,pdf=null,committed=false,resolveStart=null;
  dialog.querySelector('.pdf-cancel').onclick=()=>{cancelled=true;if(resolveStart)resolveStart(false);if(task)void task.destroy().catch(()=>{})};
@@ -1661,12 +1670,12 @@ async function importPDF(file){
   releaseCaches();
   pages.splice(0,pages.length,...pets,...staged);
   if(coreCoverBlob)await applyCoreCoverArt(coreCoverBlob,coreCoverName,coreCoverReplaceEnds,false);
-  resetPreferredBooklets();
+  resetPDFBooklets();
   spread=0;petOpened=false;petTurn=0;petEndClosed=false;petEndTurn=0;
   committed=true;recordLayoutHistory(before);saveBinding();
   selected=staged[0]?.id||selected;selectedIds.clear();if(selected)selectedIds.add(selected);
   renderList();renderSettings();await ensureSpread(spread);drawScene();saveSoon();
-  toast('已导入 PDF '+staged.length+'P，已按16/16/24/16P分册 · Ctrl+Z 可恢复旧书芯');
+  toast('已导入 PDF '+staged.length+'P，已按16/16/16/8/16P分册（超过72P按16P续分） · Ctrl+Z 可恢复旧书芯');
  }catch(e){
   console.error(e);toast(committed?'PDF 已导入，预览刷新失败；请导出工程备份':cancelled?'已取消导入，原排版未改动':('PDF 导入失败：'+e.message));
  }finally{
