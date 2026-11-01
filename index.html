@@ -645,7 +645,7 @@ function blobToDataURL(b){return new Promise(r=>{const fr=new FileReader();fr.on
 
 async function exportSignatureLayout(){
  const body=bookletPages().map(p=>({...p}));if(!body.length){toast('请先导入页面');return}
- const groups=preferredBookletGroups(body),btn=$('#exportLayoutBtn');
+ const groups=bindingGroups(),btn=$('#exportLayoutBtn');
  btn.disabled=true;btn.textContent='正在生成…';
  const cols=8,cw=184,ch=273,margin=60,header=115,groupTitleH=65,groupGap=26;
  const blocks=groups.map(gr=>{const items=body.slice(gr.base,gr.end);return {...gr,items,rows:Math.ceil(items.length/cols)}});
@@ -657,7 +657,7 @@ async function exportSignatureLayout(){
   const c=document.createElement('canvas');c.width=width;c.height=height;
   const ctx=c.getContext('2d');ctx.fillStyle='#f6f8fc';ctx.fillRect(0,0,width,height);
   ctx.fillStyle='#243247';ctx.font='bold 34px "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif';ctx.fillText('BOOK LAB  /  OVERALL LAYOUT',margin,48);
-  ctx.fillStyle='#607084';ctx.font='18px "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif';ctx.fillText(groups.length+' booklets  |  '+body.length+' pages  |  16 / 16 / 24 / 16P  |  PET excluded  |  each imported page = 1P, including tracing backs',margin,82);
+  ctx.fillStyle='#607084';ctx.font='18px "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif';ctx.fillText(groups.length+' booklets  |  '+body.length+' pages  |  '+groups.map(g=>g.used+'P').join(' / ')+'  |  PET excluded  |  each imported page = 1P, including tracing backs',margin,82);
   let y=header;
   for(const block of blocks){
    const {g,items,rows}=block;
@@ -694,7 +694,7 @@ async function exportSignatureLayout(){
   link.href=url;link.download='BOOKLAB_OVERALL_LAYOUT_'+groups.length+'BOOKLETS_'+body.length+'P.png';
   document.body.appendChild(link);link.click();link.remove();
   setTimeout(()=>URL.revokeObjectURL(url),15000);
-  toast('总体排版 PNG 已按 16 / 16 / 24 / 16P 导出');
+  toast('总体排版 PNG 已按左侧栏当前分册导出（'+groups.length+' 帖）');
  }catch(err){console.error(err);toast('总览导出失败：'+err.message)}
  finally{btn.disabled=false;btn.textContent='导出总体排版 PNG'}
 }
