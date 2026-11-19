@@ -1766,7 +1766,7 @@ async function applyIdSyncPdf(file){
    staged.push(await pdfPageArtwork(pg,file.name,n,idSyncCrop));
    await new Promise(requestAnimationFrame);
   }
-  if(body.length!==bookletPages().length)throw Error('同步期间页数发生变化');
+  if(body.length!==bookletPages().length||body.some((p,i)=>bookletPages()[i]?.id!==p.id))throw Error('同步期间书芯顺序发生变化');
   const before=captureLayoutState();
   // Preserve each page's ID, material, opacity, name, position, fold pairing and selection.
   for(let i=0;i<body.length;i++){
@@ -1790,6 +1790,7 @@ async function pollIdSync(){
   if((await idSyncDirectory.queryPermission({mode:'read'}))!=='granted'){
    idSyncMessage('权限已失效，请重新绑定','#ffd59b');return;
   }
+  idSyncHandle=await idSyncDirectory.getFileHandle('booklab-sync.pdf');
   const f=await idSyncHandle.getFile();
   const sig=f.lastModified+':'+f.size;
   if(sig===idSyncLastSignature)return;
