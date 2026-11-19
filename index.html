@@ -100,7 +100,7 @@ body.layout-page-open .pet-preview-section{max-width:600px;width:100%;margin:0 a
 </head>
 <body>
 <div class="app">
-<header class="topbar"><div class="brand">BOOK LAB v8.9.2 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="pdfInput" title="将单页 PDF 按顺序导入为新书帖">导入 PDF</label><input id="pdfInput" type="file" accept=".pdf,application/pdf"><button class="btn" id="topAutoFlipBtn">▶ 翻页动画</button><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><label class="btn" for="coreCoverInput" title="352×250mm，不含书脊：整图等比居中，不裁出血；左封底，右封面">单独上传封底＋封面整图</label><input id="coreCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><span id="coreCoverFileLabel" style="font-size:11px;color:#c7d6e9">未单独上传封面</span><label style="font-size:11px;display:flex;align-items:center;gap:4px"><input id="coreCoverReplaceEnds" type="checkbox" checked>替换已有首尾页</label><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="净尺寸479×250mm，不裁出血：勒口60＋封底176＋书脊7＋封面176＋勒口60">单独上传 PET · 479mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><label style="font-size:12px;color:#acd4d6;display:flex;gap:5px;align-items:center"><input id="petFlapsVisible" type="checkbox" checked>3D 显示60mm勒口</label><span style="font-size:11px;color:#9badbf" title="彩色/黑色图案不透明，白色背景近乎透明；白色图案需要另外指定白墨区域">PET：彩色不透／白底透</span><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
+<header class="topbar"><div class="brand">BOOK LAB v8.9.3 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept="image/png,image/jpeg,image/webp" multiple><label class="btn" for="pdfInput" title="将单页 PDF 按顺序导入为新书帖">导入 PDF</label><input id="pdfInput" type="file" accept=".pdf,application/pdf"><button class="btn" id="topAutoFlipBtn">▶ 翻页动画</button><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept="image/*" webkitdirectory multiple><label class="btn" for="coreCoverInput" title="352×250mm，不含书脊：整图等比居中，不裁出血；左封底，右封面">单独上传封底＋封面整图</label><input id="coreCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><span id="coreCoverFileLabel" style="font-size:11px;color:#c7d6e9">未单独上传封面</span><label style="font-size:11px;display:flex;align-items:center;gap:4px"><input id="coreCoverReplaceEnds" type="checkbox" checked>替换已有首尾页</label><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="净尺寸479×250mm，不裁出血：勒口60＋封底176＋书脊7＋封面176＋勒口60">单独上传 PET · 479mm</label><input id="petCoverInput" type="file" accept="image/png,image/jpeg,image/webp"><label style="font-size:12px;color:#acd4d6;display:flex;gap:5px;align-items:center"><input id="petFlapsVisible" type="checkbox" checked>3D 显示60mm勒口</label><span style="font-size:11px;color:#9badbf" title="彩色/黑色图案不透明，白色背景近乎透明；白色图案需要另外指定白墨区域">PET：彩色不透／白底透</span><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
 <div id="bookSpecs" role="status" aria-live="polite" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:8px 14px;background:#1b1e25;border-bottom:1px solid var(--line);font-size:12px;color:#cbd3e1">
  <strong style="color:#e8ecf9">📖 本册实时规格</strong>
  <span>成品：176 × 250 mm</span>
@@ -267,11 +267,23 @@ function mvp(){return mat4Mul(mat4Perspective(.72,canvas.width/canvas.height,.1,
 function ensureTexture(p){if(!p)return null;if(textureCache.has(p.id))return textureCache.get(p.id);const bmp=bitmapCache.get(p.id);if(!bmp)return null;const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,bmp);gl.generateMipmap(gl.TEXTURE_2D);textureCache.set(p.id,t);return t}
 const whiteTex=(()=>{const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array([250,250,250,255]));return t})();
 
+// One folded single-sided tracing sheet has opposite-facing leaves.
+function tracingPrintFaceInfo(p){
+ if(!p||p.material!=='tracing')return null;
+ const body=pages.filter(x=>x.material!=='pet'),i=body.findIndex(x=>x.id===p.id);
+ if(i<0)return null;
+ const group=bindingGroups().find(g=>i>=g.base&&i<g.end);
+ const local=group?i-group.base:i,count=group?group.end-group.base:body.length;
+ const firstOfLeaf=local%2===0,reverseFirst=Math.floor(local/2)>=Math.ceil(count/4);
+ const printed=reverseFirst?!firstOfLeaf:firstOfLeaf;
+ const mate=body[firstOfLeaf?i+1:i-1];
+ return {printed,reverseFirst,firstOfLeaf,mate:mate?.material==='tracing'?mate:null};
+}
 function tracingTextureSource(p){
- if(!p||p.material!=='tracing')return {page:p,mirrored:false};
- const index=pages.findIndex(x=>x.id===p.id);
- const front=index>0&&index%2===1?pages[index-1]:null;
- return front?.material==='tracing'?{page:front,mirrored:true}:{page:p,mirrored:false};
+ const info=tracingPrintFaceInfo(p);
+ if(!info)return {page:p,mirrored:false};
+ if(info.printed||!info.mate)return {page:p,mirrored:false};
+ return {page:info.mate,mirrored:true};
 }
 function sheetSurface(p){
  // Each explicit face is 1P; a reverse face shows ink through its paired front.
@@ -1746,6 +1758,26 @@ $('#resetBookletContentsBtn').onclick=async()=>{
  toast('已按16/16/24/16P分册，不足不补页；图片与材质保留 · Ctrl+Z 撤销');
 };
 
+// Add print-facing labels across thumbnail and booklet/reading layouts.
+const renderBeforePrintFaceBadges=renderList;
+renderList=function(){
+ renderBeforePrintFaceBadges();
+ for(const el of list.querySelectorAll('.thumb')){
+  const p=pages.find(x=>x.id===el.dataset.id),info=tracingPrintFaceInfo(p);
+  if(!info)continue;
+  const note=document.createElement('div');
+  note.textContent=info.printed?'● 印刷正面':'↻ 透印反面 · 不印刷';
+  note.style.cssText='margin-top:3px;padding:4px 6px;border-radius:4px;font-size:11px;font-weight:700;color:'+(info.printed?'#d7fbef':'#ffe5ad')+';background:'+(info.printed?'#17624d':'#654516');
+  el.append(note);
+  if(info.reverseFirst&&info.firstOfLeaf){
+   const warning=document.createElement('div');
+   warning.textContent='↻ 反面先出现 · 翻页后见印刷层';
+   warning.style.cssText='margin-top:3px;padding:4px 6px;border:1px solid #f6bd60;border-radius:4px;background:#4d3217;color:#ffe5ad;font-size:11px;font-weight:700';
+   el.append(warning);
+   el.title='这张硫酸纸先露出未印刷的反面；翻过这一叶，下一面才是印刷正面';
+  }
+ }
+};
 const renderBeforeTracingReversePreview=renderList;
 renderList=function(){
  renderBeforeTracingReversePreview();
