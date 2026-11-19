@@ -100,7 +100,7 @@ body.layout-page-open .pet-preview-section{max-width:600px;width:100%;margin:0 a
 </head>
 <body>
 <div class="app">
-<header class="topbar"><div class="brand">BOOK LAB v8.9.4 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept=".psd,image/vnd.adobe.photoshop,image/png,image/jpeg,image/webp" multiple><label class="btn" for="pdfInput" title="将单页 PDF 按顺序导入为新书帖">导入 PDF</label><input id="pdfInput" type="file" accept=".pdf,application/pdf"><button class="btn" id="topAutoFlipBtn">▶ 翻页动画</button><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept=".psd,image/*" webkitdirectory multiple><label class="btn" for="coreCoverInput" title="352×250mm，不含书脊：整图等比居中，不裁出血；左封底，右封面">单独上传封底＋封面整图</label><input id="coreCoverInput" type="file" accept=".psd,image/vnd.adobe.photoshop,image/png,image/jpeg,image/webp"><span id="coreCoverFileLabel" style="font-size:11px;color:#c7d6e9">未单独上传封面</span><label style="font-size:11px;display:flex;align-items:center;gap:4px"><input id="coreCoverReplaceEnds" type="checkbox" checked>替换已有首尾页</label><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="净尺寸479×250mm，不裁出血：勒口60＋封底176＋书脊7＋封面176＋勒口60">单独上传 PET · 479mm</label><input id="petCoverInput" type="file" accept=".psd,image/vnd.adobe.photoshop,image/png,image/jpeg,image/webp"><label style="font-size:12px;color:#acd4d6;display:flex;gap:5px;align-items:center"><input id="petFlapsVisible" type="checkbox" checked>3D 显示60mm勒口</label><span style="font-size:11px;color:#9badbf" title="彩色/黑色图案不透明，白色背景近乎透明；白色图案需要另外指定白墨区域">PET：彩色不透／白底透</span><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
+<header class="topbar"><div class="brand">BOOK LAB v8.9.5 WEBGL</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept=".psd,image/vnd.adobe.photoshop,image/png,image/jpeg,image/webp" multiple><label class="btn" for="pdfInput" title="将单页 PDF 按顺序导入为新书帖">导入 PDF</label><button class="btn" id="idSyncButton" title="绑定 InDesign 自动导出文件夹">⟳ ID 自动同步</button><span id="idSyncStatus" style="font-size:11px;color:#9bd8c6">未绑定</span><input id="pdfInput" type="file" accept=".pdf,application/pdf"><button class="btn" id="topAutoFlipBtn">▶ 翻页动画</button><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept=".psd,image/*" webkitdirectory multiple><label class="btn" for="coreCoverInput" title="352×250mm，不含书脊：整图等比居中，不裁出血；左封底，右封面">单独上传封底＋封面整图</label><input id="coreCoverInput" type="file" accept=".psd,image/vnd.adobe.photoshop,image/png,image/jpeg,image/webp"><span id="coreCoverFileLabel" style="font-size:11px;color:#c7d6e9">未单独上传封面</span><label style="font-size:11px;display:flex;align-items:center;gap:4px"><input id="coreCoverReplaceEnds" type="checkbox" checked>替换已有首尾页</label><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="净尺寸479×250mm，不裁出血：勒口60＋封底176＋书脊7＋封面176＋勒口60">单独上传 PET · 479mm</label><input id="petCoverInput" type="file" accept=".psd,image/vnd.adobe.photoshop,image/png,image/jpeg,image/webp"><label style="font-size:12px;color:#acd4d6;display:flex;gap:5px;align-items:center"><input id="petFlapsVisible" type="checkbox" checked>3D 显示60mm勒口</label><span style="font-size:11px;color:#9badbf" title="彩色/黑色图案不透明，白色背景近乎透明；白色图案需要另外指定白墨区域">PET：彩色不透／白底透</span><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
 <div id="bookSpecs" role="status" aria-live="polite" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:8px 14px;background:#1b1e25;border-bottom:1px solid var(--line);font-size:12px;color:#cbd3e1">
  <strong style="color:#e8ecf9">📖 本册实时规格</strong>
  <span>成品：176 × 250 mm</span>
@@ -1734,6 +1734,87 @@ async function importPDF(file){
  }
 }
 $('#pdfInput').onchange=e=>{const file=e.target.files?.[0];if(file)void importPDF(file)};
+// InDesign document-save -> exported PDF -> local directory polling.
+// The browser never opens INDD directly and never writes to the chosen folder.
+let idSyncDirectory=null,idSyncHandle=null,idSyncTimer=null,idSyncBusy=false;
+let idSyncLastSignature=null,idSyncPendingSignature=null,idSyncPendingSince=0,idSyncCrop='auto';
+function idSyncMessage(message,color='#9bd8c6'){const el=$('#idSyncStatus');if(el){el.textContent=message;el.style.color=color;el.title=message}}
+function stopIdSync(){
+ if(idSyncTimer)clearInterval(idSyncTimer);
+ idSyncTimer=null;idSyncDirectory=null;idSyncHandle=null;idSyncLastSignature=null;idSyncPendingSignature=null;
+ $('#idSyncButton').textContent='⟳ ID 自动同步';idSyncMessage('未绑定');
+}
+async function applyIdSyncPdf(file){
+ if(busy||idSyncBusy||autoFlipping)return false;
+ idSyncBusy=true;
+ let task=null;
+ try{
+  const body=bookletPages();
+  if(!body.length){idSyncMessage('请先用「导入 PDF」建立书芯','#ffd59b');return false}
+  idSyncMessage('正在检查 PDF…');
+  const {lib,assets}=await loadPDFEngine();
+  task=lib.getDocument({data:new Uint8Array(await file.arrayBuffer()),cMapUrl:assets+'cmaps/',cMapPacked:true,standardFontDataUrl:assets+'standard_fonts/',isEvalSupported:false});
+  const pdf=await task.promise;
+  if(pdf.numPages!==body.length){
+   idSyncMessage('⚠ PDF '+pdf.numPages+'P，BookLab '+body.length+'P；未覆盖','#ffad9e');
+   return false;
+  }
+  const staged=[];
+  for(let n=1;n<=pdf.numPages;n++){
+   idSyncMessage('同步 '+n+'/'+pdf.numPages+'P');
+   const pg=await pdf.getPage(n);
+   staged.push(await pdfPageArtwork(pg,file.name,n,idSyncCrop));
+   await new Promise(requestAnimationFrame);
+  }
+  if(body.length!==bookletPages().length)throw Error('同步期间页数发生变化');
+  const before=captureLayoutState();
+  // Preserve each page's ID, material, opacity, name, position, fold pairing and selection.
+  for(let i=0;i<body.length;i++){
+   const p=body[i],replacement=staged[i];
+   if(p.thumbURL)URL.revokeObjectURL(p.thumbURL);
+   p.preview=replacement.preview;p.thumb=replacement.thumb;p.thumbURL=null;
+   p.sourcePath='ID 自动同步/'+file.name+'/'+(i+1);
+   p.blankSlot=false;
+  }
+  releaseCaches();
+  recordLayoutHistory(before);
+  renderList();renderSettings();await ensureSpread(spread);drawScene();saveSoon();
+  idSyncMessage('✓ 已同步 '+body.length+'P · '+new Date().toLocaleTimeString());
+  return true;
+ }catch(err){console.error('BookLab InDesign sync',err);idSyncMessage('⚠ 同步失败：'+err.message,'#ffad9e');return false}
+ finally{if(task)try{await task.destroy()}catch(e){}idSyncBusy=false}
+}
+async function pollIdSync(){
+ if(!idSyncHandle||idSyncBusy||busy||autoFlipping||document.hidden)return;
+ try{
+  if((await idSyncDirectory.queryPermission({mode:'read'}))!=='granted'){
+   idSyncMessage('权限已失效，请重新绑定','#ffd59b');return;
+  }
+  const f=await idSyncHandle.getFile();
+  const sig=f.lastModified+':'+f.size;
+  if(sig===idSyncLastSignature)return;
+  if(sig!==idSyncPendingSignature){idSyncPendingSignature=sig;idSyncPendingSince=Date.now();return}
+  if(Date.now()-idSyncPendingSince<1800)return;
+  if(await applyIdSyncPdf(f))idSyncLastSignature=sig;
+ }catch(err){idSyncMessage('⚠ 无法读取同步 PDF，请检查导出','#ffad9e');console.warn(err)}
+}
+$('#idSyncButton').onclick=async()=>{
+ if(idSyncDirectory){stopIdSync();return}
+ if(!window.showDirectoryPicker){toast('此功能需要桌面版 Chrome 或 Edge 的 HTTPS 页面');return}
+ try{
+  const folder=await window.showDirectoryPicker({mode:'read'});
+  const fileHandle=await folder.getFileHandle('booklab-sync.pdf');
+  idSyncDirectory=folder;idSyncHandle=fileHandle;
+  idSyncLastSignature=null;idSyncPendingSignature=null;
+  $('#idSyncButton').textContent='■ 停止 ID 同步';
+  idSyncMessage('已绑定 '+folder.name+' · 每5秒检查');
+  idSyncTimer=setInterval(()=>{void pollIdSync()},5000);
+  await pollIdSync();
+ }catch(err){
+  if(err.name!=='AbortError'){toast('绑定失败：请选择含 booklab-sync.pdf 的 BookLab_Sync 文件夹');console.warn(err)}
+ }
+};
+
 
 
 let readingSpreadMode=false;
