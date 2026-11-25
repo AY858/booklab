@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>BOOK LAB — WebGL Flipbook v8.10 UV</title>
+<title>BOOK LAB — WebGL Flipbook v8.11 模板</title>
 <style>
 :root{--bg:#101114;--panel:#17191d;--panel2:#21242a;--line:#30343c;--text:#f2f4f7;--muted:#8f97a4;--accent:#9da6ff}
 *{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}button,input,select{font:inherit;color:inherit}button{cursor:pointer}.app{height:100%;display:grid;grid-template-rows:52px auto minmax(0,1fr)}.topbar{display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid var(--line);background:#131519}.brand{font-weight:800;letter-spacing:.08em;margin-right:8px}.btn{height:32px;padding:0 11px;border:1px solid var(--line);background:var(--panel2);border-radius:8px;display:inline-flex;align-items:center;justify-content:center;gap:6px}.btn.primary{background:#eef0ff;color:#11131a;border-color:#eef0ff}.spacer{flex:1}.status{font-size:12px;color:var(--muted)}input[type=file]{display:none}.main{display:grid;grid-template-columns:286px 1fr;min-height:0}.sidebar{min-height:0;border-right:1px solid var(--line);background:var(--panel);display:grid;grid-template-rows:auto 1fr auto}.sidehead{padding:10px;border-bottom:1px solid var(--line)}.drop{padding:12px;border:1px dashed #4a505b;border-radius:9px;color:var(--muted);font-size:12px;text-align:center}.drop.drag{border-color:var(--accent);background:#22253b}.list{overflow:auto;padding:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start}.thumb{border:1px solid #333844;background:#242730;border-radius:7px;padding:5px;user-select:none}.thumb.selected{outline:2px solid var(--accent);outline-offset:1px}.thumb.dragging{opacity:.4}.thumb img{display:block;width:100%;aspect-ratio:.707/1;object-fit:contain;background:#0b0c0e;border-radius:4px}.meta{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:10px;margin-top:4px}.chip{padding:2px 5px;border-radius:99px;background:#333843}.chip.pet{background:#203b3e;color:#b8f0eb}.chip.tracing{background:#403a28;color:#ffe7a4}.settings{padding:11px;border-top:1px solid var(--line);display:grid;gap:9px}.settings h3{margin:0;font-size:12px}.row{display:grid;grid-template-columns:86px 1fr;align-items:center;gap:8px;color:var(--muted);font-size:12px}.row input,.row select{width:100%;background:#22262d;border:1px solid var(--line);border-radius:6px;padding:6px}.actions{display:flex;gap:6px}.actions .btn{flex:1;font-size:11px}.stagewrap{position:relative;overflow:hidden;background:radial-gradient(circle at 50% 42%,#3d414a 0,#1b1d22 48%,#0e0f12 100%)}.canvasbox{position:absolute;inset:0 0 52px;display:grid;place-items:center}.canvasbox canvas{display:block;width:min(90vw,1160px);height:min(80vh,790px)}.controls{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);display:flex;align-items:center;gap:7px;padding:7px;border:1px solid #343944;background:#121418df;border-radius:12px}.indicator{min-width:128px;text-align:center;color:#c6cbd4;font-size:12px}.zoom{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:11px}.zoom input{width:86px}.empty{position:absolute;inset:0 0 52px;display:grid;place-items:center;color:var(--muted);pointer-events:none}.empty b{display:block;text-align:center;color:#e1e4ea;font-size:18px;margin-bottom:7px}.toast{position:absolute;right:14px;top:14px;background:#eef0ff;color:#11131a;padding:8px 11px;border-radius:8px;font-size:12px;opacity:0;transform:translateY(-5px);transition:.18s;z-index:50}.toast.show{opacity:1;transform:none}@media(max-width:920px){.main{grid-template-columns:230px 1fr}}
@@ -97,21 +97,22 @@ body.layout-page-open.layout-spreads .reading-spread .booklet-heading{font-size:
 .pet-preview-card span{display:block;padding-top:5px;font-size:12px}
 body.layout-page-open .pet-preview-section{max-width:600px;width:100%;margin:0 auto}
 .finish-section{border-color:#7b6b9a;flex:none}.finish-section select{display:block;width:100%;margin-top:5px;background:#22262d;color:#f2f4f7;border:1px solid #58647b;border-radius:5px;padding:7px}.finish-section label{font-size:14px}.finish-section small{line-height:1.6;color:#b8c3d5}.finish-section input[type=range]{width:100%}
+.finish-section .pet-preview-pages{grid-template-columns:1fr}.finish-section .pet-preview-card img{height:110px;aspect-ratio:auto}.finish-actions{display:flex;gap:6px;flex-wrap:wrap;padding:10px}.finish-actions .btn{font-size:12px}.template-dialog{width:min(1100px,96vw);max-height:94vh;overflow:auto;background:#17191d;color:#f2f4f7;border:1px solid #6c7394;border-radius:12px;padding:20px}.template-dialog::backdrop{background:#000b}.template-canvas{width:100%;max-height:52vh;object-fit:contain;display:block;touch-action:none;cursor:crosshair}.template-fields{display:flex;flex-wrap:wrap;gap:12px;margin:14px 0}.template-fields label{font-size:14px}.template-fields input{display:block;width:90px;background:#22262d;border:1px solid #58647b;border-radius:5px;color:white;padding:7px}.template-toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.template-toolbar select{background:#22262d;color:white;padding:7px}.template-dialog p{font-size:14px;line-height:1.6;color:#c0c9d8}
 </style>
 </head>
 <body>
 <div class="app">
-<header class="topbar"><div class="brand">BOOK LAB v8.10 UV</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept=".psd,image/vnd.adobe.photoshop,image/png,image/jpeg,image/webp" multiple><label class="btn" for="pdfInput" title="将单页 PDF 按顺序导入为新书帖">导入 PDF</label><button class="btn" id="idSyncButton" title="绑定 InDesign 自动导出文件夹">⟳ ID 自动同步</button><span id="idSyncStatus" style="font-size:11px;color:#9bd8c6">未绑定</span><input id="pdfInput" type="file" accept=".pdf,application/pdf"><button class="btn" id="topAutoFlipBtn">▶ 翻页动画</button><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept=".psd,image/*" webkitdirectory multiple><label class="btn" for="coreCoverInput" title="352×250mm，不含书脊：整图等比居中，不裁出血；左封底，右封面">单独上传封底＋封面整图</label><input id="coreCoverInput" type="file" accept=".psd,image/vnd.adobe.photoshop,image/png,image/jpeg,image/webp"><span id="coreCoverFileLabel" style="font-size:11px;color:#c7d6e9">未单独上传封面</span><label style="font-size:11px;display:flex;align-items:center;gap:4px"><input id="coreCoverReplaceEnds" type="checkbox" checked>替换已有首尾页</label><label class="btn" for="uvInput">上传封面 UV 层</label><input id="uvInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="净尺寸479×250mm，不裁出血：勒口60＋封底176＋书脊7＋封面176＋勒口60">单独上传 PET · 479mm</label><input id="petCoverInput" type="file" accept=".psd,image/vnd.adobe.photoshop,image/png,image/jpeg,image/webp"><label style="font-size:12px;color:#acd4d6;display:flex;gap:5px;align-items:center"><input id="petFlapsVisible" type="checkbox" checked>3D 显示60mm勒口</label><span style="font-size:11px;color:#9badbf" title="彩色/黑色图案不透明，白色背景近乎透明；白色图案需要另外指定白墨区域">PET：彩色不透／白底透</span><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
+<header class="topbar"><div class="brand">BOOK LAB v8.11 模板</div><label class="btn primary" for="imgInput">＋ 导入页面</label><input id="imgInput" type="file" accept=".psd,image/vnd.adobe.photoshop,image/png,image/jpeg,image/webp" multiple><label class="btn" for="pdfInput" title="将单页 PDF 按顺序导入为新书帖">导入 PDF</label><button class="btn" id="idSyncButton" title="绑定 InDesign 自动导出文件夹">⟳ ID 自动同步</button><span id="idSyncStatus" style="font-size:11px;color:#9bd8c6">未绑定</span><input id="pdfInput" type="file" accept=".pdf,application/pdf"><button class="btn" id="topAutoFlipBtn">▶ 翻页动画</button><label class="btn" for="folderInput">导入文件夹</label><input id="folderInput" type="file" accept=".psd,image/*" webkitdirectory multiple><label class="btn" for="coreCoverInput" title="上传完整展开图，再按模板调整封底和封面区域">上传封面展开图</label><input id="coreCoverInput" type="file" accept=".psd,image/vnd.adobe.photoshop,image/png,image/jpeg,image/webp"><span id="coreCoverFileLabel" style="font-size:11px;color:#c7d6e9">未单独上传封面</span><label style="font-size:11px;display:flex;align-items:center;gap:4px"><input id="coreCoverReplaceEnds" type="checkbox" checked>替换已有首尾页</label><label class="btn" for="uvInput">上传光油展开图</label><input id="uvInput" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" id="petFullPreview" title="核对 PET 的完整展开图">查看 PET 展开图</button><span id="petCoverFileLabel" style="font-size:11px;color:#9ad1d8;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="当前 PET 外封">默认 PET</span><label class="btn" for="petCoverInput" title="净尺寸476×249mm，不裁出血：勒口60＋封底176＋书脊4＋封面176＋勒口60">上传 PET 展开图</label><input id="petCoverInput" type="file" accept=".psd,image/vnd.adobe.photoshop,image/png,image/jpeg,image/webp"><label style="font-size:12px;color:#acd4d6;display:flex;gap:5px;align-items:center"><input id="petFlapsVisible" type="checkbox" checked>3D 显示60mm勒口</label><span style="font-size:11px;color:#9badbf" title="彩色/黑色图案不透明，白色背景近乎透明；白色图案需要另外指定白墨区域">PET：彩色不透／白底透</span><button class="btn" id="signatureBtn">16P 对轴</button><button class="btn" id="exportLayoutBtn">导出总体排版 PNG</button><button class="btn" id="exportBtn">导出工程</button><label class="btn" for="projectInput">载入工程</label><input id="projectInput" type="file" accept="application/json,.booklab"><div class="spacer"></div><button class="btn" id="soundBtn">🔊 翻页音效</button><span class="status" id="status">WebGL 曲面翻页</span></header>
 <div id="bookSpecs" role="status" aria-live="polite" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:8px 14px;background:#1b1e25;border-bottom:1px solid var(--line);font-size:12px;color:#cbd3e1">
  <strong style="color:#e8ecf9">📖 本册实时规格</strong>
- <span>成品：176 × 250 mm</span>
+ <span>成品：176 × 249 mm</span>
  <span>普通纸：<b id="specOrdinary">0P</b></span>
  <span>硫酸纸（正反两面）：<b id="specTracing">0P</b></span>
  <span style="color:#a7e4df">合计：<b id="specTotal">0P</b></span>
  <span id="specUnits" style="color:#9a9eac"></span>
 </div>
 <main class="main"><aside class="sidebar"><div class="sidehead"><div class="sidebar-zoom-controls"><span>左侧图片大小</span><button class="btn" id="sideZoomOut" title="缩小左侧缩略图">−</button><input type="range" id="sideZoomSlider" min="50" max="200" step="5" value="100" aria-label="左侧图片缩放"><output id="sideZoomValue">100%</output><button class="btn" id="sideZoomIn" title="放大左侧缩略图">＋</button><button class="btn" id="sideZoomReset">重置</button></div><button class="btn" id="mainUndo">↶ 撤销</button><button class="btn" id="mainRedo">↷ 重做</button><button class="btn" id="wideLayoutBtn" type="button" aria-pressed="false">⤢ 展开排版 · 每帖两排</button><div class="drop" id="drop">拖图片到这里 · 按源文件名前缀页码排序<br>Ctrl / ⌘ 多选 · Shift 连选 · 拖动整组选页<br>拖至图片中央＝交换 · 左右边缘＝插入移动</div><div class="binding-controls"><b>书帖分组</b><label>默认 <input id="bindingDefault" type="number" min="4" step="4" value="16"> P</label><label>起点 <input id="bindingStart" type="number" min="1" value="1"> P</label><button class="btn" id="bindingReset">统一分组</button></div><div class="binding-info" id="bindingInfo">点击图片，金框标出同张折纸的另一半。</div><div class="batch"><span id="selectionCount">已选 0 页 · Ctrl多选 / Shift连选 · 拖动选中图片集体移动</span><button class="btn" id="selectAll">全选</button><input id="movePosition" type="number" min="1" value="1" aria-label="移动到页码"><button class="btn" id="moveSelected">移到此页前</button></div></div><div class="list" id="list"></div><div class="settings"><h3>当前页面材质</h3><label style="font-size:12px;color:#bac4d5;display:flex;align-items:center;gap:6px"><input id="batchMaterialSettings" type="checkbox"> 将材质和不透明度应用到全部选中页</label><small style="color:#8f97a4">默认只修改当前页；普通纸和封面保持不透明。</small><div class="row"><span>材质</span><select id="material"><option value="paper">普通纸</option><option value="pet">PET 透明封皮</option><option value="tracing">硫酸纸 / 半透明纸</option><option value="cover">书芯封面 / 封底</option></select></div><div class="row"><span title="硫酸纸100%为最厚档，仍保留轻微透光；普通纸完全不透明">不透明度</span><input id="opacity" type="range" min="5" max="100" value="100"></div><div class="row"><span>页名</span><input id="name"></div><div class="actions"><button class="btn" id="replaceImage">替换图像</button><input id="replaceImageInput" type="file" accept=".psd,image/vnd.adobe.photoshop,image/png,image/jpeg,image/webp" hidden><button class="btn" id="duplicate">复制页</button><button class="btn" id="delete">删除页</button></div></div></aside>
-<div class="resizer" role="separator" tabindex="0" aria-label="调整左侧宽度" aria-orientation="vertical"></div><section class="stagewrap"><div class="viewtools"><label class="flip-speed-label">自动播放速度 <input id="flipSpeed" type="range" min="0.1" max="3" step="0.1" value="1" aria-label="自动播放速度"><output id="flipSpeedValue">1×</output></label><button class="btn" id="stagePETFlaps" aria-pressed="true">PET 勒口：显示</button><button class="btn" id="recordShowcaseBtn" title="录制旋转一周和完整翻页，生成无声视频" aria-pressed="false">● 录像展示</button><button class="btn" id="resetView">复位视角</button><span>左键旋转 · 中键平移 · 滚轮缩放 · 双击复位</span></div><div class="toast" id="toast"></div><div class="canvasbox"><canvas id="viewer"></canvas></div><div class="empty" id="empty"><div><b>导入页面开始预览 📖</b><span>WebGL 曲面网格 · 纸张弯曲 · 双面纹理 · 预缓存</span></div></div><div class="controls"><button class="btn" id="first">⟪</button><button class="btn" id="prev">←</button><div class="indicator" id="indicator">0 / 0</div><button class="btn" id="next">→</button><button class="btn" id="last">⟫</button><button class="btn" id="autoFlipBtn" title="连续叠页动画展示，可再次点击停止">▶ 一键动画</button><label class="flip-speed-label" title="仅控制一键动画的自动播放速度；数值越小越慢">自动播放速度 <input id="autoPlaybackSpeed" type="range" min="0.1" max="3" step="0.1" value="1" aria-label="自动播放速度调节"><output id="autoPlaybackSpeedValue">1×</output></label><div class="zoom">缩放 <input id="zoom" type="range" min="65" max="125" value="96"></div><div class="zoom" title="PET书脊固定7mm，书芯和折手共用相同厚度边界">书脊 7mm<input id="bookThickness" type="range" min="50" max="180" value="100" aria-label="固定7mm书脊" disabled style="display:none"></div></div></section></main></div>
+<div class="resizer" role="separator" tabindex="0" aria-label="调整左侧宽度" aria-orientation="vertical"></div><section class="stagewrap"><div class="viewtools"><label class="flip-speed-label">自动播放速度 <input id="flipSpeed" type="range" min="0.1" max="3" step="0.1" value="1" aria-label="自动播放速度"><output id="flipSpeedValue">1×</output></label><button class="btn" id="stagePETFlaps" aria-pressed="true">PET 勒口：显示</button><button class="btn" id="recordShowcaseBtn" title="录制旋转一周和完整翻页，生成无声视频" aria-pressed="false">● 录像展示</button><button class="btn" id="resetView">复位视角</button><span>左键旋转 · 中键平移 · 滚轮缩放 · 双击复位</span></div><div class="toast" id="toast"></div><div class="canvasbox"><canvas id="viewer"></canvas></div><div class="empty" id="empty"><div><b>导入页面开始预览 📖</b><span>WebGL 曲面网格 · 纸张弯曲 · 双面纹理 · 预缓存</span></div></div><div class="controls"><button class="btn" id="first">⟪</button><button class="btn" id="prev">←</button><div class="indicator" id="indicator">0 / 0</div><button class="btn" id="next">→</button><button class="btn" id="last">⟫</button><button class="btn" id="autoFlipBtn" title="连续叠页动画展示，可再次点击停止">▶ 一键动画</button><label class="flip-speed-label" title="仅控制一键动画的自动播放速度；数值越小越慢">自动播放速度 <input id="autoPlaybackSpeed" type="range" min="0.1" max="3" step="0.1" value="1" aria-label="自动播放速度调节"><output id="autoPlaybackSpeedValue">1×</output></label><div class="zoom">缩放 <input id="zoom" type="range" min="65" max="125" value="96"></div><div class="zoom" title="PET书脊固定4mm，书芯和折手共用相同厚度边界">书脊 4mm<input id="bookThickness" type="range" min="50" max="180" value="100" aria-label="固定4mm书脊" disabled style="display:none"></div></div></section></main></div>
 <dialog class="signature" id="signatureDialog"><div class="sigbar"><h2>16P 书帖 · 硫酸纸对轴定位</h2><button class="btn" id="closeSignature">关闭</button></div><p class="signote">按最终阅读页序，每 16P 为一帖（8 张叶／4 张对折纸）。一张完整对折硫酸纸占 4P，左右两张叶必须成对；另一半的位置以书帖中心为轴对应。</p><div class="sigbar"><label>第 1 帖从全书第 <input class="siginput" id="signatureStart" type="number" min="1" value="1"> P 开始</label><span class="signote">独立封面不入帖时，请调整起点。</span></div><div class="sigfocus" id="signatureFocus"></div><div class="sigbar"><button class="btn" id="selectSignaturePair">选中同张折纸的 4P</button><button class="btn" id="traceSignaturePair">这 4P 设为硫酸纸</button></div><p class="signote">金色边框＝另一半的两面；蓝色边框＝当前页。这里定位和设置已有页面，不会自动插页。增删／移动页面后会重新计算，请以最终排版为准。若插入整张对折纸会使书帖增加 4P，需与师傅重新确认分帖。</p><div id="signatureContent"></div></dialog><script>
 const $=s=>document.querySelector(s),pages=[];let selected=null,spread=0,busy=false,dragId=null,soundOn=true,zoom=.96;
 const list=$('#list'),canvas=$('#viewer');
@@ -128,7 +129,7 @@ $('#sideZoomIn').onclick=()=>setSidebarZoom(sidebarZoom+10);
 $('#sideZoomReset').onclick=()=>setSidebarZoom(100);
 $('#sideZoomSlider').oninput=e=>setSidebarZoom(e.target.value);
 setSidebarZoom(100);
-let cameraPitch=-.11,cameraYaw=0,cameraPanX=0,cameraPanY=0,thicknessScale=1,petOpened=false,petTurn=0,petEndClosed=false,petEndTurn=0;let flipSpeed=1;let uvBlob=null,uvName='',uvMode='auto',uvLayout='spread',uvEnabled=true,uvStrength=.8,uvTextures={},uvPreviewURLs={},uvGeneration=0;let coreCoverBlob=null,coreCoverName='',coreCoverReplaceEnds=true;let petCoverName='默认空白 PET 外封';let petCoverLayout='flaps';let petFlapsVisible=true;let petCoverBlob=null,petCoverTexture=null;const selectedIds=new Set();let selectionAnchor=null;
+let cameraPitch=-.11,cameraYaw=0,cameraPanX=0,cameraPanY=0,thicknessScale=1,petOpened=false,petTurn=0,petEndClosed=false,petEndTurn=0;let flipSpeed=1;let finishAssets={};let uvBlob=null,uvName='',uvMode='auto',uvLayout='spread',uvEnabled=true,uvStrength=.8,uvTextures={},uvPreviewURLs={},uvGeneration=0;let coreCoverBlob=null,coreCoverName='',coreCoverReplaceEnds=true;let petCoverName='默认空白 PET 外封';let petCoverLayout='flaps';let petFlapsVisible=true;let petCoverBlob=null,petCoverTexture=null;const selectedIds=new Set();let selectionAnchor=null;
 const PREVIEW_W=920,PREVIEW_H=1300,THUMB_W=180,THUMB_H=255;
 const bitmapCache=new Map(),textureCache=new Map(),bitmapPending=new Map();
 function uid(){return crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2)}
@@ -312,7 +313,7 @@ const U={};['uMVP','uFlip','uDir','uSide','uCurl','uMode','uZOffset','uFrontOpac
 function mat4Perspective(fovy,aspect,near,far){const f=1/Math.tan(fovy/2),nf=1/(near-far);return new Float32Array([f/aspect,0,0,0,0,f,0,0,0,0,(far+near)*nf,-1,0,0,2*far*near*nf,0])}
 function mat4Mul(a,b){const o=new Float32Array(16);for(let r=0;r<4;r++)for(let c=0;c<4;c++)o[c*4+r]=a[0*4+r]*b[c*4+0]+a[1*4+r]*b[c*4+1]+a[2*4+r]*b[c*4+2]+a[3*4+r]*b[c*4+3];return o}
 function mat4View(){const cx=Math.cos(cameraPitch),sx=Math.sin(cameraPitch),cy=Math.cos(cameraYaw),sy=Math.sin(cameraYaw);const rx=new Float32Array([1,0,0,0,0,cx,sx,0,0,-sx,cx,0,0,0,0,1]),ry=new Float32Array([cy,0,-sy,0,0,1,0,0,sy,0,cy,0,0,0,0,1]);const m=mat4Mul(rx,ry);m[12]=cameraPanX;m[13]=-.06+cameraPanY;m[14]=-4.25/zoom;return m}
-function mvp(){return mat4Mul(mat4Perspective(.72,canvas.width/canvas.height,.1,30),mat4View())}
+function mvp(){return mat4Mul(mat4Perspective(.72,canvas.width/canvas.height,.1,30),mat4Mul(mat4View(),new Float32Array([1,0,0,0,0,249/250,0,0,0,0,1,0,0,0,0,1])))}
 function ensureTexture(p){if(!p)return null;if(textureCache.has(p.id))return textureCache.get(p.id);const bmp=bitmapCache.get(p.id);if(!bmp)return null;const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,bmp);gl.generateMipmap(gl.TEXTURE_2D);textureCache.set(p.id,t);return t}
 const whiteTex=(()=>{const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array([250,250,250,255]));return t})();
 
@@ -432,7 +433,7 @@ gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,20,0);
 gl.enableVertexAttribArray(1);gl.vertexAttribPointer(1,2,gl.FLOAT,false,20,12);
 function uploadCoverBitmap(bitmap){
  const ratio=bitmap.width/bitmap.height;
- petCoverLayout=Math.abs(ratio-(PET_PAGE*2+PET_SPINE)/250)<Math.abs(ratio-PET_WIDTH/250)?'plain':'flaps';
+ petCoverLayout=Math.abs(ratio-(PET_PAGE*2+PET_SPINE)/249)<Math.abs(ratio-PET_WIDTH/249)?'plain':'flaps';
  if(petCoverTexture)gl.deleteTexture(petCoverTexture);
  petCoverTexture=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,petCoverTexture);
  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false);
@@ -442,9 +443,9 @@ function uploadCoverBitmap(bitmap){
  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);
 }
 async function setPETCover(blob,name){const bitmap=await decodeUploadedImage(blob);try{uploadCoverBitmap(bitmap.image||bitmap)}finally{bitmap.close()}petCoverBlob=blob;if(name)petCoverName=name;const el=$('#petCoverFileLabel');if(el){el.textContent=petCoverName+' ['+(petCoverLayout==='plain'?'无襟片':'含襟片')+']';el.title=el.textContent}drawScene();if(typeof saveSoon==='function')saveSoon()}
-// PET unfolded layout (mm): 60 flap | 176 back | 7 spine | 176 front | 60 flap.
+// PET unfolded layout (mm): 60 flap | 176 back | 4 spine | 176 front | 60 flap.
 // Front artwork is on the OUTSIDE. The folded sleeve remains translucent from either side.
-const PET_PAGE=176,PET_FLAP=60,PET_SPINE=7,PET_WIDTH=PET_PAGE*2+PET_FLAP*2+PET_SPINE;
+const PET_PAGE=176,PET_FLAP=60,PET_SPINE=4,PET_WIDTH=PET_PAGE*2+PET_FLAP*2+PET_SPINE;
 const PET_UNIT=1.408/176,PET_SPINE_WORLD=PET_SPINE*PET_UNIT;
 const PET_FRONT_Z=.003,PET_BACK_Z=PET_FRONT_Z-PET_SPINE_WORLD;
 const petU=mm=>mm/(petCoverLayout==='plain'?(PET_PAGE*2+PET_SPINE):PET_WIDTH);
@@ -575,7 +576,7 @@ async function migrateLegacyPETPlaceholder(blob){
  }finally{bmp.close()}
 }
 async function defaultPETCover(){
- const c=document.createElement('canvas');c.width=PET_WIDTH*6;c.height=1500;
+ const c=document.createElement('canvas');c.width=PET_WIDTH*6;c.height=1494;
  const ctx=c.getContext('2d');ctx.fillStyle='#c9e6e9';ctx.fillRect(0,0,c.width,c.height);
  const unit=c.width/PET_WIDTH;
  const x=[PET_FLAP,PET_FLAP+PET_PAGE,PET_FLAP+PET_PAGE+PET_SPINE,PET_FLAP+PET_PAGE*2+PET_SPINE].map(v=>v*unit);
@@ -590,13 +591,12 @@ async function defaultPETCover(){
 $('#petFullPreview').onclick=()=>{
  if(!petCoverBlob)return toast('请先导入 PET 外封');
  const layer=document.createElement('div');layer.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:9999;padding:30px';
- const info=document.createElement('div');info.textContent='PET 整图 479 × 250 mm｜左勒口60 / 封底176 / 书脊7 / 封面176 / 右勒口60';info.style.cssText='color:white;text-align:center';
+ const info=document.createElement('div');info.textContent='PET 整图 476 × 249 mm｜左勒口60 / 封底176 / 书脊4 / 封面176 / 右勒口60';info.style.cssText='color:white;text-align:center';
  const photo=new Image();const u=URL.createObjectURL(petCoverBlob);photo.src=u;photo.style.cssText='max-width:98%;max-height:75%;object-fit:contain;border:1px solid #53686e';
  const close=document.createElement('button');close.className='btn';close.textContent='关闭预览';const dismiss=()=>{URL.revokeObjectURL(u);layer.remove()};
  close.onclick=dismiss;layer.onclick=e=>{if(e.target===layer)dismiss()};layer.append(info,photo,close);document.body.append(layer);
 };
 
-$('#petCoverInput').onchange=async e=>{const file=e.target.files[0];e.target.value='';if(!file)return;try{const bmp=await decodeUploadedImage(file);const w=bmp.width,h=bmp.height;bmp.close();if(Math.abs(w/h-PET_WIDTH/250)/(PET_WIDTH/250)>.015){toast('PET 请上传479×250mm净尺寸整图（60＋176＋7＋176＋60），本入口不裁出血');return}await setPETCover(file,file.name+' ('+w+'×'+h+')');petCoverLayout='flaps';drawScene();toast('已读取 PET 外封：'+file.name+'｜'+w+'×'+h)}catch(err){console.error(err);toast('PET 导入失败：'+(err.message||'请使用 PNG/JPG/WebP 图片'))}};
 // The default jacket is installed during workspace restore, never over the user's saved artwork.
 
 // Inner book's FRONT/BACK covers occupy the outside of the opened book block.
@@ -762,8 +762,8 @@ async function exportSignatureLayout(){
  }catch(err){console.error(err);toast('总览导出失败：'+err.message)}
  finally{btn.disabled=false;btn.textContent='导出总体排版 PNG'}
 }
-async function exportProject(){const payload={format:'BOOKLAB_V5_WEBGL',tracingModel:'EXPLICIT_FACES_1P',bindingConfig,spread,petOpened,petEndClosed,selected,soundOn,flipSpeed,pages:[],petCover:petCoverBlob?await blobToDataURL(petCoverBlob):null,petCoverName,petFlapsVisible,coreCover:coreCoverBlob?await blobToDataURL(coreCoverBlob):null,coreCoverName,coreCoverReplaceEnds,uvLayer:uvBlob?await blobToDataURL(uvBlob):null,uvName,uvMode,uvLayout,uvEnabled,uvStrength};$('#status').textContent='导出工程…';for(const p of pages)payload.pages.push({id:p.id,name:p.name,sourceName:p.sourceName||p.name,sourcePath:p.sourcePath||p.sourceName||p.name,material:p.material,opacity:p.opacity,blankSlot:!!p.blankSlot,standaloneCoreCover:!!p.standaloneCoreCover,preview:await blobToDataURL(p.preview),thumb:await blobToDataURL(p.thumb),sourceFile:p.sourceFile?await blobToDataURL(p.sourceFile):null});const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(payload)],{type:'application/json'}));a.download='booklab-v5.booklab';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);$('#status').textContent='WebGL 曲面翻页'}
-async function loadProject(file){try{const j=JSON.parse(await file.text());if(!['BOOKLAB_V2_META','BOOKLAB_V3_META','BOOKLAB_V4_CANVAS','BOOKLAB_V5_WEBGL'].includes(j.format))throw 0;pages.length=0;for(const p of j.pages)pages.push({...p,sourceName:p.sourceName||p.name,sourcePath:p.sourcePath||p.sourceName||p.name,preview:dataURLtoBlob(p.preview),thumb:dataURLtoBlob(p.thumb),sourceFile:p.sourceFile?dataURLtoBlob(p.sourceFile):null,thumbURL:null});coreCoverBlob=j.coreCover?dataURLtoBlob(j.coreCover):null;await restoreUV(j,j.uvLayer?dataURLtoBlob(j.uvLayer):null);coreCoverName=j.coreCoverName||'';coreCoverReplaceEnds=j.coreCoverReplaceEnds!==false;updateCoreCoverControls();petFlapsVisible=j.petFlapsVisible!==false;syncPETFlapControls();if(j.petCover)await setPETCover(await migrateLegacyPETPlaceholder(dataURLtoBlob(j.petCover)),j.petCoverName||'工程中的 PET 外封');selected=pages.some(p=>p.id===j.selected)?j.selected:(pages[0]?.id||null);spread=clamp(j.spread||0,0,maxSpread());petOpened=!!j.petOpened;petTurn=petOpened?1:0;petEndClosed=!!j.petEndClosed;petEndTurn=petEndClosed?1:0;soundOn=j.soundOn!==false;setFlipSpeed(j.flipSpeed??1);renderList();renderSettings();await ensureSpread(spread);drawScene();updateSound();toast('工程已载入')}catch(e){console.error(e);toast('工程文件无法读取')}}
+async function exportProject(){const payload={format:'BOOKLAB_V5_WEBGL',tracingModel:'EXPLICIT_FACES_1P',bindingConfig,spread,petOpened,petEndClosed,selected,soundOn,flipSpeed,pages:[],petCover:petCoverBlob?await blobToDataURL(petCoverBlob):null,petCoverName,petFlapsVisible,coreCover:coreCoverBlob?await blobToDataURL(coreCoverBlob):null,coreCoverName,coreCoverReplaceEnds,uvLayer:uvBlob?await blobToDataURL(uvBlob):null,uvName,uvMode,uvLayout,uvEnabled,uvStrength,finishAssets:await exportFinishAssets()};$('#status').textContent='导出工程…';for(const p of pages)payload.pages.push({id:p.id,name:p.name,sourceName:p.sourceName||p.name,sourcePath:p.sourcePath||p.sourceName||p.name,material:p.material,opacity:p.opacity,blankSlot:!!p.blankSlot,standaloneCoreCover:!!p.standaloneCoreCover,preview:await blobToDataURL(p.preview),thumb:await blobToDataURL(p.thumb),sourceFile:p.sourceFile?await blobToDataURL(p.sourceFile):null});const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(payload)],{type:'application/json'}));a.download='booklab-v5.booklab';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);$('#status').textContent='WebGL 曲面翻页'}
+async function loadProject(file){try{const j=JSON.parse(await file.text());if(!['BOOKLAB_V2_META','BOOKLAB_V3_META','BOOKLAB_V4_CANVAS','BOOKLAB_V5_WEBGL'].includes(j.format))throw 0;finishAssets=await importFinishAssets(j.finishAssets);pages.length=0;for(const p of j.pages)pages.push({...p,sourceName:p.sourceName||p.name,sourcePath:p.sourcePath||p.sourceName||p.name,preview:dataURLtoBlob(p.preview),thumb:dataURLtoBlob(p.thumb),sourceFile:p.sourceFile?dataURLtoBlob(p.sourceFile):null,thumbURL:null});coreCoverBlob=j.coreCover?dataURLtoBlob(j.coreCover):null;await restoreUV(j,j.uvLayer?dataURLtoBlob(j.uvLayer):null);coreCoverName=j.coreCoverName||'';coreCoverReplaceEnds=j.coreCoverReplaceEnds!==false;updateCoreCoverControls();petFlapsVisible=j.petFlapsVisible!==false;syncPETFlapControls();if(j.petCover)await setPETCover(await migrateLegacyPETPlaceholder(dataURLtoBlob(j.petCover)),j.petCoverName||'工程中的 PET 外封');selected=pages.some(p=>p.id===j.selected)?j.selected:(pages[0]?.id||null);spread=clamp(j.spread||0,0,maxSpread());petOpened=!!j.petOpened;petTurn=petOpened?1:0;petEndClosed=!!j.petEndClosed;petEndTurn=petEndClosed?1:0;soundOn=j.soundOn!==false;setFlipSpeed(j.flipSpeed??1);renderList();renderSettings();await ensureSpread(spread);drawScene();updateSound();toast('工程已载入')}catch(e){console.error(e);toast('工程文件无法读取')}}
 $('#imgInput').onchange=e=>{addFiles(e.target.files);e.target.value=''};$('#folderInput').onchange=e=>{addFiles(e.target.files,true);e.target.value=''};$('#projectInput').onchange=e=>{if(e.target.files[0])loadProject(e.target.files[0]);e.target.value=''};$('#exportLayoutBtn').onclick=exportSignatureLayout;$('#exportBtn').onclick=exportProject;let autoFlipping=false;
 function updateAutoFlipButton(){
  const button=$('#autoFlipBtn');
@@ -851,7 +851,7 @@ const saveBadge=document.createElement('span');saveBadge.className='status';save
 const database=new Promise((resolve,reject)=>{const request=indexedDB.open('booklab-workspace',1);request.onupgradeneeded=()=>request.result.createObjectStore('projects');request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error)});
 let restoring=true,saveTimer,saveChain=Promise.resolve();
 function saveSoon(){if(restoring)return;saveBadge.textContent='待保存…';clearTimeout(saveTimer);saveTimer=setTimeout(saveWorkspace,350)}
-function saveWorkspace(){if(restoring)return;clearTimeout(saveTimer);const snapshot={tracingModel:'EXPLICIT_FACES_1P',bindingConfig:JSON.parse(JSON.stringify(bindingConfig)),pages:pages.map(({thumbURL,...p})=>({...p})),selected,selection:[...selectedIds],spread,petOpened,petEndClosed,soundOn,flipSpeed,zoom,cameraPitch,cameraYaw,cameraPanX,cameraPanY,uvBlob,uvName,uvMode,uvLayout,uvEnabled,uvStrength,petCoverBlob,petCoverName,petFlapsVisible,coreCoverBlob,coreCoverName,coreCoverReplaceEnds,sidebarWidth:$('.sidebar').getBoundingClientRect().width};saveBadge.textContent='保存中…';saveChain=saveChain.catch(()=>{}).then(async()=>{const db=await database;await new Promise((resolve,reject)=>{const tx=db.transaction('projects','readwrite');tx.objectStore('projects').put(snapshot,'current');tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error)});saveBadge.textContent='已自动保存到此浏览器'}).catch(e=>{console.error(e);saveBadge.textContent='保存失败，请导出工程备份';toast('自动保存失败，请导出工程备份')});return saveChain}
+function saveWorkspace(){if(restoring)return;clearTimeout(saveTimer);const snapshot={tracingModel:'EXPLICIT_FACES_1P',bindingConfig:JSON.parse(JSON.stringify(bindingConfig)),pages:pages.map(({thumbURL,...p})=>({...p})),selected,selection:[...selectedIds],spread,petOpened,petEndClosed,soundOn,flipSpeed,zoom,cameraPitch,cameraYaw,cameraPanX,cameraPanY,finishAssets,uvBlob,uvName,uvMode,uvLayout,uvEnabled,uvStrength,petCoverBlob,petCoverName,petFlapsVisible,coreCoverBlob,coreCoverName,coreCoverReplaceEnds,sidebarWidth:$('.sidebar').getBoundingClientRect().width};saveBadge.textContent='保存中…';saveChain=saveChain.catch(()=>{}).then(async()=>{const db=await database;await new Promise((resolve,reject)=>{const tx=db.transaction('projects','readwrite');tx.objectStore('projects').put(snapshot,'current');tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error)});saveBadge.textContent='已自动保存到此浏览器'}).catch(e=>{console.error(e);saveBadge.textContent='保存失败，请导出工程备份';toast('自动保存失败，请导出工程备份')});return saveChain}
 function releaseCaches(){for(const p of pages){if(p.thumbURL)URL.revokeObjectURL(p.thumbURL);p.thumbURL=null;}for(const b of bitmapCache.values())b.close();bitmapCache.clear();for(const t of textureCache.values())gl.deleteTexture(t);textureCache.clear()}
 const originalLoadProject=loadProject;
 loadProject=async function(file){ // Validate before replacing the current workspace.
@@ -908,7 +908,7 @@ let orbit=null;canvas.addEventListener('auxclick',e=>{if(e.button===1)e.preventD
 // Save navigation, names and preferences, including changes triggered by existing controls.
 document.addEventListener('input',saveSoon);document.addEventListener('change',saveSoon);document.addEventListener('click',saveSoon);const originalDrawScene=drawScene;let previousSpread=-1;drawScene=function(...args){originalDrawScene(...args);if(!busy&&spread!==previousSpread){previousSpread=spread;saveSoon()}};
 document.addEventListener('visibilitychange',()=>{if(document.hidden)saveWorkspace()});window.addEventListener('pagehide',()=>saveWorkspace());
-(async()=>{try{const db=await database;const data=await new Promise((resolve,reject)=>{const tx=db.transaction('projects');const req=tx.objectStore('projects').get('current');req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)});if(data){if(data.bindingConfig)bindingConfig=data.bindingConfig;pages.push(...data.pages.map(p=>({...p,thumbURL:null})));selected=data.selected;for(const id of data.selection||[])if(pages.some(p=>p.id===id))selectedIds.add(id);spread=clamp(data.spread||0,0,maxSpread());petOpened=!!data.petOpened;petTurn=petOpened?1:0;petEndClosed=!!data.petEndClosed;petEndTurn=petEndClosed?1:0;soundOn=data.soundOn!==false;setFlipSpeed(data.flipSpeed??1);zoom=data.zoom||.96;cameraPitch=data.cameraPitch??-.11;cameraYaw=data.cameraYaw||0;cameraPanX=data.cameraPanX||0;cameraPanY=data.cameraPanY||0;coreCoverBlob=data.coreCoverBlob||null;await restoreUV(data,data.uvBlob||null);coreCoverName=data.coreCoverName||'';coreCoverReplaceEnds=data.coreCoverReplaceEnds!==false;updateCoreCoverControls();petFlapsVisible=data.petFlapsVisible!==false;syncPETFlapControls();if(data.petCoverBlob)await setPETCover(await migrateLegacyPETPlaceholder(data.petCoverBlob),data.petCoverName||'已恢复 PET 图片');if(data.sidebarWidth)setSidebar(data.sidebarWidth);$('#zoom').value=zoom*100;await ensureSpread(spread)}if(!petCoverBlob){petCoverBlob=await defaultPETCover();await setPETCover(petCoverBlob)}saveBadge.textContent=data?'已恢复上次资料':'自动保存已开启';navigator.storage?.persist?.().catch(()=>{})}catch(e){console.error(e);saveBadge.textContent='无法读取本地保存，请导入工程'}finally{restoring=false;fitCanvas(false);setupGL();updateSound();renderList();renderSettings();drawScene()}})();
+(async()=>{try{const db=await database;const data=await new Promise((resolve,reject)=>{const tx=db.transaction('projects');const req=tx.objectStore('projects').get('current');req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)});if(data){finishAssets=data.finishAssets||{};if(data.bindingConfig)bindingConfig=data.bindingConfig;pages.push(...data.pages.map(p=>({...p,thumbURL:null})));selected=data.selected;for(const id of data.selection||[])if(pages.some(p=>p.id===id))selectedIds.add(id);spread=clamp(data.spread||0,0,maxSpread());petOpened=!!data.petOpened;petTurn=petOpened?1:0;petEndClosed=!!data.petEndClosed;petEndTurn=petEndClosed?1:0;soundOn=data.soundOn!==false;setFlipSpeed(data.flipSpeed??1);zoom=data.zoom||.96;cameraPitch=data.cameraPitch??-.11;cameraYaw=data.cameraYaw||0;cameraPanX=data.cameraPanX||0;cameraPanY=data.cameraPanY||0;coreCoverBlob=data.coreCoverBlob||null;await restoreUV(data,data.uvBlob||null);coreCoverName=data.coreCoverName||'';coreCoverReplaceEnds=data.coreCoverReplaceEnds!==false;updateCoreCoverControls();petFlapsVisible=data.petFlapsVisible!==false;syncPETFlapControls();if(data.petCoverBlob)await setPETCover(await migrateLegacyPETPlaceholder(data.petCoverBlob),data.petCoverName||'已恢复 PET 图片');if(data.sidebarWidth)setSidebar(data.sidebarWidth);$('#zoom').value=zoom*100;await ensureSpread(spread)}if(!petCoverBlob){petCoverBlob=await defaultPETCover();await setPETCover(petCoverBlob)}saveBadge.textContent=data?'已恢复上次资料':'自动保存已开启';navigator.storage?.persist?.().catch(()=>{})}catch(e){console.error(e);saveBadge.textContent='无法读取本地保存，请导入工程'}finally{restoring=false;fitCanvas(false);setupGL();updateSound();renderList();renderSettings();drawScene()}})();
 
 
 let signatureStart=Math.max(1,Number(localStorage.getItem('booklab-signature-start'))||1);
@@ -1265,7 +1265,7 @@ function pageOrderIds(){return pages.map(p=>p.id)}
 function updateLayoutHistory(){for(const pre of ['layout','main']){$('#'+pre+'Undo').disabled=!layoutUndo.length;$('#'+pre+'Redo').disabled=!layoutRedo.length}}
 function captureLayoutState(){
  bindingGroups();
- return {kind:'state8',pages:pages.map(p=>({...p})),binding:JSON.parse(JSON.stringify(bindingConfig)),selected,selection:[...selectedIds],spread,petOpened,petTurn,petEndClosed,petEndTurn,coreCoverBlob,coreCoverName,coreCoverReplaceEnds};
+ return {kind:'state8',pages:pages.map(p=>({...p})),binding:JSON.parse(JSON.stringify(bindingConfig)),selected,selection:[...selectedIds],spread,petOpened,petTurn,petEndClosed,petEndTurn,coreCoverBlob,coreCoverName,coreCoverReplaceEnds,finishAssets:structuredClone(finishAssets)};
 }
 function recordLayoutHistory(before){
  layoutUndo.push(before);if(layoutUndo.length>60)layoutUndo.shift();layoutRedo.length=0;updateLayoutHistory();
@@ -1275,7 +1275,7 @@ async function restoreLayoutOrder(state){
   const p=pages.find(p=>p.id===state.id);if(!p)return false;Object.assign(p,state.page);p.thumbURL=null;
  }else if(state.kind==='state8'){
   releaseCaches();pages.splice(0,pages.length,...state.pages.map(p=>({...p,thumbURL:null})));
-  bindingConfig=JSON.parse(JSON.stringify(state.binding));coreCoverBlob=state.coreCoverBlob??null;coreCoverName=state.coreCoverName||'';coreCoverReplaceEnds=state.coreCoverReplaceEnds!==false;updateCoreCoverControls();petOpened=state.petOpened??petOpened;petTurn=state.petTurn??petTurn;petEndClosed=state.petEndClosed??petEndClosed;petEndTurn=state.petEndTurn??petEndTurn;selected=state.selected;selectedIds.clear();
+  bindingConfig=JSON.parse(JSON.stringify(state.binding));finishAssets=state.finishAssets||finishAssets;coreCoverBlob=state.coreCoverBlob??null;coreCoverName=state.coreCoverName||'';coreCoverReplaceEnds=state.coreCoverReplaceEnds!==false;updateCoreCoverControls();petOpened=state.petOpened??petOpened;petTurn=state.petTurn??petTurn;petEndClosed=state.petEndClosed??petEndClosed;petEndTurn=state.petEndTurn??petEndTurn;selected=state.selected;selectedIds.clear();
   state.selection.forEach(id=>{if(pages.some(p=>p.id===id))selectedIds.add(id)});spread=clamp(state.spread,0,maxSpread());saveBinding();
  }else return false;
  renderList();renderSettings();await ensureSpread(spread);drawScene();saveSoon();return true;
@@ -1970,7 +1970,7 @@ function updateCoreCoverControls(){
 function coreCoverRegions(width,height){
  return {back:{x:0,y:0,width:width/2,height},front:{x:width/2,y:0,width:width/2,height},spineMM:0};
 }
-function coreCoverPlacement(width,height,canvasWidth=3520,canvasHeight=2500){
+function coreCoverPlacement(width,height,canvasWidth=3520,canvasHeight=2490){
  if(!(width>0&&height>0))throw Error('图片宽高无效');
  const scale=Math.min(canvasWidth/width,canvasHeight/height);
  const w=width*scale,h=height*scale;
@@ -1999,12 +1999,9 @@ function coverOpaqueBounds(bitmap){
  return {x:left,y:top,width:right-left,height:bottom-top};
 }
 function centerCoreCoverArtwork(bitmap){
- const bounds=coverOpaqueBounds(bitmap);
- const c=document.createElement('canvas');c.width=3520;c.height=2500;
- const ctx=c.getContext('2d'),p=coreCoverPlacement(bounds.width,bounds.height,c.width,c.height);
- ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);
- ctx.drawImage(bitmap.image||bitmap,bounds.x,bounds.y,bounds.width,bounds.height,p.x,p.y,p.width,p.height);
- return c;
+ const c=document.createElement('canvas');c.width=3520;c.height=2490;
+ const ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);
+ ctx.drawImage(bitmap.image||bitmap,0,0,c.width,c.height);return c;
 }
 async function decodeUploadedImage(blob){
  try{return await createImageBitmap(blob,{imageOrientation:'from-image'})}
@@ -2038,21 +2035,13 @@ async function applyCoreCoverArt(blob,name,replaceEnds,record=true){
  releaseCaches();
  if(first){front.id=oldFirst.id;pages[pages.indexOf(oldFirst)]=front}else pages.unshift(front);
  if(last){back.id=oldLast.id;pages[pages.indexOf(oldLast)]=back}else pages.push(back);
- coreCoverBlob=blob;coreCoverName=name;coreCoverReplaceEnds=replaceEnds;updateCoreCoverControls();if(uvBlob)await setUVLayer(uvBlob);
+ coreCoverBlob=blob;coreCoverName=name;coreCoverReplaceEnds=replaceEnds;updateCoreCoverControls();
  if(record){
   recordLayoutHistory(before);saveBinding();selected=front.id;selectedIds.clear();selectedIds.add(front.id);
   spread=0;petOpened=false;petTurn=0;petEndClosed=false;petEndTurn=0;
   try{renderList();renderSettings();await ensureSpread(spread);drawScene();saveSoon()}catch(err){err.coverCommitted=true;saveSoon();throw err}
  }
 }
-$('#coreCoverInput').onchange=async e=>{
- const file=e.target.files?.[0];e.target.value='';if(!file)return;
- if(busy){toast('请等翻页或导入完成');return}
- busy=true;
- try{await applyCoreCoverArt(file,file.name,$('#coreCoverReplaceEnds').checked);toast('已按非透明内容边界居中封面，左右各176×250mm；不留书脊、不裁印刷出血')}
- catch(err){console.error(err);toast((err.coverCommitted?'封面已读取，但预览刷新失败：':'封面导入失败：')+err.message)}
- finally{busy=false}
-};
 $('#coreCoverReplaceEnds').onchange=e=>{coreCoverReplaceEnds=e.target.checked;saveSoon()};
 
 
@@ -2245,8 +2234,8 @@ async function setUVLayer(blob,name=uvName){
  if(!blob){Object.values(uvTextures).forEach(t=>gl.deleteTexture(t));Object.values(uvPreviewURLs).forEach(URL.revokeObjectURL);uvTextures={};uvPreviewURLs={};uvBlob=null;uvName='';renderList();drawScene();return}
  const bitmap=await decodeUploadedImage(blob),textures={},urls={};
  try{
-  const expected=uvLayout==='front'?176/250:352/250;
-  if(Math.abs(bitmap.width/bitmap.height-expected)/expected>.025)throw Error(uvLayout==='front'?'单封面 UV 请用176×250mm比例':'展开 UV 请用352×250mm比例（左封底、右封面，不含书脊）');
+  const expected=uvLayout==='front'?176/249:352/249;
+  if(Math.abs(bitmap.width/bitmap.height-expected)/expected>.025)throw Error(uvLayout==='front'?'单封面 UV 请用176×249mm比例':'展开 UV 请用352×249mm比例（左封底、右封面，不含书脊）');
   const source=document.createElement('canvas');source.width=uvLayout==='front'?920:1840;source.height=1300;
   const ctx=source.getContext('2d',{willReadFrequently:true});ctx.drawImage(bitmap.image||bitmap,0,0,source.width,source.height);
   const pixels=ctx.getImageData(0,0,source.width,source.height);let transparent=false;
@@ -2257,17 +2246,6 @@ async function setUVLayer(blob,name=uvName){
    d[i]=d[i+1]=d[i+2]=Math.round(amount*255);d[i+3]=255;
   }
   ctx.putImageData(pixels,0,0);
-  // Apply the same artwork-bounds placement as the standalone printed cover.
-  // Process the mask first so transparent padding cannot change auto detection.
-  if(uvLayout==='spread'&&coreCoverBlob){
-   const art=await decodeUploadedImage(coreCoverBlob);
-   try{const bounds=coverOpaqueBounds(art),placed=coreCoverPlacement(bounds.width,bounds.height,source.width,source.height);
-    const aligned=document.createElement('canvas');aligned.width=source.width;aligned.height=source.height;
-    const ac=aligned.getContext('2d');ac.fillStyle='#000';ac.fillRect(0,0,aligned.width,aligned.height);
-    ac.drawImage(source,bounds.x/art.width*source.width,bounds.y/art.height*source.height,bounds.width/art.width*source.width,bounds.height/art.height*source.height,placed.x,placed.y,placed.width,placed.height);
-    ctx.clearRect(0,0,source.width,source.height);ctx.drawImage(aligned,0,0);
-   }finally{art.close()}
-  }
   for(const key of uvLayout==='front'?['front']:['back','front']){
    const c=document.createElement('canvas');c.width=920;c.height=1300;
    c.getContext('2d').drawImage(source,key==='front'&&uvLayout==='spread'?920:0,0,920,1300,0,0,920,1300);
@@ -2302,21 +2280,110 @@ function finishSection(title,items){
 const renderBeforeFinishes=renderList;
 renderList=function(){
  renderBeforeFinishes();
- const body=pages.filter(p=>p.material!=='pet'),front=body.find(p=>p.material==='cover')||body[0],back=[...body].reverse().find(p=>p.material==='cover'&&p!==front)||body[body.length-1];
- const thumb=p=>p?(p.thumbURL||(p.thumbURL=URL.createObjectURL(p.thumb))):null;
- const cover=finishSection('本体封面 / 封底 · 图稿预览',[['封面',thumb(front)],['封底',thumb(back)]]);
- const uv=finishSection('封面光油 UV · 独立工艺层',[['UV 封面 · 白色区域上光',uvPreviewURLs.front],['UV 封底 · 白色区域上光',uvPreviewURLs.back]]);
+ const cover=finishSection('封面 · 完整展开图（封底＋封面）',[['封面展开图',finishAssetURL('core',coreCoverBlob)]]);
+ const uv=finishSection('光油 UV · 完整展开图（封底＋封面）',[['UV 展开图',finishAssetURL('uv',uvBlob)]]);
+ list.querySelector('.pet-preview-section')?.remove();
+ const pet=finishSection('PET · 完整展开图（含勒口）',[['PET 展开图',finishAssetURL('pet',petCoverBlob)]]);
  const controls=document.createElement('div');controls.style.cssText='padding:10px;display:grid;gap:9px;font-size:12px';
- controls.innerHTML='<label class="btn" for="uvInput">上传 / 替换 UV 层</label><label><input id="uvEnabled" type="checkbox"> 显示光油效果</label><label>图稿范围 <select id="uvLayout"><option value="spread">封底＋封面 · 352×250</option><option value="front">仅封面 · 176×250</option></select></label><label>识别方式 <select id="uvMode"><option value="auto">自动：透明底用透明度，白底用黑色</option><option value="alpha">透明度：图案区域上光</option><option value="dark">黑色区域上光</option><option value="light">白色区域上光</option></select></label><label>光泽强度 <input id="uvStrength" type="range" min="0" max="150" value="80"></label><span id="uvFilename"></span><small>遮罩须与封面共用画布和定位；自动沿用封面居中位置。缩略图白色＝上光；旋转书本查看反光。</small><button class="btn" id="uvRemove">移除光油层</button>';
- uv.append(controls);list.prepend(cover);list.prepend(uv);
- if(!list.querySelector('.pet-preview-section'))list.insertBefore(finishSection('PET 外封 · 独立工艺层',[['PET 封面',null],['PET 封底',null]]),cover);
+ controls.innerHTML='<label class="btn" for="uvInput">上传 / 替换 UV 层</label><label><input id="uvEnabled" type="checkbox"> 显示光油效果</label><label>图稿范围 <select id="uvLayout"><option value="spread">封底＋封面 · 352×249</option></select></label><label>识别方式 <select id="uvMode"><option value="auto">自动：透明底用透明度，白底用黑色</option><option value="alpha">透明度：图案区域上光</option><option value="dark">黑色区域上光</option><option value="light">白色区域上光</option></select></label><label>光泽强度 <input id="uvStrength" type="range" min="0" max="150" value="80"></label><span id="uvFilename"></span><small>点击下方“调整模板区域”，可独立调整光油展开图的区域。缩略图白色＝上光；旋转书本查看反光。</small><button class="btn" id="uvRemove">移除光油层</button>';
+ uv.append(controls);
+ for(const [section,kind,input] of [[cover,'core','coreCoverInput'],[pet,'pet','petCoverInput'],[uv,'uv','uvInput']]){
+  const bar=document.createElement('div');bar.className='finish-actions';
+  const upload=document.createElement('label');upload.className='btn';upload.htmlFor=input;upload.textContent='上传完整展开图';
+  const edit=document.createElement('button');edit.className='btn';edit.textContent='调整模板区域';edit.disabled=!({core:coreCoverBlob,pet:petCoverBlob,uv:uvBlob}[kind]);edit.onclick=()=>editExistingFinish(kind);bar.append(upload,edit);section.append(bar);
+ }
+ list.prepend(cover);list.prepend(pet);list.prepend(uv);
+ 
  $('#uvFilename').textContent=uvName||'未上传 UV 层';$('#uvEnabled').checked=uvEnabled;$('#uvMode').value=uvMode;$('#uvLayout').value=uvLayout;$('#uvStrength').value=uvStrength*100;
  $('#uvEnabled').onchange=e=>{uvEnabled=e.target.checked;drawScene();saveSoon()};
  $('#uvStrength').oninput=e=>{uvStrength=Number(e.target.value)/100;drawScene();saveSoon()};
  for(const key of ['uvMode','uvLayout'])$('#'+key).onchange=async e=>{const old=key==='uvMode'?uvMode:uvLayout;if(key==='uvMode')uvMode=e.target.value;else uvLayout=e.target.value;try{if(uvBlob)await setUVLayer(uvBlob);saveSoon()}catch(err){if(key==='uvMode')uvMode=old;else uvLayout=old;renderList();toast(err.message)}};
- $('#uvRemove').onclick=async()=>{await setUVLayer(null);saveSoon()};
+ $('#uvRemove').onclick=async()=>{delete finishAssets.uv;await setUVLayer(null);saveSoon()};
 };
-$('#uvInput').onchange=async e=>{const file=e.target.files[0];e.target.value='';if(!file)return;if(busy)return toast('请等翻页完成');try{await setUVLayer(file,file.name);toast('UV 层已载入，旋转书本查看局部反光')}catch(err){toast('UV 导入失败：'+err.message)}};
+
+// Independent unfolded artwork and editable source-region templates.
+const finishURLCache={};
+function finishAssetURL(kind,fallback){
+ const blob=finishAssets[kind]?.blob||fallback;if(!blob)return null;
+ const cached=finishURLCache[kind];if(cached?.blob===blob)return cached.url;
+ if(cached)URL.revokeObjectURL(cached.url);const url=URL.createObjectURL(blob);finishURLCache[kind]={blob,url};return url;
+}
+function finishTemplate(kind,withSpine=false){
+ const widths=kind==='pet'?[60,176,4,176,60]:withSpine?[176,4,176]:[176,176];
+ const labels=kind==='pet'?['左勒口','封底','书脊','封面','右勒口']:withSpine?['封底','书脊','封面']:['封底','封面'];
+ const total=widths.reduce((a,b)=>a+b,0),cuts=[0];let n=0;for(const w of widths){n+=w;cuts.push(n/total*100)}
+ return {widths,labels,cuts,top:0,bottom:100,withSpine};
+}
+function validFinishTemplate(t,kind){
+ if(!t||!Array.isArray(t.cuts))return false;const base=finishTemplate(kind,!!t.withSpine);
+ return t.cuts.length===base.cuts.length&&t.cuts.every((x,i)=>Number.isFinite(x)&&x>=0&&x<=100&&(!i||x-t.cuts[i-1]>=.05))&&Number.isFinite(t.top)&&Number.isFinite(t.bottom)&&t.top>=0&&t.bottom<=100&&t.bottom-t.top>=.05;
+}
+async function exportFinishAssets(){
+ const result={};for(const [key,a] of Object.entries(finishAssets))if(a?.blob)result[key]={...a,blob:await blobToDataURL(a.blob)};return result;
+}
+async function importFinishAssets(data){
+ const result={};for(const key of ['core','pet','uv']){const a=data?.[key];if(a?.blob&&validFinishTemplate(a.template,key))result[key]={...a,blob:dataURLtoBlob(a.blob)}}return result;
+}
+function renderFinishRegions(bitmap,kind,template){
+ if(!validFinishTemplate(template,kind))throw Error('分界位置必须由左至右递增，上边界须小于下边界');
+ const spec=finishTemplate(kind,template.withSpine),parts=spec.widths.map((w,i)=>({w,i})).filter(p=>kind==='pet'||spec.labels[p.i]!=='书脊');
+ const c=document.createElement('canvas');c.width=parts.reduce((n,p)=>n+p.w,0)*6;c.height=249*6;
+ const ctx=c.getContext('2d');let dx=0;
+ for(const part of parts){const i=part.i,x=template.cuts[i]/100*bitmap.width,w=(template.cuts[i+1]-template.cuts[i])/100*bitmap.width,y=template.top/100*bitmap.height,h=(template.bottom-template.top)/100*bitmap.height;
+  ctx.drawImage(bitmap.image||bitmap,x,y,w,h,dx,0,part.w*6,c.height);dx+=part.w*6;
+ }return c;
+}
+async function openFinishEditor(kind,blob,name,previous=null){
+ if(busy||autoFlipping){toast('请先停止翻页动画');return null}
+ const bitmap=await decodeUploadedImage(blob);
+ let template=validFinishTemplate(previous,kind)?JSON.parse(JSON.stringify(previous)):finishTemplate(kind);
+ const dialog=document.createElement('dialog');dialog.className='template-dialog';
+ const heading=document.createElement('h3');heading.textContent=({core:'封面',pet:'PET',uv:'光油 UV'}[kind])+' · 完整展开图区域调整';
+ const help=document.createElement('p');help.textContent='拖动竖线划分区域，拖动横线裁上下边缘；也可输入原图百分比。左边是封底，右边是封面。各区域会分别映射到模板；透明边不会自动裁掉。PET：60＋176＋4＋176＋60＝476mm；成品高249mm。';
+ const toolbar=document.createElement('div');toolbar.className='template-toolbar';
+ const preset=document.createElement('select');preset.setAttribute('aria-label','展开图模板');
+ for(const [value,label] of kind==='pet'?[['pet','PET：勒口 / 封底 / 4mm书脊 / 封面 / 勒口']]:[['spread','封底＋封面（不含书脊）'],['spine','封底＋4mm书脊＋封面']]){const o=document.createElement('option');o.value=value;o.textContent=label;preset.append(o)}
+ preset.value=kind==='pet'?'pet':template.withSpine?'spine':'spread';toolbar.append(preset);
+ const reset=document.createElement('button');reset.className='btn';reset.textContent='恢复模板默认位置';toolbar.append(reset);
+ const canvas=document.createElement('canvas');canvas.className='template-canvas';canvas.width=1000;canvas.height=Math.max(100,Math.round(1000*bitmap.height/bitmap.width));canvas.setAttribute('aria-label','展开图分区模板，拖动分界线调整');
+ const fields=document.createElement('div');fields.className='template-fields';const message=document.createElement('p');
+ const actions=document.createElement('div');actions.className='template-toolbar';const apply=document.createElement('button');apply.className='btn primary';apply.textContent='应用区域';const cancel=document.createElement('button');cancel.className='btn';cancel.textContent='取消';actions.append(apply,cancel);
+ dialog.append(heading,help,toolbar,canvas,fields,message,actions);document.body.append(dialog);
+ const ctx=canvas.getContext('2d');let inputs=[];
+ function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#373d48';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(bitmap.image||bitmap,0,0,canvas.width,canvas.height);
+  const spec=finishTemplate(kind,template.withSpine);ctx.font='bold 16px sans-serif';ctx.lineWidth=2;
+  template.cuts.forEach((p,i)=>{const x=p/100*canvas.width;ctx.strokeStyle='#68f2dd';ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);ctx.stroke();ctx.fillStyle='#68f2dd';ctx.fillRect(x-5,0,10,18);if(i<spec.labels.length){const right=template.cuts[i+1]/100*canvas.width;ctx.fillStyle='#101114de';ctx.fillRect(x+5,22,Math.min(160,right-x-8),26);ctx.fillStyle='white';ctx.fillText(spec.labels[i]+' '+spec.widths[i]+'mm',x+10,41)}});
+  for(const k of ['top','bottom']){const y=template[k]/100*canvas.height;ctx.strokeStyle='#ffcf78';ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);ctx.stroke()}
+  for(const input of inputs)input.el.value=String(Math.round((input.index===null?template[input.key]:template.cuts[input.index])*1000)/1000);
+  message.textContent=validFinishTemplate(template,kind)?'输出：'+(kind==='pet'?'476':'352')+' × 249mm；'+(template.withSpine&&kind!=='pet'?'中间书脊区域不计入左右封面。':''):'区域顺序无效，请调整分界位置';apply.disabled=!validFinishTemplate(template,kind);
+ }
+ function buildFields(){fields.replaceChildren();inputs=[];
+  for(const [key,index,label] of [...template.cuts.map((_,i)=>['cuts',i,i===0?'左裁边 %':i===template.cuts.length-1?'右裁边 %':'分界 '+i+' %']),['top',null,'上裁边 %'],['bottom',null,'下裁边 %']]){
+   const labelEl=document.createElement('label');labelEl.textContent=label;const el=document.createElement('input');el.type='number';el.min=0;el.max=100;el.step=.01;labelEl.append(el);fields.append(labelEl);inputs.push({el,key,index});el.oninput=()=>{const value=Number(el.value);if(index===null)template[key]=value;else template.cuts[index]=value;draw()};
+  }draw();
+ }
+ preset.onchange=()=>{template=finishTemplate(kind,preset.value==='spine');buildFields()};reset.onclick=()=>{template=finishTemplate(kind,preset.value==='spine');buildFields()};
+ function point(e){const r=canvas.getBoundingClientRect(),scale=Math.min(r.width/canvas.width,r.height/canvas.height),w=canvas.width*scale,h=canvas.height*scale;return {x:clamp((e.clientX-r.left-(r.width-w)/2)/w*100,0,100),y:clamp((e.clientY-r.top-(r.height-h)/2)/h*100,0,100),w,h}}
+ let dragging=null;
+ canvas.onpointerdown=e=>{const p=point(e),candidates=template.cuts.map((value,index)=>({index,key:'cuts',distance:Math.abs(p.x-value)/100*p.w}));for(const key of ['top','bottom'])candidates.push({index:null,key,distance:Math.abs(p.y-template[key])/100*p.h});candidates.sort((a,b)=>a.distance-b.distance);if(candidates[0].distance<=16){dragging=candidates[0];canvas.setPointerCapture(e.pointerId);e.preventDefault()}};
+ canvas.onpointermove=e=>{if(!dragging)return;const p=point(e);if(dragging.index===null)template[dragging.key]=clamp(p.y,dragging.key==='top'?0:template.top+.05,dragging.key==='top'?template.bottom-.05:100);else{const i=dragging.index;template.cuts[i]=clamp(p.x,i?template.cuts[i-1]+.05:0,i<template.cuts.length-1?template.cuts[i+1]-.05:100)}draw()};
+ canvas.onpointerup=canvas.onpointercancel=()=>dragging=null;
+ buildFields();dialog.showModal();
+ return new Promise(resolve=>{let result=null;cancel.onclick=()=>dialog.close();dialog.onclose=()=>{bitmap.close();dialog.remove();resolve(result)};apply.onclick=async()=>{apply.disabled=true;try{const raster=renderFinishRegions(bitmap,kind,template);const normalized=await pdfCanvasBlob(raster);result={blob:normalized,template:JSON.parse(JSON.stringify(template))};dialog.close()}catch(error){message.textContent=error.message;apply.disabled=false}}});
+}
+async function uploadFinishSource(kind,blob,name,previous=null){
+ const result=await openFinishEditor(kind,blob,name,previous);if(!result)return;
+ const old=finishAssets[kind];
+ try{
+  if(kind==='core')await applyCoreCoverArt(result.blob,name,$('#coreCoverReplaceEnds').checked);
+  else if(kind==='pet'){await setPETCover(result.blob,name);petCoverLayout='flaps'}
+  else{uvLayout='spread';await setUVLayer(result.blob,name)}
+  finishAssets[kind]={blob,name,template:result.template};renderList();drawScene();saveSoon();toast('已应用'+({core:'封面',pet:'PET',uv:'光油'}[kind])+'展开图区域');
+ }catch(error){if(old)finishAssets[kind]=old;else delete finishAssets[kind];renderList();toast('应用失败：'+error.message)}
+}
+async function editExistingFinish(kind){const a=finishAssets[kind],blob=a?.blob||({core:coreCoverBlob,pet:petCoverBlob,uv:uvBlob}[kind]);if(blob)await uploadFinishSource(kind,blob,a?.name||({core:coreCoverName,pet:petCoverName,uv:uvName}[kind]),a?.template)}
+for(const [id,kind] of [['coreCoverInput','core'],['petCoverInput','pet'],['uvInput','uv']])$('#'+id).onchange=async e=>{const file=e.target.files?.[0];e.target.value='';if(!file)return;try{await uploadFinishSource(kind,file,file.name)}catch(error){toast('图片无法读取：'+error.message)}};
 
 </script></body></html>
 
